@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>주식 투자 × AI 활용 — 10주 완성 커리큘럼</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Noto+Serif+KR:wght@600;700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<style>
+  :root{
+    --bg:#FEFCF8; --bg2:#FFF9F0; --bg3:#FFF5E8; --card:#FFFFFF;
+    --gold:#D4A853; --amber:#E8943A; --coral:#E87461; --sage:#7BA68C; --sky:#5B9BD5; --lav:#9B8EC4; --sub:#C9A66B;
+    --ink:#1A1612; --ink2:#6B5E52; --ink3:#9E8E7E; --line:#EFE6D8; --line2:#F4ECDF;
+    --radius:20px; --shadow:0 6px 24px rgba(26,22,18,.06); --shadow-h:0 18px 50px rgba(26,22,18,.12);
+    --glow:0 10px 40px rgba(212,168,83,.18);
+    --grad-gold:linear-gradient(135deg,#D4A853,#E8943A);
+    --bar:68px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Pretendard','Plus Jakarta Sans',system-ui,sans-serif;
+    color:var(--ink); min-height:100vh; line-height:1.6; overflow-x:hidden;
+    background:var(--bg);
+  }
+  /* 분위기 레이어 */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(60vw 60vw at 82% -8%, rgba(232,148,58,.10), transparent 60%),
+      radial-gradient(48vw 48vw at -6% 12%, rgba(212,168,83,.12), transparent 60%),
+      radial-gradient(50vw 50vw at 50% 116%, rgba(123,166,140,.08), transparent 60%),
+      linear-gradient(160deg,#FFF6EA 0%,#FEFCF8 46%,#FFF9F0 100%);}
+  .latin{font-family:'Playfair Display','Noto Serif KR',serif;}
+  .serif{font-family:'Noto Serif KR','Playfair Display',serif;}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;
+    font-weight:700;font-size:clamp(.92rem,1.1vw,1.05rem);padding:9px 15px;border-radius:12px;cursor:pointer;
+    transition:.2s cubic-bezier(.4,0,.2,1);display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#E5D6BD;}
+  .btn:disabled{opacity:.32;cursor:default;transform:none;box-shadow:none;}
+  .btn-gold{background:var(--grad-gold);color:#fff;border:none;box-shadow:var(--glow);}
+  .btn-gold:hover{box-shadow:0 14px 44px rgba(212,168,83,.3);}
+  ::selection{background:rgba(212,168,83,.25);}
+
+  /* ===== 홈 ===== */
+  #home{max-width:1180px;margin:0 auto;padding:clamp(40px,6vw,84px) clamp(18px,4vw,40px) 110px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:clamp(36px,6vw,70px);}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.01em;}
+  .brand .dot{width:30px;height:30px;border-radius:9px;background:var(--grad-gold);box-shadow:var(--glow);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.14em;
+    text-transform:uppercase;font-size:.8rem;color:var(--amber);
+    background:rgba(232,148,58,.10);padding:7px 15px;border-radius:999px;}
+  .hero{max-width:840px;}
+  .hero h1{font-family:'Noto Serif KR',serif;font-weight:900;letter-spacing:-.02em;margin:22px 0 0;
+    font-size:clamp(1.6rem,4.3vw,3.4rem);line-height:1.14;word-break:keep-all;}
+  .hero h1 .hl{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero h1 .ln1{white-space:nowrap;}
+  .hero p{color:var(--ink2);font-weight:600;font-size:clamp(1.12rem,1.8vw,1.5rem);margin:22px 0 0;max-width:680px;line-height:1.55;}
+  .stats{display:flex;gap:clamp(20px,3vw,44px);margin-top:34px;flex-wrap:wrap;}
+  .stat .n{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.8rem,3vw,2.6rem);
+    background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
+  .stat .l{color:var(--ink3);font-weight:700;font-size:.95rem;margin-top:6px;}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin:clamp(54px,7vw,84px) 0 26px;}
+  .sec-head h2{font-family:'Noto Serif KR',serif;font-weight:800;font-size:clamp(1.5rem,2.4vw,2rem);margin:0;letter-spacing:-.01em;}
+  .sec-head .line{flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent);}
+
+  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,318px),1fr));gap:20px;}
+  .toc-card{position:relative;background:var(--card);border:1px solid var(--line2);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:30px 28px 26px;cursor:pointer;overflow:hidden;
+    transition:.28s cubic-bezier(.4,0,.2,1);}
+  .toc-card::after{content:"";position:absolute;left:0;top:0;height:100%;width:5px;background:var(--accent,var(--gold));
+    opacity:.0;transition:.28s;}
+  .toc-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-h);border-color:#EADBC0;}
+  .toc-card:hover::after{opacity:1;}
+  .toc-card .num{font-family:'Playfair Display',serif;font-weight:900;font-size:2.5rem;line-height:1;
+    width:64px;height:64px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+    color:#fff;background:var(--accent,var(--gold));box-shadow:0 8px 22px rgba(26,22,18,.14);
+    position:relative;}
+  .toc-card .num::before{content:"";position:absolute;inset:2px 2px auto 2px;height:42%;border-radius:16px 16px 40px 40px;
+    background:linear-gradient(180deg,rgba(255,255,255,.45),transparent);}
+  .toc-card .wk{font-weight:800;letter-spacing:.12em;font-size:.78rem;text-transform:uppercase;color:var(--ink3);margin:18px 0 5px;}
+  .toc-card h3{font-family:'Noto Serif KR',serif;font-weight:800;letter-spacing:-.01em;
+    font-size:clamp(1.4rem,1.9vw,1.65rem);margin:0 0 9px;line-height:1.28;}
+  .toc-card p{color:var(--ink2);font-size:1.02rem;margin:0;line-height:1.5;font-weight:500;}
+  .toc-card .meta{margin-top:18px;padding-top:15px;border-top:1px dashed var(--line);
+    display:flex;gap:16px;color:var(--ink3);font-weight:700;font-size:.86rem;align-items:center;}
+  .toc-card .go{margin-left:auto;color:var(--accent,var(--gold));font-weight:800;transition:.22s;}
+  .toc-card:hover .go{transform:translateX(4px);}
+  .foot{margin-top:64px;text-align:center;color:var(--ink3);font-size:.92rem;font-weight:600;}
+
+  /* ===== 덱 ===== */
+  #deck{display:none;flex-direction:column;height:100dvh;}
+  body.deckmode #home{display:none;}
+  body.deckmode #deck{display:flex;}
+  .deckbar{flex:none;height:var(--bar);display:flex;align-items:center;gap:12px;
+    padding:0 clamp(14px,2.2vw,26px);background:rgba(255,250,243,.9);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:relative;}
+  .progress{position:absolute;left:0;bottom:-1px;height:3px;background:var(--grad-gold);width:0;
+    transition:width .4s cubic-bezier(.4,0,.2,1);border-radius:0 3px 3px 0;}
+  .wk-pill{display:flex;align-items:center;gap:9px;font-family:'Noto Serif KR',serif;font-weight:800;
+    font-size:clamp(1rem,1.4vw,1.25rem);white-space:nowrap;max-width:34vw;overflow:hidden;text-overflow:ellipsis;}
+  .wk-pill .b{font-family:'Playfair Display',serif;color:#fff;background:var(--accent,var(--gold));
+    border-radius:9px;padding:3px 10px;font-size:.9em;}
+  .ptabs{display:flex;gap:7px;flex:1;overflow-x:auto;padding:6px 2px;align-items:center;scrollbar-width:none;}
+  .ptabs::-webkit-scrollbar{display:none;}
+  .ptab{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink3);font-family:inherit;
+    font-weight:800;font-size:.98rem;width:38px;height:38px;border-radius:11px;cursor:pointer;transition:.16s;}
+  .ptab:hover{border-color:var(--accent,var(--gold));color:var(--ink);transform:translateY(-2px);}
+  .ptab.active{background:var(--accent,var(--gold));color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(26,22,18,.16);}
+  .nav{display:flex;gap:7px;align-items:center;}
+
+  .page{flex:1;display:flex;gap:22px;padding:clamp(18px,2.6vw,34px);overflow:hidden;}
+  .page.wide{justify-content:center;}
+  .pcard{flex:1 1 0;min-width:0;background:var(--card);border:1px solid var(--line2);
+    border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(24px,2.4vw,38px);
+    display:flex;flex-direction:column;overflow:auto;position:relative;}
+  .pcard::before{content:"";position:absolute;left:0;top:26px;bottom:26px;width:5px;border-radius:0 5px 5px 0;
+    background:var(--cc,var(--gold));}
+  .page.wide .pcard{flex:1 1 100%;max-width:1200px;}
+  .pcard::-webkit-scrollbar{width:8px;} .pcard::-webkit-scrollbar-thumb{background:#EADBC0;border-radius:8px;}
+  .chip{align-self:flex-start;font-weight:800;font-size:.84rem;letter-spacing:.04em;
+    padding:6px 15px;border-radius:999px;background:var(--bg3);color:var(--amber);margin-bottom:15px;}
+  .pcard[data-c="amber"]{--cc:var(--amber);} .pcard[data-c="amber"] .chip{background:#FDEBD8;color:var(--amber);}
+  .pcard[data-c="coral"]{--cc:var(--coral);} .pcard[data-c="coral"] .chip{background:#FBE3DE;color:var(--coral);}
+  .pcard[data-c="sage"]{--cc:var(--sage);} .pcard[data-c="sage"] .chip{background:#E4EFE8;color:#5f8c72;}
+  .pcard[data-c="sky"]{--cc:var(--sky);} .pcard[data-c="sky"] .chip{background:#E1EEF9;color:var(--sky);}
+  .pcard[data-c="lav"]{--cc:var(--lav);} .pcard[data-c="lav"] .chip{background:#ECE8F5;color:var(--lav);}
+  .pcard[data-c="gold"]{--cc:var(--gold);}
+  .pcard h3{font-family:'Noto Serif KR',serif;font-weight:800;letter-spacing:-.01em;line-height:1.22;margin:0;
+    font-size:clamp(1.55rem,2.5vw,2.3rem);}
+  .pcard .csub{color:var(--ink3);font-weight:700;margin-top:8px;font-size:clamp(1.05rem,1.4vw,1.32rem);line-height:1.3;}
+  .body{margin-top:18px;font-size:clamp(1.12rem,1.5vw,1.48rem);color:var(--ink2);line-height:1.68;}
+  .body .lead{font-weight:800;color:var(--ink);margin-bottom:8px;}
+  .body b{color:var(--ink);font-weight:800;}
+  .body ul{margin:14px 0 0;padding-left:2px;list-style:none;}
+  .body li{position:relative;padding-left:28px;margin-bottom:11px;}
+  .body li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;
+    background:var(--cc,var(--gold));box-shadow:0 0 0 4px color-mix(in srgb,var(--cc,var(--gold)) 18%,transparent);}
+  .box-dark{background:linear-gradient(135deg,#221E18,#16130F);color:#F5E4C3;border-radius:14px;padding:15px 19px;margin-top:18px;
+    font-weight:700;line-height:1.55;border-left:5px solid var(--gold);box-shadow:0 10px 30px rgba(26,22,18,.2);}
+  .box-red{background:linear-gradient(135deg,#E87461,#E25b47);color:#fff;border-radius:14px;padding:15px 19px;margin-top:18px;
+    font-weight:700;line-height:1.55;box-shadow:0 10px 30px rgba(232,116,97,.3);}
+  .box-dark b,.box-red b{color:#fff;}
+  .box-dark::before{content:"🎯 ";} .box-red::before{content:"⚠️ ";}
+  .ai{margin-top:18px;background:linear-gradient(135deg,#FFF6EA,#FFEFDC);border:1px dashed #E2C9A0;border-radius:14px;
+    padding:15px 18px;font-size:.96em;color:#955b10;font-weight:600;line-height:1.6;}
+  .ai::before{content:"🤖 ";font-weight:800;}
+
+  .kws{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px;}
+  .kw{background:#fff;border:1.5px solid color-mix(in srgb,var(--cc,var(--gold)) 45%,#fff);
+    color:var(--ink);font-weight:700;font-size:.92em;padding:5px 14px;border-radius:999px;
+    box-shadow:0 2px 8px rgba(26,22,18,.05);}
+  .ai .ln{display:block;margin-top:7px;padding-left:1.5em;text-indent:-1.5em;}
+
+  /* 그래프 */
+  .graphwrap{flex:1;display:flex;flex-direction:column;min-height:0;margin-top:14px;}
+  .graphbox{flex:1;min-height:0;border-radius:18px;border:1px solid var(--line2);overflow:hidden;
+    background:radial-gradient(120% 120% at 50% 30%,#FFFDF9,#FFF4E4);box-shadow:inset 0 2px 22px rgba(212,168,83,.08);}
+  .graphbox svg{display:block;width:100%;height:100%;}
+  .glabel{font-family:'Pretendard',sans-serif;font-weight:800;}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-weight:700;color:var(--ink2);font-size:1.02rem;}
+  .legend i{display:inline-block;width:15px;height:15px;border-radius:5px;margin-right:7px;vertical-align:-2px;box-shadow:0 2px 6px rgba(26,22,18,.12);}
+
+  /* 펜 / 전체화면 */
+  #drawCanvas{position:fixed;inset:0;z-index:50;pointer-events:none;touch-action:none;}
+  #palette{position:fixed;left:24px;bottom:24px;z-index:60;background:rgba(255,255,255,.97);
+    border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-h);display:flex;align-items:center;gap:6px;padding:9px;touch-action:none;}
+  .grip{cursor:grab;color:var(--ink3);font-size:1.4rem;padding:0 5px;user-select:none;letter-spacing:-3px;}
+  .grip:active{cursor:grabbing;}
+  .tool{width:46px;height:46px;border-radius:13px;border:2px solid var(--line);background:#fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.16s;}
+  .tool:hover{transform:translateY(-2px);}
+  .tool.active{border-color:var(--ink);box-shadow:0 0 0 3px rgba(212,168,83,.35);}
+  .swatch{width:24px;height:24px;border-radius:50%;}
+  .sw-black{background:#1A1612;} .sw-red{background:#E5342B;} .sw-blue{background:#1E66E0;} .sw-mark{background:#FFE94D;border:1px solid #e3cf3f;}
+  .divider{width:1px;height:34px;background:var(--line);margin:0 2px;}
+  .tool.danger{color:var(--coral);}
+  .hint{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:55;background:var(--ink);color:#fff;
+    padding:9px 20px;border-radius:999px;font-weight:700;font-size:.95rem;opacity:0;transition:.3s;pointer-events:none;white-space:nowrap;}
+  .hint.show{opacity:.92;}
+
+  @media (max-width:900px){
+    .page{flex-direction:column;overflow:auto;}
+    .wk-pill{max-width:48vw;}
+    #palette{left:12px;bottom:12px;padding:7px;gap:4px;} .tool{width:40px;height:40px;}
+  }
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+
+<!-- ===== 홈 ===== -->
+<section id="home">
+  <div class="topbar">
+    <div class="brand hero-el"><span class="dot">₩</span> 투자 × AI 클래스</div>
+    <button class="btn hero-el" id="fsBtn">⛶ 전체화면</button>
+  </div>
+  <div class="hero">
+    <span class="eyebrow hero-el">10주 완성 커리큘럼</span>
+    <h1 class="hero-el"><span class="ln1">부는 어디서 생기는가,</span><br><span class="hl ln1">그리고 AI로 어떻게 찾는가</span></h1>
+    <p class="hero-el">희소성·병목 같은 부의 원리부터, 섹터·수급·차트, 그리고 Claude·Gemini·ChatGPT를 부려 나만의 투자 시스템을 완성하기까지 — 한 번에.</p>
+    <div class="stats hero-el">
+      <div class="stat"><div class="n">10</div><div class="l">주차</div></div>
+      <div class="stat"><div class="n" id="statCards">76</div><div class="l">개념 카드</div></div>
+      <div class="stat"><div class="n" id="statPrompts">13</div><div class="l">AI 프롬프트</div></div>
+      <div class="stat"><div class="n" id="statGraphs">4</div><div class="l">인터랙티브 그래프</div></div>
+    </div>
+  </div>
+  <div class="sec-head"><h2>커리큘럼</h2><span class="line"></span></div>
+  <div class="toc" id="toc"></div>
+  <div class="foot">주차를 선택해 강의를 시작하세요 · 좌하단 펜으로 화면에 바로 판서 · ⛶ 로 전체화면</div>
+</section>
+
+<!-- ===== 덱 ===== -->
+<section id="deck">
+  <div class="deckbar">
+    <button class="btn" id="homeBtn">☰ 목차</button>
+    <span class="wk-pill" id="wkPill"></span>
+    <div class="ptabs" id="ptabs"></div>
+    <div class="nav">
+      <button class="btn" id="prevBtn">◀</button>
+      <button class="btn" id="nextBtn">▶</button>
+      <button class="btn" id="fsBtn2">⛶</button>
+    </div>
+    <div class="progress" id="progress"></div>
+  </div>
+  <div class="page" id="page"></div>
+</section>
+
+<canvas id="drawCanvas"></canvas>
+<div id="palette">
+  <span class="grip" id="grip" title="드래그 이동">⋮⋮</span>
+  <button class="tool active" data-tool="select" title="선택(판서 끔)">✋</button>
+  <div class="divider"></div>
+  <button class="tool" data-tool="black" title="검정"><span class="swatch sw-black"></span></button>
+  <button class="tool" data-tool="red" title="빨강"><span class="swatch sw-red"></span></button>
+  <button class="tool" data-tool="blue" title="파랑"><span class="swatch sw-blue"></span></button>
+  <button class="tool" data-tool="mark" title="형광"><span class="swatch sw-mark"></span></button>
+  <div class="divider"></div>
+  <button class="tool" data-tool="eraser" title="지우개">🩹</button>
+  <button class="tool danger" data-tool="clear" title="전체지우기">🗑</button>
+</div>
+<div class="hint" id="hint"></div>
+
+<script>
+/* ===================== 커리큘럼 데이터 ===================== */
+const COURSE = [
+  {
+    week:1, tag:"WEEK 1 · 투자의 진리", title:"부는 어디서 생기는가 — 희소성에서 10배거까지",
+    sub:"희소성 → 쇼티지 → 병목 → 가격결정권 → 진입장벽으로 이어지는 부의 사슬 (2026 최신 시장)",
+    cards:[
+      {c:"lav", chip:"1등의 법칙", t:"상대성 이론 — 가치는 비교값, 결국 1등이 더 간다",
+       body:`<div class="lead">주식의 가치는 절대값이 아니라 <b>'비교값'</b>. 비교의 끝은 언제나 1등이다.</div>
+       <ul><li>같은 PER도 금리·업종·<b>1등 대비</b>로 싸고 비쌈이 갈린다</li>
+       <li>좋은 기업이라도 <b>경쟁사 비교는 필수</b> — <b>3등은 좋아도 안 갈 수 있고, 1등은 더 잘 간다</b></li>
+       <li>돈·관심·수급이 1등으로 쏠린다 → 이것이 '1등의 법칙'</li>
+       <li><b>2026 예</b>: AI 가속기의 엔비디아, HBM의 SK하이닉스 — 2등이 따라와도 1등 프리미엄은 유지</li>
+       <li>매수 전 질문: "이건 이 판의 1등인가, 2·3등인가?"</li></ul>`},
+      {c:"amber", chip:"1등 실전", t:"주도섹터·주도주 — 돈은 1등 섹터의 대장에 모인다",
+       body:`<div class="lead">돈은 평등하게 흐르지 않는다. 먼저 <b>1등 섹터(주도섹터)</b>로 모이고, 그 안의 <b>대장주(주도주)</b>가 가장 크게 간다.</div>
+       <ul><li>이것이 '1등의 법칙 + 멱법칙'의 <b>실전 형태</b></li>
+       <li>찾는 순서: <b>매크로(큰 물결) → 주도섹터(돈 모이는 산업) → 주도주(그 섹터의 대장)</b></li>
+       <li>주도섹터 판별: 거래대금·상승률·뉴스 빈도 <b>1위 산업</b></li>
+       <li><b>후발주·2·3등 추격 금지</b> — 대장이 가장 안전하고 가장 멀리 간다</li>
+       <li><b>2026 예</b>: AI 반도체가 주도섹터, 그 안의 엔비디아·SK하이닉스가 주도주 (5주차에서 로테이션·밸류체인으로 심화)</li></ul>`},
+      {c:"gold", chip:"본질", t:"자본주의 경매의 원리 — 사용자가 매긴 값이 곧 가격",
+       body:`<div class="lead">시장은 거대한 경매장. <b>사용자가 가치를 측정하는 순간, 그게 곧 가격</b>이다.</div>
+       <ul><li>경매는 '평균'이 아니라 <b>가장 간절한 사람</b>이 값을 정한다</li>
+       <li>그 가격 = <b>본질가치 + 프리미엄</b>. 프리미엄의 정체가 바로 '희소성'(다음 카드)</li>
+       <li><b>2026 예</b>: 메모리 품귀로 PS5 가격 최대 $150 인상, PC 출하 -11% 전망 — 사겠다는 힘이 값을 끌어올린다</li>
+       <li>식었을 때(공포) 사서, 끓을 때(탐욕) 판다</li></ul>`},
+      {c:"sky", chip:"기회", t:"시간의 왜곡 — 공포가 좋은 주식을 과거 가격으로 되돌린다",
+       body:`<div class="lead">상대성 이론: 중력이 강하면 시간이 일그러진다. <b>시장에선 '공포'가 그 중력</b>이다.</div>
+       <ul><li>강한 공포(거시 충격·전쟁·규제·일시적 악재)가 주가의 시간을 <b>과거로 되돌린다</b></li>
+       <li>펀더멘털은 그대로인데 가격만 몇 년 전 저점으로 회귀 → <b>저점 매수의 창</b></li>
+       <li>리스크 큰 공포 시장일수록, 좋은 기업엔 가장 좋은 매수 기회가 열린다</li>
+       <li>단, <b>'일시적 왜곡(공포)' vs '구조적 붕괴(진짜 쇠퇴)'</b>를 구분 — 눌린 용수철 vs 떨어지는 칼날</li>
+       <li><b>사례</b>: 2020 코로나 패닉(우량주 급락 후 V자 반등), 2022 금리쇼크로 반토막 난 성장주 → 이후 AI주 폭등</li></ul>`},
+      {c:"coral", chip:"제1원리", t:"희소성 — '보이지 않는 손'의 유일한 예외",
+       body:`<div class="lead">아담 스미스: "가격은 시장이 정한다(보이지 않는 손)." <b>그 유일한 예외가 희소성</b>이다.</div>
+       <ul><li>흔하면 싸고 귀하면 비싸다 — 모든 <b>프리미엄의 원천</b></li>
+       <li>희소성이 생기면 가격을 '시장'이 아니라 <b>'파는 자(기업)'</b>가 정하기 시작한다</li>
+       <li>핵심 질문: 이 회사가 파는 건 얼마나 <b>대체 불가능</b>한가?</li>
+       <li><b>2026 예</b>: EUV 노광장비(ASML), 최첨단 HBM, 고급 GPU — 돈이 있어도 못 산다</li>
+       <li>희소성 = 경매 프리미엄을 '구조화'한 것. 쇼티지와 만나면 폭발한다.</li></ul>`},
+      {c:"amber", chip:"촉매", t:"쇼티지 현상 — 품절이 '생존'과 만나면 폭등",
+       body:`<div class="lead">쇼티지 = 한마디로 <b>품절·부족</b>. 그게 생존과 연결되면 가격이 폭등한다.</div>
+       <ul><li>수요는 그대로인데 공급이 막힘 → 가격은 <b>비선형</b>으로 튄다</li>
+       <li>핵심은 "없으면 못 산다"가 아니라 <b>"없으면 안 돌아간다"</b>(생존 필수)</li>
+       <li><b>2026 예</b>: AI發 메모리 슈퍼사이클 — "유례없는 공급부족", DRAM 수요 +30%</li>
+       <li>단, 일시적 쇼티지는 증설로 풀린다 → <b>사이클 vs 구조</b> 구분이 핵심</li></ul>`},
+      {c:"sky", chip:"구조", t:"병목 현상 — 사슬에서 가장 좁은 곳이 다 가진다",
+       body:`<div class="lead">병목 = <b>수요·공급의 불균형</b>. 사려는 사람은 많은데 파는 곳이 그곳뿐이다.</div>
+       <ul><li>생산 사슬 전체의 이익이 <b>가장 좁은 길목</b>으로 빨려 들어간다</li>
+       <li>그 제품이 <b>생존에 필수</b>일 때 가격 폭등 → 희소성·가격결정과 한 몸</li>
+       <li><b>2026 예</b>: AI 데이터센터의 이익이 GPU·HBM·HBM 본딩 장비(한미반도체)로 집중</li>
+       <li>"이거 없으면 전부 멈춘다"를 찾으면 병목을 찾은 것</li></ul>`},
+      {c:"gold", chip:"핵심", t:"가격결정권 — 권력이 시장에서 '기업'으로 넘어간다",
+       body:`<div class="lead">희소성 + 쇼티지 + 병목이 겹치면, 가격을 정하는 권력이 시장에서 <b>기업</b>으로 넘어간다.</div>
+       <ul><li>필수 기술·제품은 <b>값을 올려도 살 수밖에 없다</b></li>
+       <li><b>사람의 생존·기업의 생존</b>에 가까울수록 가격결정권이 강해진다</li>
+       <li><b>2026 대표 예: 엔비디아 · SK하이닉스 · 한미반도체</b> — AI를 돌리려면 반드시 거쳐야 한다</li>
+       <li>TSMC도 첨단공정 가격 3~10% 인상(2029까지) — 못 올리는 회사는 원가에 마진이 녹는다</li></ul>`},
+      {c:"sage", chip:"해자", t:"진입 장벽 — 경쟁을 원천 차단하는 핵심 해자",
+       body:`<div class="lead">진입장벽 = 경쟁의 '진입 자체'를 막아 <b>독점력과 점유율</b>을 지키는 핵심 해자.</div>
+       <ul><li>누구나 따라 만들면 가격은 0으로 수렴(완전경쟁) → 막아야 가격결정권이 <b>'지속'</b>된다</li>
+       <li>해자 5종: <b>특허·규제 / 브랜드 / 규모의 경제 / 네트워크 / 전환비용</b></li>
+       <li>높은 점유율 → 가격·공급·협상력 등 <b>많은 권한</b>이 부여된다</li>
+       <li><b>2026 예</b>: HBM 본딩·EUV처럼 진입 자체가 막힌 영역이 가장 강한 해자</li></ul>`},
+      {c:"lav", chip:"산업", t:"AI 산업의 핵심 — 사람을 닮은 산업 지도",
+       body:`<div class="lead">AI 산업은 <b>데이터센터 · 피지컬 AI · 온디바이스 AI</b>로 갈린다. 하드웨어(피지컬)+소프트웨어가 합쳐질수록 완성도가 오르는데 — <b>사람의 성장과 똑같다</b>.</div>
+       <ul><li>🧠 <b>뇌(학습·추론)</b>: GPU·AI 모델 (엔비디아 Isaac GR00T·Cosmos)</li>
+       <li>👁 <b>눈(비전 AI)</b>: 이미지센서 (소니)</li>
+       <li>💪 <b>근육·관절(운동)</b>: 정밀 감속기·모터 (일본 독무대)</li>
+       <li>⚡ <b>에너지(전력)</b>: 데이터센터 전력·배터리 — 몸이 에너지를 쓰듯</li>
+       <li>🌐 <b>신경(통신)·관리 인프라</b>: 데이터를 잇고 운영한다</li>
+       <li>⚡ <b>반사신경(온디바이스 추론)</b>: Jetson Thor 등 — 클라우드 없이 0.1초 판단</li>
+       <li><b>2026</b>: CES '피지컬 AI 시대' 개막, 현대차 아틀라스·테슬라 옵티머스 양산 경쟁</li>
+       <li>투자 질문: 이 회사는 이 '신체 지도'에서 <b>대체 불가능한 기관(병목)</b>인가?</li></ul>
+       <div class="ai">관심 AI 기업을 "데이터센터/피지컬/온디바이스 중 어디 · 인체로 치면 뇌·눈·근육·에너지 중 무엇 · 병목인가 대체가능한가"로 AI에 분류 요청</div>`},
+      {c:"amber", chip:"시간", t:"복리의 마법 — 시간을 곱하는 유일한 힘",
+       body:`<div class="lead">아인슈타인: "복리는 세계 8번째 불가사의."</div>
+       <ul><li><b>72의 법칙</b>: 72 ÷ 수익률(%) = 원금 2배 햇수. 연 20%면 약 3.6년마다 2배</li>
+       <li>핵심은 '높은 수익률'보다 <b>'오래, 끊기지 않게'</b></li>
+       <li>큰 손실은 복리의 사슬을 끊는다 → <b>리스크 관리가 1순위</b></li>
+       <li>1등을 오래 보유 = 복리와 '1등의 법칙'을 동시에 누리는 길</li></ul>`},
+      {c:"coral", chip:"법칙①·추가", t:"멱법칙(파레토) — 1등이 전부를 가진다",
+       body:`<div class="lead">결과는 평등하지 않다. 상위 소수가 전체의 대부분 — <b>'1등의 법칙'의 통계 버전</b>.</div>
+       <ul><li>80:20 — 상위 20%가 80%의 결과를 만든다</li>
+       <li>주식·벤처 모두 멱법칙: <b>10배거 하나가 아홉 번의 실패를 덮는다</b></li>
+       <li><b>2026 예</b>: AI 반도체 이익이 극소수 병목 기업에 집중</li>
+       <li>시사점: 이기는 종목 비중 키우고, 지는 종목 빨리 손절</li></ul>`},
+      {c:"sky", chip:"법칙②·추가", t:"반사성 이론 — 가격이 현실을 바꾼다 (소로스)",
+       body:`<div class="lead">주가는 펀더멘털을 '반영'만 하지 않는다. <b>펀더멘털을 바꾼다.</b></div>
+       <ul><li>주가↑ → 자금조달·인재·신뢰↑ → <b>진짜 실적 개선</b> → 주가 또↑</li>
+       <li>이 자기강화 고리가 추세를 <b>'비합리적으로 길게'</b> 끈다</li>
+       <li><b>2026 예</b>: AI 대장주 상승 → 막대한 캐펙스·증설 → 실적 현실화 → 재상승</li>
+       <li>'적정가치'만 보면 추세를 놓친다. <b>피드백 루프를 읽어라</b></li></ul>`},
+      {c:"sage", chip:"법칙③·추가", t:"네트워크 효과(메칼프) — 사용자가 곧 해자",
+       body:`<div class="lead">사용자가 늘수록 가치가 <b>'제곱'</b>으로 커진다 — 가장 무너뜨리기 힘든 진입장벽.</div>
+       <ul><li>남들이 쓰니까 나도 쓴다 → <b>승자독식(Winner-take-all)</b></li>
+       <li>AI는 데이터·사용자 피드백 네트워크가 곧 해자 (예: 테슬라 주행 데이터)</li>
+       <li>1등이 커질수록 따라잡기 불가능 → '1등의 법칙'을 <b>잠그는</b> 장치</li></ul>`},
+      {c:"coral", chip:"탄생", t:"판이 바뀌는 순간 — 낡은 1등이 무너진 자리에서 새 10배거가 난다",
+       body:`<div class="lead">기술이 바뀌면 옛 1등의 해자가 무너지고, 그 자리에서 새 1등이 솟는다. (학술명: <b>창조적 파괴</b>, 슘페터)</div>
+       <ul><li>그래서 <b>1등도 영원하지 않다</b> — 진입장벽도 기술 전환 앞에선 깨진다</li>
+       <li>새 10배거가 태어나는 <b>3조건</b>: ① 새로운 분야 ② 확장성(미래 연계성)이 큼 ③ 진입장벽이 높음</li>
+       <li>미래 연계성이 큰 산업일수록 포텐셜이 크다 → <b>로봇 · 자율주행 · AI</b></li>
+       <li><b>사례</b>: 노키아(피처폰 1등)→애플(스마트폰), 내연기관차→테슬라, 검색→생성형 AI</li>
+       <li>지금 자리: AI·피지컬 AI가 기존 IT 질서를 다시 짜는 중</li></ul>`},
+      {c:"amber", chip:"타이밍", t:"S-커브 — 신기술이 폭발하는 변곡점, 10배거의 타이밍",
+       body:`<div class="lead">모든 신기술의 보급은 <b>S자 곡선</b>: 도입기(완만) → 성장기(급폭발) → 성숙기(포화).</div>
+       <ul><li>10배거는 <b>변곡점 직전~초입</b>에서 나온다 — 대중화가 막 시작되는 순간</li>
+       <li><b>캐즘(Chasm)</b>: 초기 마니아 → 대중 사이의 '죽음의 계곡'. 이걸 넘으면 폭발</li>
+       <li>좋은 기업을 '아는 것'과 '지금 사는 것'을 가르는 핵심 = <b>곡선의 어디인가</b></li>
+       <li><b>사례</b>: 스마트폰(2010 전후), 전기차(2020 전후), 그리고 지금 <b>AI·피지컬 AI</b>가 변곡점 돌파 중</li>
+       <li><b>2026 신호</b>: 휴머노이드 가격 25만 달러(2020) → 3만 달러대(2026), 양산 진입 기업 12곳 — 캐즘 돌파 중</li></ul>`},
+      {c:"sage", chip:"3가지 힘", t:"돈의 속성 — 버는 힘 · 지키는 힘 · 쓰는 힘",
+       body:`<div class="lead">1강의 모든 법칙은 결국 <b>돈의 세 가지 힘</b>으로 압축된다. 기업도, 투자자도 이 셋을 본다.</div>
+       <ul><li>💰 <b>버는 힘</b> = 희소성·병목·가격결정권 / 기업: 값을 올려도 팔리는 힘 · 투자자: 좋은 종목을 고르는 안목</li>
+       <li>🛡 <b>지키는 힘</b> = 진입장벽·해자·네트워크 / 기업: 경쟁을 막아 이익을 지킴 · 투자자: 리스크 관리·분산(잃지 않기)</li>
+       <li>🌱 <b>쓰는 힘</b> = 재투자·자본배분(capex) / 기업: 번 돈을 성장에 재투입(반사성) · 투자자: 기회에 비중 싣고 리밸런싱</li>
+       <li><b>10배거는 이 세 힘을 모두 가진 기업</b> — 하나라도 빠지면 오래 못 간다</li>
+       <li><b>예</b>: 엔비디아 — 버는힘(GPU 가격결정권) + 지키는힘(CUDA 생태계 해자) + 쓰는힘(R&D·생태계 재투자)</li></ul>`},
+      {c:"gold", chip:"⭐ 종합", t:"10배거가 되는 기업의 흐름 — 모든 법칙·해자의 결합",
+       body:`<div class="lead">앞의 모든 법칙과 해자 키워드가 <b>한 회사에서 동시에</b> 작동할 때 10배가 된다.</div>
+       <ul><li><b>① 작은 시총 + 거대한 시장(TAM) 초입</b> — 새 분야(로봇·자율주행·AI)일수록 공간이 크다</li>
+       <li><b>② 구조적 변화·S커브 변곡점</b>(기술 전환·쇼티지)에서 수요 폭발</li>
+       <li><b>③ 병목 장악 → 희소성</b> 확보</li>
+       <li><b>④ 가격결정권 → 마진 급등 → 어닝 서프라이즈</b> 연속</li>
+       <li><b>⑤ 진입장벽</b>(특허·네트워크·규모)으로 경쟁 차단 = 지속성</li>
+       <li><b>⑥ 멱법칙·1등의 법칙</b>으로 자금이 1등에 집중 → <b>밸류 리레이팅(재평가)</b></li>
+       <li><b>⑦ 반사성</b>: 주가 상승이 자금·인재를 끌어와 펀더멘털을 또 개선</li>
+       <li><b>2026 체감</b>: HBM 병목 → SK하이닉스·한미반도체 재평가 / 삼성 HBM4, 4개월 만에 매출 10억 달러(역대 최단)</li></ul>
+       <div class="lead">한 단계만 있으면 <b>'테마'</b>, 일곱이 겹치면 <b>'10배거'</b>.</div>`},
+    ]
+  }
+,
+  {
+    week:2, tag:"WEEK 2 · 섹터 분류", title:"산업 섹터 분류 — 돈이 흐르는 지도",
+    sub:"분류 → 경기민감/방어 → 로테이션 → 밸류체인 → 한국 특수성 → 좋은 섹터 → Claude 실습",
+    cards:[
+      {c:"gold", chip:"체계", t:"섹터 분류 체계 — 무엇을 팔아 버는가",
+       body:`<div class="lead">섹터를 나누는 단 하나의 기준 = <b>주력 매출(돈의 출처)</b>.</div>
+       <ul><li>글로벌 표준 <b>GICS 11섹터</b> (S&P·MSCI)</li>
+       <li>한국 = <b>KRX 업종 · WICS</b> → 네이버 증권 '업종' 탭</li></ul>
+       <div class="box-dark">간판이 아니라 <b>매출의 원천</b>으로 분류된다. 삼성전자=IT(반도체), 네이버=커뮤니케이션.</div>`},
+      {c:"amber", chip:"기준", t:"주력 매출 기준 — 한 회사, 한 섹터",
+       body:`<ul><li>여러 사업을 해도 <b>매출 비중 1위 사업</b>으로 분류</li>
+       <li>"이 회사 뭐 하는 곳?"이 아니라 <b>"어디서 돈을 버나?"</b></li>
+       <li>사업 구조가 바뀌면 섹터도 바뀐다 (제조→플랫폼 전환 등)</li></ul>`},
+      {c:"coral", chip:"척추", t:"가장 큰 2분류 — 경기민감 vs 경기방어",
+       body:`<ul><li><b>경기민감</b>: 반도체·소재·산업재·경기소비재·금융 → 호황 폭발/불황 급락</li>
+       <li><b>경기방어</b>: 필수소비재·헬스케어·유틸리티·통신 → 불황에도 버팀</li></ul>
+       <div class="box-red">국면을 모르면 좋은 종목도 타이밍에 깨진다. 호황 초입=민감, 고금리·불황=방어.</div>`},
+      {c:"sky", chip:"지도", t:"GICS 11개 섹터 — 외우지 말고 분류하라",
+       body:`<ul><li>에너지·소재·산업재 · 경기소비재 · 금융 · IT (민감)</li>
+       <li>필수소비재·헬스케어·유틸리티·통신 (방어)</li>
+       <li>커뮤니케이션(혼합) · 부동산(금리민감)</li></ul>
+       <div class="box-dark">각 섹터가 <b>민감인지 방어인지</b>만 먼저 떠올려도 절반은 끝.</div>`},
+      {c:"gold", chip:"포스 그래프", t:"섹터 지도 — 경기민감 ↔ 경기방어", wide:true,
+       graph:{kind:"sector", caption:"자금 → 경기민감/방어 → 11개 섹터 → 대표 종목군까지 한눈에 파생된다. 노드를 끌거나 올려놓아 보세요.",
+         legend:[["gold","자금(중심)"],["coral","경기민감"],["sky","경기방어"],["sub","대표 종목군"]]}},
+      {c:"amber", chip:"흐름", t:"섹터 로테이션 — 주도섹터는 돈다",
+       body:`<ul><li>회복기 → 소재·산업재</li><li>호황기 → IT·경기소비재</li>
+       <li>후퇴기 → 필수소비재·헬스케어</li><li>침체기 → 유틸리티·통신</li></ul>
+       <div class="box-dark">"지금 경기 어디쯤?"을 알면 <b>다음 주도섹터</b>가 보인다.</div>`},
+      {c:"lav", chip:"구분", t:"섹터 vs 테마 — 지도와 날씨",
+       body:`<ul><li><b>섹터</b>: 구조적 산업 분류 → 길게 간다 (지도)</li>
+       <li><b>테마</b>: 단기 이슈로 묶인 종목군 → 빨리 식음, 여러 섹터에 걸침 (날씨)</li>
+       <li>예 테마: AI·로봇·원전·초전도체</li></ul>`},
+      {c:"lav", chip:"포스 그래프", t:"테마는 섹터를 가로지른다 — 'AI' 예시", wide:true,
+       graph:{kind:"theme", caption:"테마(AI)가 여러 섹터를 가로지르고, 각 섹터의 구체 종목군(HBM·클라우드·전력기기…)으로 뻗어나간다.",
+         legend:[["lav","테마(AI)"],["sky","섹터"],["sub","종목군"]]}},
+      {c:"sage", chip:"포스 그래프", t:"밸류체인 — 이익은 병목으로 빨려간다 (반도체)", wide:true,
+       graph:{kind:"chain", caption:"수요에서 완성품까지의 흐름. 모두가 거쳐야 하는 병목(장비·HBM)으로 입자와 이익이 수렴한다.",
+         legend:[["gold","수요(시작)"],["sage","공정 단계"],["amber","병목"]]}},
+      {c:"coral", chip:"한국", t:"한국 시장의 특수성 — 수출·반도체 쏠림",
+       body:`<ul><li><b>수출 중심</b> → 글로벌 경기·환율에 민감</li>
+       <li><b>반도체 쏠림</b> → 지수·시총 비중 절대적</li>
+       <li>코스피(대형·안정) vs 코스닥(성장·테마)</li></ul>
+       <div class="box-red">'종목 분산'이 아니라 <b>'섹터 분산'</b>. 10종목이 다 반도체 밸류체인이면 분산이 아니다.</div>`},
+      {c:"gold", chip:"선별", t:"좋은 섹터 고르는 법 — 5가지 기준",
+       body:`<ul><li>① 자금 유입(거래대금↑) ② 실적 개선(어닝)</li>
+       <li>③ 정책·구조 수혜 ④ 병목·희소성(1강) ⑤ S커브 초입(1강)</li></ul>
+       <div class="box-dark">5개 중 <b>3개 이상</b> 겹치면 주도섹터 후보 → 그 안의 <b>주도주(대장)</b>로 좁힌다.</div>`},
+      {c:"sky", chip:"AI 실습①", t:"Claude 프로젝트에 '투자 지침' 심기",
+       body:`<div class="lead">개념을 Claude <b>프로젝트 지침</b>으로 넣으면 = 같은 기준의 전용 비서.</div>
+       <div class="ai"><b>[프로젝트 지침 — 그대로 복사]</b>
+       <span class="ln">· 역할: 너는 한국 주식 분석 보조 애널리스트다.</span>
+       <span class="ln">· 순서: 분석은 항상 [매크로 → 주도섹터 → 주도주 → 밸류체인] 순서로.</span>
+       <span class="ln">· 분류: 섹터는 GICS 11 + 경기민감/방어로 먼저 분류.</span>
+       <span class="ln">· 기준: 좋은 섹터 = 자금유입 · 실적개선 · 정책수혜 · 병목 · S커브 초입.</span>
+       <span class="ln">· 금지: 매수 추천과 미래 단정 금지 — 근거와 시나리오만.</span>
+       <span class="ln">· 표시: 모르는 최신 정보는 '확인 필요', 출력은 표·키워드 중심.</span></div>`},
+      {c:"amber", chip:"AI 실습②", t:"분석 프롬프트 — 현재·미래 시점으로",
+       body:`<div class="box-red">AI는 과거에 갇혀 있다. ① <b>오늘 날짜</b> 알려주고 ② <b>웹검색</b> 켜고 ③ <b>출처</b> 요구.</div>
+       <div class="ai"><b>[분석 프롬프트]</b>
+       <span class="ln">오늘은 2026년 O월 O일, 최신은 웹검색으로 확인해줘.</span>
+       <span class="ln">① 한국 매크로 국면(금리·환율·경기) 3줄</span>
+       <span class="ln">② 자금이 몰리는 주도섹터 1~2개 + 근거</span>
+       <span class="ln">③ 그 섹터 주도주 2~3개 + 밸류체인 병목 기업</span>
+       <span class="ln">④ 향후 1~3개월 촉매·리스크</span>
+       <span class="ln">⑤ 각 항목 출처 표기, 불확실은 '확인 필요'</span></div>`},
+      {c:"sage", chip:"미션", t:"오늘의 실습 미션 — 직접 해보기",
+       body:`<ul><li><b>①</b> Claude 프로젝트 만들고 '투자 지침' 심기</li>
+       <li><b>②</b> 분석 프롬프트로 오늘의 주도섹터·주도주·밸류체인 뽑기</li>
+       <li><b>③</b> 네이버 증권 '업종' 탭과 <b>교차검증</b></li></ul>
+       <div class="box-dark">AI의 답은 '정답'이 아니라 <b>'검증할 가설'</b>. 교차검증이 곧 실력이다.</div>`},
+    ]
+  },
+  {
+    week:3, tag:"WEEK 3 · 탑다운 실전", title:"탑다운 실전 — AI로 위에서 아래로 훑는다",
+    sub:"매크로 → 주도섹터 → ETF·밸류체인 → 주도주(수급 1등). 단계별 키워드가 그대로 Claude 프롬프트가 된다",
+    cards:[
+      {c:"gold", chip:"WHY", t:"탑다운 — 숲을 보고 나무를 고른다",
+       body:`<div class="lead">종목부터 보면 애착과 편향에 갇힌다. 돈의 흐름을 따라 위에서 아래로.</div>
+       <ul><li><b>바텀업</b>: 종목 → 시장. '내 종목' 확증편향에 취약</li>
+       <li><b>탑다운</b>: 시장 → 섹터 → 종목. 확률 높은 곳으로만 내려간다</li>
+       <li>2강의 지도(섹터·밸류체인) 위를 걷는 <b>실전 항법</b></li></ul>
+       <div class="box-dark">순서가 곧 전략: <b>① 매크로 → ② 주도섹터 → ③ 테마·밸류체인 → ④ 주도주</b>. 각 단계의 키워드만 쥐면 AI가 손발이 된다.</div>`},
+      {c:"sky", chip:"포스 그래프", t:"탑다운 깔때기 — 4단계 × 핵심 키워드", wide:true,
+       graph:{kind:"topdown", caption:"①→④로 자금이 흘러내린다. ②에서 ④로 가는 지름길이 관련 ETF → 구성종목 → 수급 1등. 작은 노드들이 그대로 프롬프트 키워드다.",
+         legend:[["sky","① 매크로"],["amber","② 주도섹터"],["lav","③ 테마·밸류체인"],["coral","④ 주도주"],["sage","ETF 지름길"],["sub","키워드 = 프롬프트 재료"]]}},
+      {c:"sky", chip:"1단계 · 매크로", t:"국면 판정 — 시장의 방향",
+       body:`<div class="lead">핵심 키워드</div>
+       <div class="kws"><span class="kw">기준금리·FOMC</span><span class="kw">원/달러 환율</span><span class="kw">CPI 물가</span><span class="kw">수출·PMI</span><span class="kw">유동성</span><span class="kw">Risk-on / off</span></div>
+       <div class="ai"><b>[1단계 프롬프트]</b>
+       <span class="ln">오늘은 2026년 O월 O일. 최신 정보는 웹검색으로 확인해줘.</span>
+       <span class="ln">① 기준금리·FOMC 방향 / 원달러 환율 / CPI / 수출 증감 — 각 1줄</span>
+       <span class="ln">② 현재 국면이 Risk-on인지 Risk-off인지 근거와 함께 판정</span>
+       <span class="ln">③ 이 국면에 유리한 섹터 성격(경기민감/방어) 결론</span>
+       <span class="ln">④ 항목별 출처 표기, 불확실하면 '확인 필요'</span></div>`},
+      {c:"amber", chip:"2단계 · 주도섹터", t:"돈이 몰리는 곳 — 섹터 선별",
+       body:`<div class="lead">핵심 키워드</div>
+       <div class="kws"><span class="kw">거래대금 상위</span><span class="kw">자금 유입</span><span class="kw">섹터 로테이션</span><span class="kw">어닝 모멘텀</span><span class="kw">정책 수혜</span><span class="kw">52주 신고가 수</span></div>
+       <div class="ai"><b>[2단계 프롬프트]</b>
+       <span class="ln">① 최근 2주 거래대금·수급이 집중된 섹터 TOP 3와 근거</span>
+       <span class="ln">② 각 섹터를 5기준(자금유입·실적·정책·병목·S커브)으로 O/X 표</span>
+       <span class="ln">③ 3개 이상 충족한 주도섹터 1~2개 결론</span>
+       <span class="ln">④ 출처와 판단 기준 날짜 명시</span></div>`},
+      {c:"sage", chip:"치트키 · ETF", t:"관련 ETF — 시장이 공인한 종목 명단",
+       body:`<div class="lead">섹터를 골랐다면, 관련 ETF의 <b>구성종목</b>이 곧 시장이 인정한 주도주 후보 명단이다.</div>
+       <div class="kws"><span class="kw">섹터 ETF</span><span class="kw">테마 ETF</span><span class="kw">구성종목 TOP 10</span><span class="kw">편입 비중</span><span class="kw">ETF 자금 유출입</span><span class="kw">수급 1등</span></div>
+       <div class="ai"><b>[ETF 프롬프트]</b>
+       <span class="ln">① 선정 섹터·테마의 국내 상장 ETF 목록을 웹검색으로 확인 (운용사·보수 포함)</span>
+       <span class="ln">② 대표 ETF의 구성종목 상위 10개 + 편입 비중 표</span>
+       <span class="ln">③ 상위 종목의 최근 20일 외국인·기관 순매수 비교 → 수급 1등 지목</span>
+       <span class="ln">④ ETF 설정액 증감(자금 유출입)으로 섹터 자금 흐름 확인</span></div>
+       <div class="box-dark">편입 비중 1등 = 운용사가 보는 대장, <b>수급 1등 = 큰손이 미는 대장</b>. 둘이 일치하면 신뢰도 최상.</div>`},
+      {c:"lav", chip:"3단계 · 테마·밸류체인", t:"구조 해부 — 병목을 찾아라",
+       body:`<div class="lead">핵심 키워드</div>
+       <div class="kws"><span class="kw">밸류체인</span><span class="kw">병목</span><span class="kw">쇼티지</span><span class="kw">가격결정권</span><span class="kw">진입장벽</span><span class="kw">S커브 초입</span></div>
+       <div class="ai"><b>[3단계 프롬프트]</b>
+       <span class="ln">① 선정 섹터의 밸류체인을 [공정 단계 → 대표 기업] 표로</span>
+       <span class="ln">② 모두가 거쳐야 하는 병목 단계와 독과점 기업 지목</span>
+       <span class="ln">③ 그 기업의 가격결정권·진입장벽 근거 3개</span>
+       <span class="ln">④ 병목이 풀리는(경쟁 진입) 리스크도 함께</span></div>`},
+      {c:"coral", chip:"4단계 · 주도주", t:"대장 고르기 — 1등의 법칙",
+       body:`<div class="lead">핵심 키워드</div>
+       <div class="kws"><span class="kw">시총·점유율 1등</span><span class="kw">수급 1등</span><span class="kw">외국인·기관 연속 순매수</span><span class="kw">52주 신고가</span><span class="kw">컨센서스 상향</span><span class="kw">경쟁사 비교</span></div>
+       <div class="ai"><b>[4단계 프롬프트]</b>
+       <span class="ln">① ETF 구성종목 상위에서 후보 2~3개 추출 → 최근 20일 외국인·기관 수급 / 컨센서스 / 신고가 표</span>
+       <span class="ln">② 경쟁사 대비 우위 비교 (1강 상대성이론 — 1등이 더 간다)</span>
+       <span class="ln">③ 수급 1등이 곧 대장 후보 — 대장 1개 결론 + 2등과의 격차 근거</span>
+       <span class="ln">④ 결론을 뒤집을 반례 1개 포함</span></div>`},
+      {c:"sage", chip:"5단계 · 검증", t:"교차검증 & 리스크 — AI의 답은 가설",
+       body:`<div class="lead">핵심 키워드</div>
+       <div class="kws"><span class="kw">교차검증</span><span class="kw">반론 요구</span><span class="kw">리스크 시나리오</span><span class="kw">출처 확인</span><span class="kw">'확인 필요'</span></div>
+       <div class="ai"><b>[5단계 프롬프트]</b>
+       <span class="ln">① 위 결론에 대한 반대 논리 3개</span>
+       <span class="ln">② 시나리오가 무산되는 조건과 트리거</span>
+       <span class="ln">③ 내가 직접 확인해야 할 데이터 목록</span>
+       <span class="ln">④ 네이버 증권(업종·매매동향)으로 검증할 체크리스트</span></div>
+       <div class="box-dark">반론을 시키는 사람이 살아남는다 — 같은 질문을 Gemini·ChatGPT에도 던져 <b>공통점만 신뢰</b>.</div>`},
+      {c:"gold", chip:"통합", t:"마스터 프롬프트 — 프로젝트에 저장",
+       body:`<div class="lead">아래 하나를 Claude 프로젝트 지침에 저장하면, 매일 아침 "오늘 브리핑"만 입력해도 4단계가 자동으로 돈다.</div>
+       <div class="ai"><b>[마스터 프롬프트]</b>
+       <span class="ln">오늘은 2026년 O월 O일. 웹검색으로 최신 확인, 모든 항목 출처 표기.</span>
+       <span class="ln">① 매크로: 금리·환율·물가·수출로 국면 판정 (3줄)</span>
+       <span class="ln">② 주도섹터: 5기준(자금유입·실적·정책·병목·S커브) O/X 표 → 1~2개 선정</span>
+       <span class="ln">③ 밸류체인: 선정 섹터의 병목 단계와 독과점 기업</span>
+       <span class="ln">④ 관련 ETF: 대표 ETF의 구성종목 TOP 10 + 편입 비중 + 자금 유출입</span>
+       <span class="ln">⑤ 주도주: 구성종목 후보 표(수급·컨센서스·신고가) → 수급 1등 확인 → 대장 1개 + 반례</span>
+       <span class="ln">⑥ 리스크: 반대 논리 3개와 무산 트리거, 불확실은 '확인 필요'</span></div>
+       <div class="box-dark">키워드가 재료, 순서가 요리법. <b>결정은 언제나 사람이 한다.</b></div>`},
+    ]
+  },
+  {
+    week:4, tag:"WEEK 4 · 매크로", title:"매크로 — 시장의 큰 물결",
+    sub:"개별 종목 위로 흐르는 거대한 조류 읽기",
+    cards:[
+      {c:"gold", chip:"개념", t:"매크로 = 큰 그림",
+       body:`<div class="lead">금리·환율·유가·경기 = 모든 종목의 배경.</div>
+       <ul><li>아무리 좋은 종목도 큰 물결을 거스르기 어렵다</li><li>'내 종목'보다 <b>시장 국면</b>을 먼저</li></ul>`},
+      {c:"coral", chip:"핵심", t:"금리와 주가 — 주식의 중력",
+       body:`<ul><li>금리↑ → 할인율↑ → <b>성장주 부담</b></li><li>금리↓ → 유동성↑ → 위험자산 선호</li>
+       <li>한국은 <b>미국 연준</b>을 따라간다</li></ul>`},
+      {c:"sky", chip:"환율", t:"원/달러 환율의 힘",
+       body:`<ul><li>환율↑(원화 약세) → <b>수출주</b> 유리</li><li>환율↓ → 내수·여행 우호</li>
+       <li>외국인 자금 유출입과 직결</li></ul>`},
+      {c:"sage", chip:"사이클", t:"경기 사이클 4국면",
+       body:`<ul><li>회복 → 호황 → 후퇴 → 침체, 반복</li><li>국면마다 유리한 섹터가 바뀐다(2강 로테이션)</li>
+       <li>Risk-on(위험 선호) vs Risk-off(안전 선호)</li></ul>`},
+      {c:"lav", chip:"지표", t:"꼭 보는 미국 지표",
+       body:`<ul><li><b>FOMC</b>(금리) · <b>CPI</b>(물가) · <b>고용</b></li><li>발표 일정을 캘린더에 표시</li></ul>
+       <div class="ai">"이번 주 매크로 일정과 핵심 지표 예상치를 표로, 오늘 날짜 기준 웹검색으로" 요청</div>`}
+    ]
+  },
+  {
+    week:5, tag:"WEEK 5 · 수급", title:"수급 — 누가 사고 있는가",
+    sub:"가격은 속여도 거래량과 주체는 못 속인다",
+    cards:[
+      {c:"gold", chip:"개념", t:"수급 = 주체별 돈의 흐름",
+       body:`<div class="lead">매매 주체: <b>외국인 · 기관 · 개인</b>.</div>
+       <ul><li>누가 사고 누가 파는지가 방향의 단서</li><li>주가의 '연료'를 보는 일</li></ul>`},
+      {c:"coral", chip:"신호", t:"외국인·기관 동반 매수",
+       body:`<ul><li>두 주체가 함께 사면 <b>강력한 매수 신호</b></li><li>큰손 자금은 지속성이 있다 → 연속 순매수</li></ul>`},
+      {c:"amber", chip:"진실", t:"거래량은 거짓말을 안 한다",
+       body:`<ul><li>가격은 소수 거래로 만들 수 있지만 거래량은 어렵다</li><li><b>거래량 동반 상승</b> = 신뢰도 ↑</li></ul>
+       <div class="box-dark">거래량 없는 상승은 의심하라.</div>`},
+      {c:"sky", chip:"디테일", t:"프로그램·대차잔고·공매도",
+       body:`<ul><li><b>프로그램</b>: 기관·외국인 대규모 자동주문</li><li><b>대차/공매도</b>: 하락 베팅 물량(참고)</li></ul>`},
+      {c:"sage", chip:"실전", t:"수급으로 바닥·천장 가늠 + AI",
+       body:`<ul><li>큰손의 연속 순매수가 바닥의 단서</li></ul>
+       <div class="ai">네이버 '투자자별 매매동향' 표를 캡쳐 → "어떤 주체가 며칠째 순매수인지, 의미를 분석" 요청</div>`}
+    ]
+  },
+  {
+    week:6, tag:"WEEK 6 · 추세·차트", title:"추세 & 차트 — 흐름을 시각화",
+    sub:"차트는 사람들의 심리가 남긴 발자국",
+    cards:[
+      {c:"gold", chip:"제1원칙", t:"추세를 거스르지 마라",
+       body:`<div class="lead">상승·하락·횡보 — 큰 흐름을 거스르지 않는다.</div>
+       <ul><li>"떨어지는 칼날을 잡지 마라"</li><li>추세에 올라타는 게 가장 편한 매매</li></ul>`},
+      {c:"sky", chip:"기본", t:"캔들 읽기",
+       body:`<ul><li><b>양봉</b>(상승)/<b>음봉</b>(하락)</li><li>몸통=시가·종가, 꼬리=고가·저가</li>
+       <li>긴 꼬리 = 세력 간 힘겨루기 흔적</li></ul>`},
+      {c:"amber", chip:"핵심", t:"이동평균선",
+       body:`<ul><li>5·20·60·120일 평균</li><li><b>정배열</b>(단기>장기)=상승 / <b>역배열</b>=하락</li>
+       <li>이평선은 지지·저항 역할도</li></ul>`},
+      {c:"coral", chip:"핵심", t:"지지선 · 저항선",
+       body:`<ul><li><b>지지</b>: 사려고 모이는 가격대</li><li><b>저항</b>: 팔려고 모이는 가격대</li>
+       <li>거래량 동반 돌파 = 신뢰도↑</li></ul>`},
+      {c:"lav", chip:"보조", t:"보조지표는 양념일 뿐",
+       body:`<ul><li>RSI(과열/침체)·MACD(전환) 등</li><li>맹신 금지 — <b>가격·거래량이 본질</b></li></ul>`},
+      {c:"sage", chip:"실습", t:"차트 캡쳐 → AI 분석",
+       body:`<div class="ai">차트를 캡쳐해 "추세·지지저항·이평선 배열을 분석, 단 매매 판단은 빼고 사실만" 요청</div>`}
+    ]
+  },
+  {
+    week:7, tag:"WEEK 7 · 종목 유형", title:"가치·성장·턴어라운드·10배거",
+    sub:"내가 어떤 종목을 잡는 사람인지 정한다",
+    cards:[
+      {c:"sage", chip:"유형", t:"가치주",
+       body:`<div class="lead">제 가치보다 <b>싸게 거래되는 우량</b>.</div>
+       <ul><li>PER·PBR 낮음 → 안전마진</li><li>지루하지만 하방이 단단</li></ul>`},
+      {c:"amber", chip:"유형", t:"성장주",
+       body:`<div class="lead">미래 성장에 <b>지금 베팅</b>.</div>
+       <ul><li>비싸 보여도 성장으로 정당화</li><li>성장이 꺾이면 충격 큼 → 실적 추적 필수</li></ul>`},
+      {c:"coral", chip:"유형", t:"턴어라운드",
+       body:`<ul><li>적자 → <b>흑자 전환</b> 회생 기업</li><li>바닥 탈출 구간 수익률 폭발</li>
+       <li>난도 높음 — 전환의 '진짜 증거' 확인</li></ul>`},
+      {c:"gold", chip:"꿈", t:"10배거 (텐베거)",
+       body:`<ul><li><b>작은 시총 + 거대 스토리 + 초기 진입</b></li><li>이미 다 아는 종목에선 나오기 어렵다</li></ul>
+       <div class="box-dark">대박을 노리되 비중은 통제(리스크 관리).</div>`},
+      {c:"sky", chip:"지표", t:"PER · PBR · ROE",
+       body:`<ul><li><b>PER</b>: 이익 대비 주가 / <b>PBR</b>: 순자산 대비</li><li><b>ROE</b>: 자본 효율</li>
+       <li>숫자는 <b>동종 업종끼리 비교</b>할 때 의미</li></ul>`},
+      {c:"lav", chip:"적용", t:"주도주 재확인 · 내 스타일 정하기",
+       body:`<ul><li>어떤 유형이든 그 시기 <b>주도주(대장)</b>가 가장 강하다</li><li>가치 vs 성장 — <b>내 그릇</b>을 정한다</li></ul>`}
+    ]
+  },
+  {
+    week:8, tag:"WEEK 8 · 실적·ETF", title:"실적 & ETF — 숫자가 말한다",
+    sub:"결국 주가는 '돈 버는 회사'로 수렴한다",
+    cards:[
+      {c:"gold", chip:"핵심", t:"실적이 최종 종착지",
+       body:`<div class="lead">테마·수급은 단기, <b>실적은 장기의 중력</b>.</div>
+       <ul><li>매출·영업이익·이익률의 <b>추세</b></li><li>한 분기보다 '꾸준히 좋아지는가'</li></ul>`},
+      {c:"sage", chip:"호재", t:"어닝 서프라이즈",
+       body:`<ul><li>시장 예상(컨센서스)을 <b>크게 초과</b></li><li>주가 점프의 강력한 촉매</li></ul>`},
+      {c:"coral", chip:"악재", t:"어닝 쇼크",
+       body:`<ul><li>예상을 <b>크게 하회</b> → 급락</li><li>좋은 회사여도 기대보다 못하면 떨어진다</li></ul>
+       <div class="box-red">실적 시즌엔 보유 종목 발표일 꼭 체크.</div>`},
+      {c:"sky", chip:"기준", t:"컨센서스 이해",
+       body:`<ul><li>애널리스트 <b>평균 예상치</b></li><li>주가는 '실제'가 아니라 <b>'예상 대비'</b>로 반응</li></ul>`},
+      {c:"amber", chip:"기본", t:"기업분석 첫걸음",
+       body:`<ul><li>매출·영업이익·이익률 3년 추세</li><li>부채·현금흐름으로 '버티는 힘' 확인</li></ul>`},
+      {c:"lav", chip:"도구", t:"ETF — 묶음 투자",
+       body:`<ul><li><b>분산+저비용</b> — 지수·섹터·테마 ETF</li><li>섹터 확신은 있는데 종목 고르기 어려우면 ETF</li></ul>
+       <div class="ai">네이버에서 관심 ETF 검색 → 구성종목·수수료 캡쳐 → "비교 정리" 요청</div>`}
+    ]
+  },
+  {
+    week:9, tag:"WEEK 9 · 실전 도구", title:"네이버 증권 & 리서치 PDF 활용",
+    sub:"흩어진 정보를 하나의 분석 루틴으로",
+    cards:[
+      {c:"gold", chip:"도구", t:"네이버 증권 완전 활용",
+       body:`<ul><li>한 화면에 시세·차트·뉴스·공시·리서치</li>
+       <li>종목 화면: 시세/차트/<b>투자자별 매매동향</b>/종목토론</li><li><b>리서치</b> 탭 = 증권사 보고서 모음</li></ul>`},
+      {c:"sky", chip:"심화", t:"증권사 리서치 PDF 읽는 법",
+       body:`<ul><li>먼저 <b>목표주가·투자의견·핵심 논리</b> 3개만</li><li>"왜 이 가격인가"의 가정을 본다</li></ul>
+       <div class="box-red">증권사 리포트엔 '낙관 편향'이 있음을 감안.</div>`},
+      {c:"lav", chip:"AI", t:"리서치 PDF를 AI에 넣기",
+       body:`<div class="lead">긴 보고서를 AI가 핵심만 추려준다.</div>
+       <div class="ai">PDF 첨부 → "목표가 근거 3줄 + 가장 위험한 가정 3개 + 반대 시나리오" 요청. 반론이 진짜 가치.</div>`},
+      {c:"amber", chip:"루틴", t:"이미지 캡쳐 분석 워크플로우",
+       body:`<ul><li>매일 같은 순서로 캡쳐 → AI 분석</li>
+       <li>① 시황 ② 섹터 ③ 종목 ④ 차트 ⑤ 수급</li></ul>
+       <div class="box-dark">매크로→섹터→수급→종목→차트 순서를 고정하면 리포트가 일관된다.</div>`}
+    ]
+  },
+  {
+    week:10, tag:"WEEK 10 · 종합", title:"포트폴리오 · 리밸런싱 · 나만의 시스템",
+    sub:"흩어진 도구를 하나의 투자 시스템으로",
+    cards:[
+      {c:"sage", chip:"운용", t:"포트폴리오 구성",
+       body:`<div class="lead">한 종목이 아니라 <b>조합</b>을 운영한다.</div>
+       <ul><li>섹터·시총·스타일(가치/성장)로 분산</li><li>종목당 비중 상한 규칙(예: 10%)</li></ul>`},
+      {c:"sky", chip:"분산", t:"진짜 분산 — 섹터·스타일·현금",
+       body:`<ul><li>'종목 수'가 아니라 <b>'섹터 분산'</b>(2강 복습)</li><li><b>현금 비중</b>도 하나의 포지션</li></ul>`},
+      {c:"coral", chip:"관리", t:"리밸런싱",
+       body:`<div class="lead">정기적으로 비중을 <b>원위치</b>로.</div>
+       <ul><li>오른 종목 일부 차익 실현 → 비중 조정</li><li>감정이 아니라 <b>규칙(분기/반기)</b>으로</li></ul>`},
+      {c:"gold", chip:"완성", t:"나만의 투자 시스템 체크리스트",
+       body:`<div class="lead">매크로 → 섹터 → 수급 → 종목 → 차트 → 실행.</div>
+       <ul><li>각 단계 질문을 <b>고정된 순서</b>로 점검</li><li>AI는 자료 정리, <b>최종 판단은 나</b></li></ul>
+       <div class="box-dark">이 6단계가 곧 1~10주 전체의 압축이다.</div>`}
+    ]
+  },
+];
+
+const ACCENT=["#D4A853","#E8943A","#9B8EC4","#5B9BD5","#7BA68C","#5B9BD5","#E87461","#E8943A","#7BA68C","#D4A853"];
+
+/* ===================== 포스 그래프 데이터 (확장) ===================== */
+const GRAPHS = {
+  sector:{
+    nodes:[
+      {id:"시장 자금",group:"core",tier:0,glow:1,pulse:1},
+      {id:"경기민감",group:"cyc",tier:1},{id:"경기방어",group:"def",tier:1},
+      {id:"반도체·IT",group:"cyc",tier:2},{id:"소재",group:"cyc",tier:2},{id:"산업재",group:"cyc",tier:2},
+      {id:"경기소비재",group:"cyc",tier:2},{id:"금융",group:"cyc",tier:2},{id:"에너지",group:"cyc",tier:2},
+      {id:"필수소비재",group:"def",tier:2},{id:"헬스케어",group:"def",tier:2},{id:"유틸리티",group:"def",tier:2},{id:"통신",group:"def",tier:2},
+      {id:"HBM",group:"sub",tier:3},{id:"파운드리",group:"sub",tier:3},{id:"팹리스",group:"sub",tier:3},
+      {id:"방산",group:"sub",tier:3},{id:"조선",group:"sub",tier:3},{id:"은행",group:"sub",tier:3},{id:"증권",group:"sub",tier:3}
+    ],
+    links:[
+      ["시장 자금","경기민감"],["시장 자금","경기방어"],
+      ["경기민감","반도체·IT"],["경기민감","소재"],["경기민감","산업재"],["경기민감","경기소비재"],["경기민감","금융"],["경기민감","에너지"],
+      ["경기방어","필수소비재"],["경기방어","헬스케어"],["경기방어","유틸리티"],["경기방어","통신"],
+      ["반도체·IT","HBM"],["반도체·IT","파운드리"],["반도체·IT","팹리스"],
+      ["산업재","방산"],["산업재","조선"],["금융","은행"],["금융","증권"]
+    ]
+  },
+  theme:{
+    nodes:[
+      {id:"AI (테마)",group:"theme",tier:0,glow:1,pulse:1},
+      {id:"반도체",group:"sector",tier:1},{id:"IT·SW",group:"sector",tier:1},
+      {id:"전력·유틸리티",group:"sector",tier:1},{id:"산업재",group:"sector",tier:1},{id:"통신",group:"sector",tier:1},
+      {id:"HBM",group:"sub",tier:2},{id:"파운드리",group:"sub",tier:2},{id:"클라우드",group:"sub",tier:2},
+      {id:"AI 모델",group:"sub",tier:2},{id:"전력기기",group:"sub",tier:2},{id:"데이터센터",group:"sub",tier:2}
+    ],
+    links:[
+      ["AI (테마)","반도체"],["AI (테마)","IT·SW"],["AI (테마)","전력·유틸리티"],["AI (테마)","산업재"],["AI (테마)","통신"],
+      ["반도체","HBM"],["반도체","파운드리"],["IT·SW","클라우드"],["IT·SW","AI 모델"],["전력·유틸리티","전력기기"],["산업재","데이터센터"]
+    ]
+  },
+  chain:{
+    nodes:[
+      {id:"AI 데이터센터 수요",group:"core",tier:0,glow:1,pulse:1},
+      {id:"설계·팹리스",group:"chain",tier:1},{id:"소재·부품",group:"chain",tier:1},
+      {id:"장비",group:"bottle",tier:1,glow:1},{id:"파운드리",group:"chain",tier:1},
+      {id:"HBM",group:"bottle",tier:1,glow:1},{id:"후공정·패키징",group:"chain",tier:2},{id:"AI 서버·완성품",group:"chain",tier:1}
+    ],
+    links:[
+      ["AI 데이터센터 수요","설계·팹리스"],["설계·팹리스","파운드리"],["설계·팹리스","HBM"],
+      ["소재·부품","장비"],["장비","파운드리"],["장비","HBM"],
+      ["파운드리","후공정·패키징"],["HBM","후공정·패키징"],["후공정·패키징","AI 서버·완성품"]
+    ]
+  },
+  topdown:{
+    nodes:[
+      {id:"① 매크로",group:"sector",tier:1,glow:1,pulse:1,gx:0.00,gy:0.30},
+      {id:"② 주도섹터",group:"bottle",tier:1,gx:0.333,gy:0.30},
+      {id:"③ 테마·밸류체인",group:"theme",tier:1,gx:0.667,gy:0.30},
+      {id:"④ 주도주",group:"cyc",tier:1,gx:1.00,gy:0.30},
+      {id:"관련 ETF",group:"chain",tier:2,gx:0.55,gy:0.58},{id:"구성종목 TOP10",group:"chain",tier:2,gx:0.80,gy:0.58},
+      {id:"금리·FOMC",group:"sub",tier:3,gx:0.02,gy:0.86},{id:"환율",group:"sub",tier:3,gx:0.09,gy:0.86},{id:"경기·수출",group:"sub",tier:3,gx:0.16,gy:0.86},
+      {id:"자금유입",group:"sub",tier:3,gx:0.24,gy:0.86},{id:"거래대금",group:"sub",tier:3,gx:0.333,gy:0.86},{id:"로테이션",group:"sub",tier:3,gx:0.43,gy:0.86},
+      {id:"병목",group:"sub",tier:3,gx:0.57,gy:0.86},{id:"희소성",group:"sub",tier:3,gx:0.667,gy:0.86},{id:"S커브",group:"sub",tier:3,gx:0.76,gy:0.86},
+      {id:"대장주",group:"sub",tier:3,gx:0.84,gy:0.86},{id:"수급 1등",group:"sub",tier:3,gx:0.92,gy:0.86},{id:"실적",group:"sub",tier:3,gx:1.00,gy:0.86}
+    ],
+    links:[
+      ["① 매크로","② 주도섹터"],["② 주도섹터","③ 테마·밸류체인"],["③ 테마·밸류체인","④ 주도주"],
+      ["② 주도섹터","관련 ETF"],["관련 ETF","구성종목 TOP10"],["구성종목 TOP10","④ 주도주"],
+      ["① 매크로","금리·FOMC"],["① 매크로","환율"],["① 매크로","경기·수출"],
+      ["② 주도섹터","자금유입"],["② 주도섹터","거래대금"],["② 주도섹터","로테이션"],
+      ["③ 테마·밸류체인","병목"],["③ 테마·밸류체인","희소성"],["③ 테마·밸류체인","S커브"],
+      ["④ 주도주","대장주"],["④ 주도주","수급 1등"],["④ 주도주","실적"]
+    ]
+  }
+};
+const GBASE={core:"#D4A853",cyc:"#E87461",def:"#5B9BD5",theme:"#9B8EC4",sector:"#5B9BD5",chain:"#7BA68C",bottle:"#E8943A",sub:"#C9A66B"};
+const TIER={0:{fs:18,h:52},1:{fs:16,h:44},2:{fs:14,h:36},3:{fs:13,h:32}};
+
+/* ===================== 엔진 ===================== */
+const tocEl=document.getElementById('toc'),pageEl=document.getElementById('page');
+const ptabsEl=document.getElementById('ptabs'),wkPill=document.getElementById('wkPill'),progressEl=document.getElementById('progress');
+let wk=1,page=0,pagesCache=[];
+const reduceMo=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function splitTitle(t){const p=t.split('—');return [p[0].trim(),p.slice(1).join('—').trim()];}
+function buildPages(cards){const pages=[];let buf=[];const flush=()=>{if(buf.length){pages.push(buf);buf=[];}};
+  cards.forEach(c=>{if(c.wide){flush();pages.push([c]);}else{buf.push(c);if(buf.length===2)flush();}});flush();return pages;}
+function legColor(k){return ({gold:"#D4A853",amber:"#E8943A",coral:"#E87461",sky:"#5B9BD5",sage:"#7BA68C",lav:"#9B8EC4",sub:"#C9A66B",ink:"#1A1612"})[k]||k;}
+function cardHTML(c){
+  const [main,sub]=splitTitle(c.t);const subHTML=sub?`<div class="csub">${sub}</div>`:'';
+  if(c.graph){
+    return `<div class="pcard" data-c="${c.c}"><span class="chip">${c.chip}</span><h3>${main}</h3>${subHTML}
+      <div class="graphwrap"><div class="graphbox" data-graph="${c.graph.kind}"></div>
+      <div class="legend">${(c.graph.legend||[]).map(l=>`<span><i style="background:${legColor(l[0])}"></i>${l[1]}</span>`).join('')}</div>
+      <div class="body" style="margin-top:10px">${c.graph.caption||''}</div></div></div>`;
+  }
+  return `<div class="pcard" data-c="${c.c}"><span class="chip">${c.chip}</span><h3>${main}</h3>${subHTML}
+    <div class="body">${c.body||''}</div></div>`;
+}
+function renderHome(){
+  tocEl.innerHTML=COURSE.map((w,i)=>{
+    const n=buildPages(w.cards).length, ac=ACCENT[i%ACCENT.length];
+    return `<div class="toc-card" data-w="${w.week}" style="--accent:${ac}">
+      <div class="num">${String(w.week).padStart(2,'0')}</div>
+      <div class="wk">Week ${String(w.week).padStart(2,'0')}</div>
+      <h3>${w.title.split('—')[0].trim()}</h3>
+      <p>${w.sub}</p>
+      <div class="meta"><span>📑 ${w.cards.length} 카드</span><span>🗂 ${n} 페이지</span><span class="go">시작 →</span></div></div>`;
+  }).join('');
+  tocEl.querySelectorAll('.toc-card').forEach(el=>el.addEventListener('click',()=>openWeek(+el.dataset.w)));
+  if(window.gsap&&!reduceMo){
+    gsap.from('.hero-el',{y:26,opacity:0,duration:.7,stagger:.09,ease:'power3.out',clearProps:'all'});
+    gsap.from('.toc-card',{y:30,opacity:0,duration:.55,stagger:.05,ease:'power3.out',delay:.15,clearProps:'all'});
+  }
+}
+function openWeek(n){
+  wk=n;page=0;document.body.classList.add('deckmode');
+  const w=COURSE[n-1],ac=ACCENT[(n-1)%ACCENT.length];pagesCache=buildPages(w.cards);
+  document.documentElement.style.setProperty('--accent',ac);
+  document.getElementById('deck').style.setProperty('--accent',ac);
+  wkPill.innerHTML=`<span class="b">${String(n).padStart(2,'0')}</span> ${w.title.split('—')[0].trim()}`;
+  ptabsEl.innerHTML=pagesCache.map((_,i)=>`<button class="ptab" data-p="${i}">${i+1}</button>`).join('');
+  ptabsEl.querySelectorAll('.ptab').forEach(b=>b.addEventListener('click',()=>{page=+b.dataset.p;renderPage();}));
+  renderPage();
+}
+function goHome(){clearGraphs();document.body.classList.remove('deckmode');}
+function renderPage(){
+  clearGraphs();
+  const cards=pagesCache[page]||[];
+  pageEl.className='page'+(cards.length===1&&cards[0].wide?' wide':'');
+  pageEl.innerHTML=cards.map(cardHTML).join('');
+  ptabsEl.querySelectorAll('.ptab').forEach((b,i)=>b.classList.toggle('active',i===page));
+  document.getElementById('prevBtn').disabled=(page===0);
+  document.getElementById('nextBtn').disabled=(page>=pagesCache.length-1);
+  progressEl.style.width=((page+1)/pagesCache.length*100)+'%';
+  if(window.gsap&&!reduceMo) gsap.from('#page .pcard',{y:26,opacity:0,duration:.5,stagger:.09,ease:'power3.out',clearProps:'all'});
+  pageEl.querySelectorAll('.graphbox').forEach(box=>requestAnimationFrame(()=>renderGraph(box,GRAPHS[box.dataset.graph])));
+}
+function step(d){const np=page+d;if(np>=0&&np<pagesCache.length){page=np;renderPage();}}
+document.getElementById('homeBtn').addEventListener('click',goHome);
+document.getElementById('prevBtn').addEventListener('click',()=>step(-1));
+document.getElementById('nextBtn').addEventListener('click',()=>step(1));
+document.addEventListener('keydown',e=>{if(!document.body.classList.contains('deckmode'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')step(1); if(e.key==='ArrowLeft'||e.key==='PageUp')step(-1);});
+
+/* ===================== 포스 그래프 (입체 노드 + 입자 흐름) ===================== */
+let graphCleanups=[];
+function clearGraphs(){graphCleanups.forEach(fn=>{try{fn();}catch(e){}});graphCleanups=[];}
+function shade(hex,p){ // p>0 밝게 / p<0 어둡게
+  const n=parseInt(hex.slice(1),16);let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  const t=p<0?0:255,a=Math.abs(p);
+  r=Math.round((t-r)*a+r);g=Math.round((t-g)*a+g);b=Math.round((t-b)*a+b);
+  return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+function renderGraph(box,g){
+  if(!g||!window.d3)return;
+  box.innerHTML='';
+  const W=box.clientWidth||900,H=box.clientHeight||460;
+  const nodes=g.nodes.map(d=>Object.assign({},d));
+  const links=g.links.map(l=>({source:l[0],target:l[1]}));
+  nodes.forEach(d=>{const t=TIER[d.tier]||TIER[1];d._fs=d.fs||t.fs;d._h=d.h||t.h;d._w=Math.max(56,d.id.length*d._fs*0.62+30);d._base=GBASE[d.group]||"#D4A853";});
+  const svg=d3.select(box).append('svg').attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet');
+  const defs=svg.append('defs');
+  // 그룹별 그라데이션 + 글로우/섀도 필터
+  Object.keys(GBASE).forEach(k=>{
+    const base=GBASE[k],grad=defs.append('linearGradient').attr('id','g_'+k).attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
+    grad.append('stop').attr('offset','0%').attr('stop-color',shade(base,.30));
+    grad.append('stop').attr('offset','52%').attr('stop-color',base);
+    grad.append('stop').attr('offset','100%').attr('stop-color',shade(base,-.16));
+  });
+  const sh=defs.append('filter').attr('id','soft').attr('x','-40%').attr('y','-40%').attr('width','180%').attr('height','180%');
+  sh.append('feDropShadow').attr('dx',0).attr('dy',4).attr('stdDeviation',5).attr('flood-color','#1A1612').attr('flood-opacity',.18);
+  const gl=defs.append('filter').attr('id','glow').attr('x','-80%').attr('y','-80%').attr('width','260%').attr('height','260%');
+  gl.append('feGaussianBlur').attr('stdDeviation',7).attr('result','b');
+  const fm=gl.append('feMerge');fm.append('feMergeNode').attr('in','b');fm.append('feMergeNode').attr('in','SourceGraphic');
+
+  const isBig=d=>d.tier===0;
+  const hasGrid=nodes.some(d=>d.gx!=null);
+  const padX=Math.min(70,W*0.08), padY=Math.max(34,H*0.1);
+  const gxTo=v=>padX+v*(W-2*padX), gyTo=v=>padY+v*(H-2*padY);
+  const sim=d3.forceSimulation(nodes)
+    .force('link',d3.forceLink(links).id(d=>d.id).distance(d=>(isBig(d.source)||isBig(d.target))?150:115).strength(hasGrid?.25:.55))
+    .force('charge',d3.forceManyBody().strength(hasGrid?-260:-720))
+    .force('center',d3.forceCenter(W/2,H/2))
+    .force('collide',d3.forceCollide().radius(d=>d._w/2+16))
+    .force('gx',d3.forceX(d=>d.gx!=null?gxTo(d.gx):W/2).strength(d=>d.gx!=null?0.92:0))
+    .force('gy',d3.forceY(d=>d.gy!=null?gyTo(d.gy):H/2).strength(d=>d.gy!=null?0.92:0));
+  // 화면 밖 이탈 방지 — 모든 노드가 항상 프레임 안에 보이도록 매 tick 클램프
+  sim.on('tick',()=>{nodes.forEach(d=>{
+    const hw=d._w/2+6,hh=d._h/2+6;
+    if(d.x<hw)d.x=hw; else if(d.x>W-hw)d.x=W-hw;
+    if(d.y<hh)d.y=hh; else if(d.y>H-hh)d.y=H-hh;
+  });});
+
+  const linkSel=svg.append('g').attr('stroke','#E0CDAD').attr('stroke-width',2.2).attr('stroke-linecap','round')
+    .selectAll('line').data(links).join('line').attr('opacity',.7);
+  const flow=svg.append('g').selectAll('circle').data(links).join('circle')
+    .attr('r',3.6).attr('fill',d=>'#E8943A').attr('opacity',reduceMo?0:.9).attr('filter','url(#glow)');
+  links.forEach(l=>{l._t=Math.random();l._spd=0.0022+Math.random()*0.0018;});
+
+  const node=svg.append('g').selectAll('g').data(nodes).join('g').attr('class','gnode').style('cursor','grab')
+    .call(d3.drag()
+      .on('start',(e,d)=>{if(!e.active)sim.alphaTarget(.3).restart();d.fx=d.x;d.fy=d.y;})
+      .on('drag',(e,d)=>{d.fx=e.x;d.fy=e.y;})
+      .on('end',(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+  const inner=node.append('g').attr('class','inr');
+  inner.filter(d=>d.pulse).append('circle').attr('class','halo')
+    .attr('r',d=>d._w/2+10).attr('fill',d=>d._base).attr('opacity',.16);
+  inner.append('rect').attr('x',d=>-d._w/2).attr('y',d=>-d._h/2).attr('width',d=>d._w).attr('height',d=>d._h)
+    .attr('rx',d=>d._h/2).attr('fill',d=>`url(#g_${d.group})`).attr('stroke','#fff').attr('stroke-width',2.4)
+    .attr('filter',d=>d.glow?'url(#glow)':'url(#soft)');
+  // 상단 광택
+  inner.append('rect').attr('x',d=>-d._w/2+6).attr('y',d=>-d._h/2+3).attr('width',d=>d._w-12).attr('height',d=>d._h*0.42)
+    .attr('rx',d=>d._h*0.21).attr('fill','#fff').attr('opacity',.22).attr('pointer-events','none');
+  inner.append('text').attr('class','glabel').text(d=>d.id).attr('text-anchor','middle').attr('dy','.34em')
+    .attr('font-size',d=>d._fs).attr('fill',d=>d.group==='bottle'?'#3a2606':'#fff').attr('pointer-events','none');
+
+  // 호버 하이라이트
+  const adj={};links.forEach(l=>{(adj[l.source.id||l.source]=adj[l.source.id||l.source]||new Set()).add(l.target.id||l.target);
+    (adj[l.target.id||l.target]=adj[l.target.id||l.target]||new Set()).add(l.source.id||l.source);});
+  node.on('mouseenter',(e,d)=>{
+    node.style('opacity',o=>o.id===d.id||(adj[d.id]&&adj[d.id].has(o.id))?1:.16);
+    linkSel.attr('opacity',l=>(l.source.id===d.id||l.target.id===d.id)?.95:.08)
+      .attr('stroke',l=>(l.source.id===d.id||l.target.id===d.id)?'#D4A853':'#E0CDAD');
+    flow.attr('opacity',l=>reduceMo?0:((l.source.id===d.id||l.target.id===d.id)?1:.12));
+  }).on('mouseleave',()=>{node.style('opacity',1);linkSel.attr('opacity',.7).attr('stroke','#E0CDAD');flow.attr('opacity',reduceMo?0:.9);});
+
+  // 등장 모션 + 펄스
+  if(window.gsap&&!reduceMo){
+    gsap.from(inner.nodes(),{scale:.55,opacity:0,transformOrigin:'center',duration:.6,stagger:.035,ease:'back.out(1.5)'});
+    inner.filter(d=>d.pulse).select('.halo').each(function(){gsap.to(this,{attr:{r:'+=14'},opacity:.05,duration:1.7,repeat:-1,yoyo:true,ease:'sine.inOut'});});
+  }
+
+  // 통합 렌더 루프 (sim 정착 후에도 입자 계속 흐름)
+  let raf;
+  function frame(){
+    linkSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    node.attr('transform',d=>`translate(${d.x||W/2},${d.y||H/2})`);
+    if(!reduceMo) flow.attr('cx',d=>{d._t+=d._spd;if(d._t>1)d._t-=1;return d.source.x+(d.target.x-d.source.x)*d._t;})
+                     .attr('cy',d=>d.source.y+(d.target.y-d.source.y)*d._t)
+                     .attr('fill',d=>shade(d.source._base||'#E8943A',.05));
+    raf=requestAnimationFrame(frame);
+  }
+  frame();
+  graphCleanups.push(()=>{cancelAnimationFrame(raf);sim.stop();if(window.gsap)gsap.killTweensOf(inner.nodes());});
+}
+let rzT;window.addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{if(document.body.classList.contains('deckmode'))renderPage();sizeCanvas();},240);});
+
+/* ===================== 전체화면 ===================== */
+function toggleFS(){try{if(!document.fullscreenElement){(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen).call(document.documentElement);}else{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}}catch(e){showHint('이 브라우저에선 전체화면이 제한됩니다');}}
+document.getElementById('fsBtn').addEventListener('click',toggleFS);
+document.getElementById('fsBtn2').addEventListener('click',toggleFS);
+
+/* ===================== 판서 캔버스 ===================== */
+const canvas=document.getElementById('drawCanvas'),ctx=canvas.getContext('2d');
+let currentTool='select',drawing=false,lastX=0,lastY=0;
+const TOOLS={black:{color:'#1A1612',width:4,alpha:1,comp:'source-over'},red:{color:'#E5342B',width:4,alpha:1,comp:'source-over'},
+  blue:{color:'#1E66E0',width:4,alpha:1,comp:'source-over'},mark:{color:'#FFE94D',width:28,alpha:.42,comp:'source-over'},
+  eraser:{color:'#000',width:34,alpha:1,comp:'destination-out'}};
+function sizeCanvas(){const dpr=window.devicePixelRatio||1,prev=canvas.width?canvas.toDataURL():null;
+  canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;canvas.style.width=innerWidth+'px';canvas.style.height=innerHeight+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+  if(prev){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,innerWidth,innerHeight);img.src=prev;}}
+sizeCanvas();
+function setTool(name){if(name==='clear'){ctx.clearRect(0,0,canvas.width,canvas.height);showHint('판서 지움');return;}
+  currentTool=name;document.querySelectorAll('.tool').forEach(t=>t.classList.toggle('active',t.dataset.tool===name));
+  canvas.style.pointerEvents=(name==='select')?'none':'auto';canvas.style.cursor=(name==='select')?'default':(name==='eraser')?'cell':'crosshair';
+  showHint({select:'선택 모드',black:'검정 펜',red:'빨강 펜',blue:'파랑 펜',mark:'형광펜',eraser:'지우개'}[name]||'');}
+document.querySelectorAll('.tool').forEach(b=>b.addEventListener('click',()=>setTool(b.dataset.tool)));
+function pos(e){const r=canvas.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
+canvas.addEventListener('pointerdown',e=>{if(currentTool==='select')return;drawing=true;[lastX,lastY]=pos(e);e.preventDefault();});
+canvas.addEventListener('pointermove',e=>{if(!drawing)return;const[x,y]=pos(e),t=TOOLS[currentTool];if(!t)return;
+  ctx.globalCompositeOperation=t.comp;ctx.globalAlpha=t.alpha;ctx.strokeStyle=t.color;ctx.lineWidth=t.width;ctx.lineCap='round';ctx.lineJoin='round';
+  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(x,y);ctx.stroke();lastX=x;lastY=y;e.preventDefault();});
+window.addEventListener('pointerup',()=>drawing=false);
+const palette=document.getElementById('palette'),grip=document.getElementById('grip');let dg=false,ox=0,oy=0;
+grip.addEventListener('pointerdown',e=>{dg=true;const r=palette.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;palette.style.right='auto';palette.style.bottom='auto';grip.setPointerCapture(e.pointerId);});
+grip.addEventListener('pointermove',e=>{if(!dg)return;const r=palette.getBoundingClientRect();
+  let x=Math.max(4,Math.min(innerWidth-r.width-4,e.clientX-ox)),y=Math.max(4,Math.min(innerHeight-r.height-4,e.clientY-oy));palette.style.left=x+'px';palette.style.top=y+'px';});
+grip.addEventListener('pointerup',()=>dg=false);
+const hintEl=document.getElementById('hint');let hintT;
+function showHint(t){if(!t)return;hintEl.textContent=t;hintEl.classList.add('show');clearTimeout(hintT);hintT=setTimeout(()=>hintEl.classList.remove('show'),1400);}
+document.addEventListener('keydown',e=>{const m={'1':'black','2':'red','3':'blue','4':'mark','0':'select'};if(m[e.key])setTool(m[e.key]);if(e.key==='Escape')setTool('select');});
+
+renderHome();
+(function(){
+  const cardsN=COURSE.reduce((s,w)=>s+w.cards.length,0);
+  const promptN=COURSE.reduce((s,w)=>s+w.cards.reduce((x,c)=>x+(((c.body||'').match(/class="ai"/g)||[]).length),0),0);
+  const graphN=COURSE.reduce((s,w)=>s+w.cards.filter(c=>c.graph).length,0);
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('statCards',cardsN);set('statPrompts',promptN);set('statGraphs',graphN);
+})();
+</script>
+</body>
+</html>
