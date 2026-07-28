@@ -195,40 +195,6 @@
     color:var(--ink);font-weight:700;font-size:.88rem;padding:5px 13px 5px 10px;border-radius:999px;box-shadow:0 2px 6px rgba(26,22,18,.05);}
   .rc-chip::before{content:"🏢";font-size:.82em;}
 
-  /* 원문 HTML 임베드(iframe) — 화면 전체를 채우는 풀블리드 모드 */
-  .embed-wrap{flex:1;display:flex;margin-top:10px;border:1px solid var(--line2);border-radius:14px;
-    overflow:hidden;box-shadow:var(--shadow);min-height:0;}
-  .embed-wrap iframe{width:100%;height:100%;border:none;background:#fff;}
-  .pcard.fullembed{padding:0;overflow:hidden;position:relative;border-width:1px;}
-  .pcard.fullembed::before{display:none;}
-  .pcard.fullembed iframe{width:100%;height:100%;border:none;display:block;background:#fff;}
-  .fe-label{position:absolute;top:16px;left:16px;z-index:5;display:flex;align-items:center;gap:8px;
-    background:rgba(26,22,18,.82);color:#fff;font-weight:800;font-size:.85rem;padding:8px 16px;
-    border-radius:999px;backdrop-filter:blur(6px);box-shadow:0 8px 22px rgba(26,22,18,.28);pointer-events:none;}
-  .fe-label .fe-chip{background:var(--gold);color:#1A1612;font-size:.72rem;font-weight:900;
-    padding:2px 9px;border-radius:999px;letter-spacing:.02em;}
-  .fe-open{position:absolute;top:16px;right:16px;z-index:5;background:#fff;color:var(--ink);
-    font-weight:800;font-size:.85rem;padding:8px 16px;border-radius:999px;text-decoration:none;
-    box-shadow:0 8px 22px rgba(26,22,18,.2);transition:.15s;}
-  .fe-open:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,22,18,.26);}
-  .pcard.fullembed iframe{flex:1;}
-
-  /* 기준봉 눌림목 3단계 다이어그램 */
-  .pz-wrap{display:flex;gap:18px;margin-top:14px;align-items:stretch;}
-  .pz-bar{width:64px;flex:none;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;
-    box-shadow:0 6px 18px rgba(26,22,18,.14);}
-  .pz-zone{flex:1;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;
-    font-size:1.3rem;font-family:'Playfair Display',serif;}
-  .pz-zone.z1{background:linear-gradient(160deg,#8FBF9F,#5f8c72);}
-  .pz-zone.z2{background:linear-gradient(160deg,#F0AA5E,#d47f28);}
-  .pz-zone.z3{background:linear-gradient(160deg,#EF8A76,#d45a47);}
-  .pz-legend{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:4px;}
-  .pz-row{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0;
-    border-bottom:1px dashed var(--line);}
-  .pz-row:last-child{border-bottom:none;}
-  .pz-row .pz-t{font-weight:800;color:var(--ink);font-size:.98rem;}
-  .pz-row .pz-d{color:var(--ink2);font-size:.88rem;margin-top:2px;line-height:1.4;}
-
   /* 섹터 → 종목 그룹 */
   .sc-group{margin-bottom:18px;}
   .sc-group:last-child{margin-bottom:0;}
@@ -846,76 +812,229 @@ const COURSE = [
     ]
   },
   {
-    week:5, tag:"WEEK 5 · 2026 테크트리", title:"2026 미래 산업 테크트리 — 섹터별 병목 주도주 지도",
-    sub:"국가급 메가사이클 3갈래(반도체·전력인프라·헬스케어)와 병목 주도주를 원문 그대로",
+    week:5, tag:"WEEK 5 · 판별 프레임워크", title:"한국 증시 통합 판별 프레임워크 — 시장에서 포트폴리오까지",
+    sub:"메가사이클 → 주도섹터 → 포텐셜 종목 → 리스크·저점 → 포트폴리오, 5개 레이어로 쪼개서 판단한다",
     cards:[
-      {c:"gold", chip:"부록 · 2026", t:"2026 미래 산업 테크트리 — 섹터별 병목 주도주 지도", wide:true,
-       embedSrc:"pages/techtree-2026.html"},
+      {c:"lav", chip:"심화 도구 · v3.0", t:"판별 프레임워크 — 4개의 독립된 질문으로 쪼개기",
+       body:`<div class="lead">투자 판단에서 가장 흔한 착각 두 가지: <b>"많이 떨어졌다" ≠ "저점"</b>, <b>"쏠림" ≠ "위험"</b>.</div>
+       <ul><li><b>Layer 0</b> — 이 산업은 국가가 포기할 수 없는 메가사이클인가? (9개 항목, 7개+ 🟢면 확정)</li>
+       <li><b>Layer 1</b> — 지금 이 섹터가 진짜 주도섹터인가, 착시인가? (수급·병목·실적·확산도·매크로 5요건)</li>
+       <li><b>Part A</b> — 지금 시장이 단기적으로 얼마나 위험한가? (기술적·수급·매크로 0~100%)</li>
+       <li><b>Part B</b> — 지금이 구조적으로 저점일 가능성이 있는가? (밸류·펀더멘털·클라이맥스·수급전환 4축)</li></ul>
+       <div class="box-red">서로 다른 질문을 섞어서 결론 내리는 것이 가장 흔한 투자 실수 — 반드시 이 순서대로, 따로 평가한다.</div>`},      {c:"gold", chip:"v4.0 · 상위판", t:"통합 판별 프레임워크 — 5개 레이어 지도",
+       body:`<div class="lead">v3.0(시장·섹터)에 <b>종목·포트폴리오 레이어</b>를 더한 완전판.</div>
+       <ul><li><b>Part 1 시장</b> — 추세·모멘텀·펀더멘탈 + 메가사이클(Layer 0)</li>
+       <li><b>Part 2 섹터</b> — 주도섹터(Layer 1) + 밸류체인 소부장 병목</li>
+       <li><b>Part 3 종목</b> — 주도주 + 포텐셜 6축 스코어링(100점)</li>
+       <li><b>Part 4 리스크·타이밍</b> — 단기 리스크(A) + 구조적 저점(B)</li>
+       <li><b>Part 5 포트폴리오</b> — 포트폴리오·매매전략·리밸런싱</li></ul>
+       <div class="box-dark">5개를 <b>반드시 이 순서로</b> 관통한 뒤, 레이어 간 상충 지점에서 🛑직언을 낸다.</div>`},
+      {c:"amber", chip:"Part 3 · 종목", t:"포텐셜 강한 종목 — 6축 스코어링 (100점)",
+       body:`<div class="lead">"성장 폭발력"을 6개 축으로 정량화한다.</div>
+       <ul><li>영업이익 폭발적 증가 가능성 <b>20점</b> — 증가율의 방향·가속도</li>
+       <li>영업이익률 개선 지속성 <b>15점</b> — 1회성인가 여러 분기 이어지는가</li>
+       <li>확장성 <b>15점</b> · 차별성 <b>15점</b> · 진입장벽 <b>20점</b> · 경쟁사 비교 <b>15점</b></li>
+       <li>80~100 강력후보 / 60~79 관심 / 40~59 중립 / 40 미만 배제</li></ul>
+       <div class="box-red">매출은 느는데 <b>영업이익률 축이 정체·악화</b>라면, 다른 축이 높아도 "아직 투자 시점 아님"으로 하향 판정 — 매출 성장과 수익성 변곡을 혼동하지 않는다.</div>`},
+      {c:"sage", chip:"Part 5 · 포트폴리오", t:"현금비중·매매전략·리밸런싱",
+       body:`<div class="lead">Part A 리스크 등급에 <b>현금비중을 연동</b>한다.</div>
+       <ul><li>안전(80~100%) → 현금 10%↓ · 양호 → 10~20% · 중립 → 20~35%</li>
+       <li>위험(20~39%) → 35~50% · 경고(0~19%) → 50%↑</li>
+       <li><b>매매전략</b>: 진입=확산기+주도주신호, 청산=손절·목표가, 사이징=Part A 연동</li>
+       <li><b>리밸런싱</b>: 트리거=단계전환·점수급변, 축소는 쇠퇴기 섹터부터 우선</li></ul>
+       <div class="box-dark">이 표는 정성적 가이드일 뿐 — <b>구체적 손절%·비중을 확정 제시하지 않는다</b>, 개인 리스크 허용도가 우선.</div>`},
+      {c:"coral", chip:"최종 통합", t:"9단계 관통 판단 — 상충 시 우선순위",
+       body:`<div class="lead">시장→메가사이클→주도섹터→밸류체인→주도주→포텐셜→단기리스크→구조적저점→포트폴리오, 이 순서로 전부 통과한 뒤 🛑직언.</div>
+       <ul><li>Part A 위험 + Part B 저점신호 동시 → <b>외국인 매도 강도 둔화 여부</b>부터 확인(가장 늦게·확실하게 나오는 신호)</li>
+       <li>시장 리스크 낮은데 종목 포텐셜 낮음 → 시장 베타 착시 의심, <b>영업이익률 축 재점검</b></li>
+       <li>메가사이클 확정인데 breadth 협소 → 재해석 규칙 적용, 단 <b>수급·실적축은 계속 감시</b></li>
+       <li>밸류체인 🟢인데 대장주 부재 → <b>태동기</b>일 가능성, 시기상조 vs 선취매 구분</li></ul>`},
+      {c:"lav", chip:"v4.0 통합 프롬프트", t:"통합 판별 프레임워크 v4.0 — 5레이어 전문", wide:true,
+       body:`<div class="body" style="margin-top:0">복사 → Claude 새 대화창 → 분석 대상 이어 적기. v3.0보다 <b>종목·포트폴리오 레이어가 추가</b>된 완전판.</div>
+       <div class="pf-wrap">
+       <div class="pf-rule">🔒 실행규칙 — <b>Part1 시장 → 1-4 메가사이클 → Part2 섹터 → Part3 종목 → Part4 리스크·타이밍 → Part5 포트폴리오</b> 순서로만 관통 평가. 웹검색 근거 필수, 검증라벨 🔴 DEV.</div>
+       <div class="pf-step" style="--pc:var(--sky)"><div class="pf-head"><span class="pf-num">1</span><span class="pf-title">시장 — 추세·메가사이클</span></div>
+         <div class="pf-body">추세·모멘텀·시장펀더멘탈 검토 후 <b>메가사이클(Layer 0)</b> 9항목 판정: 패권결부·포기불가성·진입장벽·신규확장·투자증대·이익확장성·스필오버·지속성5년+·미래지향성. <b>7개+🟢 = 확정.</b></div></div>
+       <div class="pf-step" style="--pc:var(--amber)"><div class="pf-head"><span class="pf-num">2</span><span class="pf-title">섹터 — 주도섹터·밸류체인</span></div>
+         <div class="pf-body"><b>주도섹터(Layer 1)</b> 5요건: 수급강도·밸류체인병목·실적확인·확산도·매크로정합성. + <b>밸류체인 소부장</b> 검토(병목 단계·대체불가 기업).</div></div>
+       <div class="pf-step" style="--pc:var(--coral)"><div class="pf-head"><span class="pf-num">3</span><span class="pf-title">종목 — 주도주·포텐셜 스코어링</span></div>
+         <div class="pf-body">주도주 검토 + <b>포텐셜 6축 스코어링(100점)</b>: 영업이익폭발력20·마진개선지속성15·확장성15·차별성15·진입장벽20·경쟁사비교15. <b>80+ 강력후보</b> / 60~79 관심 / 40~59 중립 / 40미만 배제. 매출↑+이익률 정체면 하향판정.</div></div>
+       <div class="pf-step" style="--pc:var(--lav)"><div class="pf-head"><span class="pf-num">4</span><span class="pf-title">리스크·타이밍 — 단기·구조적 저점</span></div>
+         <div class="pf-body"><b>Part A 단기리스크</b>(기술적구조·수급주체·매크로체제, 0~100%) + <b>Part B 구조적저점</b>(밸류에이션되돌림·펀더멘털훼손·매도클라이맥스·수급전환, 0~100%). A+B만🟢=낙폭과대, <b>4개🟢=구조적저점 확정.</b></div></div>
+       <div class="pf-step" style="--pc:var(--sage)"><div class="pf-head"><span class="pf-num">5</span><span class="pf-title">포트폴리오 — 현금비중·매매전략·리밸런싱</span></div>
+         <div class="pf-body">집중도·섹터분산·상관관계·<b>현금비중</b>(Part A 등급 연동: 안전10%↓~경고50%↑) + 매매전략(진입·청산·포지션사이징, 구체적 손절%·비중 확정제시 금지) + 리밸런싱(트리거·주기·축소우선순위·재배분방향).</div></div>
+       <div class="pf-final">🏁 <b>최종</b> — 9단계(시장→메가사이클→주도섹터→밸류체인→주도주→포텐셜→단기리스크→구조적저점→포트폴리오) 관통 후, 상충 지점에서 🛑직언으로 가장 먼저 확인할 신호를 지목한다.</div>
+       <div class="pf-out"><span>각 Part 표+판정</span><span>🛑 직언</span><span>출처·기준일자</span><span>🚦 🔴 DEV</span><span>⚠️ 면책</span></div>
+       </div>
+       <div class="box-dark">v3.0(시장+섹터)이 빠른 스크리닝용이라면, v4.0은 <b>종목 선정부터 포트폴리오 관리까지</b> 이어지는 완전판이다.</div>`},
+      {c:"gold", chip:"AI 활용 지침 · v4.0 전문", t:"통합 판별 프레임워크 — 탭으로 훑어보는 세부 기준", wide:true,
+       body:`<div class="body" style="margin-top:0">위 흐름도의 <b>각 단계를 실제로 어떻게 판정하는지</b> 원문 그대로. 탭을 눌러 이동 → 필요한 부분만 복사해서 Claude에 붙여넣으면 된다.</div>
+       <div class="fw-tabs">
+         <button class="fw-tab-btn active" onclick="fwTab('m1',this)">Part1 시장</button>
+         <button class="fw-tab-btn" onclick="fwTab('m2',this)">Part2 섹터</button>
+         <button class="fw-tab-btn" onclick="fwTab('m3',this)">Part3 종목</button>
+         <button class="fw-tab-btn" onclick="fwTab('m4',this)">Part4 리스크</button>
+         <button class="fw-tab-btn" onclick="fwTab('m5',this)">Part5 포트폴리오</button>
+         <button class="fw-tab-btn" onclick="fwTab('m6',this)">최종 프로세스</button>
+       </div>
+
+       <div class="fw-panel active" data-tab="m1">
+         <div class="fw-sub"><div class="fw-sub-title">1-1 추세 검토</div>
+           <div class="fw-q">Q. 지수가 추세선상 어디에 있고, 방향은 무엇인가?</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><span class="fw-crit-k">이동평균 배열</span><span class="fw-crit-g">🟢 정배열(MA20&gt;60&gt;120)</span> · <span class="fw-crit-r">🔴 역배열(MA20&lt;60&lt;120)</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">고점·저점 패턴</span><span class="fw-crit-g">🟢 Higher High/Higher Low</span> · <span class="fw-crit-r">🔴 Lower High/Lower Low</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">추세선</span><span class="fw-crit-g">🟢 추세선 위 안착</span> · <span class="fw-crit-r">🔴 추세선 하향 이탈</span></div>
+           </div>
+           <div class="fw-verdict">판정: 🟢상승추세(정배열+HH/HL) / 🟡전환구간(혼조) / 🔴하락추세(역배열+LH/LL)</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">1-2 모멘텀 검토</div>
+           <div class="fw-q">Q. 추세의 속도가 강해지는가, 약해지는가? (추세=방향, 모멘텀=속도, 다른 질문이다)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><span class="fw-crit-k">RSI(14)</span>방향+레벨, 가격-RSI 다이버전스 여부</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">MACD 히스토그램</span>확대(강화) vs 축소(소진)</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">등락비율</span>상승종목수 ÷ 하락종목수, 5일 추이</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">거래대금 추세</span>당일 대비 5일·20일 평균 비율</div>
+           </div>
+           <div class="fw-verdict">판정: 🟢모멘텀 가속 / 🟡정체 / 🔴소진(다이버전스 확인)</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">1-3 시장 펀더멘탈 검토</div>
+           <div class="fw-q">Q. 이익 사이클과 유동성 환경이 현재 지수 레벨을 뒷받침하는가?</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><span class="fw-crit-k">이익 컨센서스</span>KOSPI 12개월 선행 EPS 상향/하향</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">밸류에이션 밴드</span>시장 PER/PBR의 역사적 밴드 내 위치</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">금리·신용</span>기준금리 방향, 회사채-국고채 스프레드</div>
+             <div class="fw-crit-row"><span class="fw-crit-k">환율 연동</span>원/달러 방향과 외국인 수급의 동조 여부</div>
+           </div>
+           <div class="fw-verdict">판정: 🟢이익·유동성 동반 우호 / 🟡혼조 / 🔴이익·유동성 훼손</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">1-4 메가사이클 판별 (Layer 0)</div>
+           <div class="fw-q">국가급 구조적 사이클 여부를 3개 클러스터 9개 항목으로 판별 — 이 판정이 이후 섹터·종목의 "협소함" 해석을 좌우하는 최상위 레이어.</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>패권·안보</b> — 패권결부 · 절대포기불가성 · 진입장벽(2~3개국 이하 과점, 5년+)</div>
+             <div class="fw-crit-row"><b>산업구조</b> — 신규확장분야 · 투자증대(이례적 CAPEX) · 이익확장성(공급부족→가격결정력)</div>
+             <div class="fw-crit-row"><b>확산성·지속성</b> — 스필오버 · 지속성5년+ · 미래지향성(R&D 로드맵 명시)</div>
+           </div>
+           <div class="fw-verdict">판정: <b>7개+🟢 = 메가사이클 확정</b> / 5~6개(패권클러스터 필수) = 후보 / 4개 이하 = 일반 성장섹터</div></div>
+       </div>
+
+       <div class="fw-panel" data-tab="m2">
+         <div class="fw-sub"><div class="fw-sub-title">2-1 주도섹터 검토 (Layer 1)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><span class="fw-crit-k">A. 수급강도·지속성</span><span class="fw-crit-g">🟢외국인+기관 동시 순매수 지속</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">B. 밸류체인 병목</span><span class="fw-crit-g">🟢공급부족·기술장벽으로 대체 불가</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">C. 실적 확인</span><span class="fw-crit-g">🟢이익 컨센서스 서프라이즈+상향 반복</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">D. 확산도(Breadth)</span><span class="fw-crit-g">🟢중소형주까지 순환 상승</span></div>
+             <div class="fw-crit-row"><span class="fw-crit-k">E. 매크로 정합성</span><span class="fw-crit-g">🟢해외 동종 섹터도 동조 강세</span></div>
+           </div>
+           <div class="fw-verdict">라이프사이클: ①태동기 → ②확산기✅ → ③과열·쏠림기⚠️ → ④쇠퇴기<br>구분법: "이번 주 신고가 종목이 지난주와 다른가?" 다르면 확산기, 매번 같으면 쏠림기.</div>
+           <div class="fw-note">Layer 0 연동: 메가사이클 🟢이면 D축(협소)은 '쏠림 위험'이 아니라 '병목이 소수 기업에 집중된 구조적 특징'으로 재해석. 단 A·C축은 계속 감시.</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">2-2 밸류체인 소부장 검토</div>
+           <div class="fw-q">Q. 완제품·대장주보다 소재·부품·장비(소부장) 기업이 먼저 수익성 변곡점에 도달하는가? — 부품사가 완제품사에 선행하는 패턴을 스크리닝.</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>밸류체인 맵핑</b> — 상류(소재)→중류(부품·장비)→하류(완제품) 분류</div>
+             <div class="fw-crit-row"><b>수익성 변곡 선후비교</b> — 완제품사 대비 부품사의 흑자전환·이익률 개선 시점</div>
+             <div class="fw-crit-row"><b>병목 위치 확인</b> — 공급부족이 실제 발생하는 구간 특정</div>
+             <div class="fw-crit-row"><b>독점성·국산화율</b> — 소수 기업 독점 공급인지, 대체재 존재 여부</div>
+           </div>
+           <div class="fw-verdict">판정: 🟢선행투자후보(부품사가 먼저 마진개선) / 🟡동행(동시개선) / 🔴후행(부품사 마진 정체)</div>
+           <div class="fw-note">매출 성장과 수익성 변곡은 다른 질문 — 매출↑+손실확대는 "아직 투자 시점 아님"일 수 있다. 3-2(포텐셜)의 영업이익률 항목과 반드시 교차 확인.</div></div>
+       </div>
+
+       <div class="fw-panel" data-tab="m3">
+         <div class="fw-sub"><div class="fw-sub-title">3-1 주도주 검토</div>
+           <div class="fw-q">Q. 주도섹터 안에서 실제로 수급·실적을 이끄는 "대장주"는 누구인가? (시총 순위가 아니라 주도력 기준)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>거래대금 점유율</b> — 섹터 내 상위 3종목 합산 거래대금 비중</div>
+             <div class="fw-crit-row"><b>실적 서프라이즈 빈도</b> — 최근 4개 분기 중 컨센서스 상회 횟수</div>
+             <div class="fw-crit-row"><b>수급 집중도</b> — 섹터 전체 외국인+기관 순매수 중 해당 종목 비중</div>
+             <div class="fw-crit-row"><b>리더십 시그널</b> — 섹터 내 신고가를 최초로 갱신하는 종목인지</div>
+           </div>
+           <div class="fw-verdict">판정: 🟢명확한 대장주(집중도 40%+) / 🟡경합 중(2~3종목 분산) / 🔴대장주 부재(확산기 이전)</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">3-2 포텐셜 강한 종목 — 6축 스코어링(100점)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>영업이익 폭발적 증가 가능성</b> 20점 — 증가율의 방향·가속도</div>
+             <div class="fw-crit-row"><b>영업이익률 개선 지속성</b> 15점 — 1회성인가 여러 분기 이어지는가</div>
+             <div class="fw-crit-row"><b>확장성</b> 15점 · <b>차별성</b> 15점 · <b>진입장벽</b> 20점 · <b>경쟁사 비교</b> 15점</div>
+           </div>
+           <div class="fw-verdict">80~100 강력후보 / 60~79 관심 / 40~59 중립 / 40미만 배제</div>
+           <div class="fw-note">🛑 직언 규칙: 매출은 늘어나는데 영업이익률 축이 정체·악화라면, 다른 축이 높아도 "아직 투자 시점 아님"으로 하향 판정 — 매출 성장과 수익성 변곡을 혼동하지 않는다.</div></div>
+       </div>
+
+       <div class="fw-panel" data-tab="m4">
+         <div class="fw-sub"><div class="fw-sub-title">4-1 단기 리스크 스코어 (Part A, 0~100%)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>기술적 구조</b> — 이평선 배열·서킷브레이커·신고저가 비율</div>
+             <div class="fw-crit-row"><b>수급 주체</b> — 외국인 연속 순매도 일수·환율 연동</div>
+             <div class="fw-crit-row"><b>매크로 체제</b> — VIX·금리 방향·유가</div>
+           </div>
+           <div class="fw-verdict">80~100 안전 / 60~79 양호 / 40~59 중립 / 20~39 위험 / 0~19 경고</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">4-2 구조적 저점 스코어 (Part B, 0~100%)</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>밸류에이션 되돌림</b> — 고점대비 -20%+ &amp; PER 밴드 하단</div>
+             <div class="fw-crit-row"><b>펀더멘털 훼손 여부</b> — 실적 견조 vs 전망 하향</div>
+             <div class="fw-crit-row"><b>매도 클라이맥스</b> — 거래량 급증+신저가 폭증</div>
+             <div class="fw-crit-row"><b>수급 전환 조짐</b> — 외국인 매도 강도 둔화 시작</div>
+           </div>
+           <div class="fw-verdict">A+B만 🟢 = 낙폭과대(저점 미확정) / 4개 전부 🟢 = 구조적 저점 확정</div></div>
+       </div>
+
+       <div class="fw-panel" data-tab="m5">
+         <div class="fw-sub"><div class="fw-sub-title">5-1 포트폴리오 검토</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>집중도</b> — 상위 3종목 합산 비중(과도한 쏠림 여부)</div>
+             <div class="fw-crit-row"><b>섹터 분산</b> — 단일 섹터 비중 상한 설정 여부</div>
+             <div class="fw-crit-row"><b>상관관계</b> — 동일 소재·이슈로 함께 움직이는 종목 중복 보유 여부</div>
+           </div>
+           <div class="fw-verdict">권장 현금비중(Part A 등급 연동): 안전10%↓ · 양호10~20% · 중립20~35% · 위험35~50% · 경고50%↑</div>
+           <div class="fw-note">정성적 가이드일 뿐 — 개인별 리스크 허용도·투자기간에 따라 달라져야 한다. 특정 비중을 지시하는 게 아니다.</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">5-2 매매전략 검토</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>진입 기준</b> — 확산기 진입 + 3-1 주도주 신호 결합 시점</div>
+             <div class="fw-crit-row"><b>청산 기준</b> — 손절선(구조 이탈 기준), 목표가·트레일링스탑</div>
+             <div class="fw-crit-row"><b>포지션 사이징</b> — Part A 리스크 등급에 따라 1종목당 최대 비중 조정</div>
+             <div class="fw-crit-row"><b>분할매수·매도</b> — Part B 저점 판정 단계(미확정→확정)에 따른 분할 진입</div>
+           </div>
+           <div class="fw-note">손절%·비중 등 구체적 매매 수치는 실데이터·본인 리스크 허용도 확인 없이 확정 제시하지 않는다 — "됩니다" 대신 확률·전제조건을 분리해 고지한다.</div></div>
+         <div class="fw-sub"><div class="fw-sub-title">5-3 리밸런싱 검토</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>트리거 조건</b> — 라이프사이클 단계 전환, Part A/B 점수 급변, 목표비중 대비 ±X%p 이탈</div>
+             <div class="fw-crit-row"><b>주기</b> — 정기(월간·분기) vs 이벤트 기반(트리거 발생 시 즉시)</div>
+             <div class="fw-crit-row"><b>축소 우선순위</b> — 쇠퇴기 진입 섹터부터 우선 축소</div>
+             <div class="fw-crit-row"><b>재배분 방향</b> — 메가사이클 확정 + 포텐셜 고득점 종목으로 우선 재배분</div>
+           </div></div>
+       </div>
+
+       <div class="fw-panel" data-tab="m6">
+         <div class="fw-sub"><div class="fw-sub-title">최종 통합 판단 프로세스</div>
+           <div class="fw-verdict">1-1~1-3 시장 → 1-4 메가사이클 → 2-1 주도섹터 → 2-2 밸류체인 → 3-1 주도주 → 3-2 포텐셜 → 4-1 단기리스크 → 4-2 구조적저점 → 5-1~5-3 포트폴리오 → 🛑직언 + 최종출력</div>
+           <div class="fw-sub-title" style="margin-top:16px;font-size:.98rem">상충 시 직언 우선순위</div>
+           <div class="fw-crit">
+             <div class="fw-crit-row"><b>Part A 위험 + Part B 저점신호 동시</b> → 4-2 D축(외국인 매도강도 둔화 여부)부터 — 저점 조건 중 가장 늦게·가장 확실하게 나오는 신호</div>
+             <div class="fw-crit-row"><b>시장 리스크는 낮은데(안전) 종목 포텐셜(3-2)이 낮음</b> → 시장 베타 착시 의심, 영업이익률 축 재점검</div>
+             <div class="fw-crit-row"><b>메가사이클 확정인데 2-1 breadth 협소</b> → 재해석 규칙 적용 여부, A축·C축이 여전히 살아있는지가 관건</div>
+             <div class="fw-crit-row"><b>2-2 밸류체인 🟢인데 3-1 대장주 부재</b> → 확산기 진입 이전(태동기)일 가능성, 시기상조인지 선취매 기회인지 구분</div>
+           </div></div>
+       </div>`},
     ]
   },
   {
-    week:6, tag:"WEEK 6 · 추세·차트", title:"차트 분석 — 탑다운으로 좁히고, 힘의 원리로 판정한다",
-    sub:"시장→섹터→종목→차트유형→이평선→이격도→추세→패턴, 그리고 나만의 눌림목 판정법",
+    week:6, tag:"WEEK 6 · 추세·차트", title:"추세 & 차트 — 흐름을 시각화",
+    sub:"차트는 사람들의 심리가 남긴 발자국",
     cards:[
-      {c:"gold", chip:"WHY", t:"차트분석의 본질 — 예언이 아니라 '힘의 흔적'을 읽는 것",
-       body:`<div class="lead">차트는 미래를 맞히는 수정구슬이 아니라, <b>돈이 실제로 들어온 흔적</b>을 읽는 도구다.</div>
-       <ul><li>본질: 캔들 하나하나가 아니라 <b>"힘이 실린 구간"</b>을 찾는 것</li>
-       <li>효율성: 처음부터 차트만 보면 수천 종목을 다 볼 수 없다 — <b>3강 탑다운으로 좁힌 후보에 마지막 필터</b>로 쓸 때 가장 효율적</li></ul>
-       <div class="box-dark">순서: <b>① 시장 → ② 섹터 → ③ 종목 → ④ 차트유형 → ⑤ 이평선 → ⑥ 이격도 → ⑦ 추세 → ⑧ 패턴.</b> 위에서 좁혀온 자리에 차트를 마지막으로 얹는다.</div>`},
-      {c:"sky", chip:"① 시장", t:"지수 차트로 국면부터 — 큰 물결이 먼저다",
-       body:`<ul><li>개별 종목 차트를 보기 전, <b>코스피·코스닥 지수 차트</b>로 정배열/역배열부터 확인</li>
-       <li>시장이 역배열(하락추세)이면 개별 종목의 상승 신호는 신뢰도가 떨어진다</li></ul>
-       <div class="box-red">"떨어지는 칼날을 잡지 마라" — 시장 추세를 거스르는 개별 차트 신호는 의심하고 본다.</div>`},
-      {c:"amber", chip:"② 섹터", t:"섹터지수·ETF 차트로 재확인",
-       body:`<ul><li>2·4강에서 고른 주도섹터를 <b>섹터 ETF 차트</b>로 다시 확인</li>
-       <li>섹터 차트가 시장보다 강하게(상대적으로) 움직이면 진짜 주도섹터일 확률↑</li></ul>`},
-      {c:"coral", chip:"③ 종목", t:"개별 종목 차트 — 탑다운의 마지막 압축",
-       body:`<ul><li>대장주 후보 2~3개를 <b>같은 시간축·같은 배율</b>로 나란히 비교</li>
-       <li>같은 섹터라도 차트 강도(눌림목 깊이·거래량)는 종목마다 다르다 — 여기서 최종 압축</li></ul>`},
-      {c:"lav", chip:"④ 차트 유형", t:"시간봉 선택 — 목적에 맞는 창을 골라라",
-       body:`<ul><li><b>일봉</b> — 스윙(수일~수주) 매매의 기본 단위</li>
-       <li><b>주봉</b> — 큰 흐름·긴 추세 확인용, 노이즈에 덜 흔들림</li>
-       <li><b>분봉</b> — 당일 매매 타이밍용, 단독으로 추세 판단 금지</li></ul>
-       <div class="box-dark">일봉으로 방향을 정하고, 분봉으로 타이밍만 다듬는다 — 반대로 하면 노이즈에 휘둘린다.</div>`},
-      {c:"sky", chip:"⑤ 이동평균선", t:"이평선 = 평균 매수 단가의 흔적",
-       body:`<ul><li>5·20·60·120일 — 그 기간 매수자들의 <b>평균 단가선</b></li>
-       <li><b>정배열</b>(5&gt;20&gt;60&gt;120)=상승 구조 / <b>역배열</b>=하락 구조</li>
-       <li>이평선은 지지·저항으로도 작동 — 특히 20일선은 단기 생명선</li></ul>`},
-      {c:"amber", chip:"⑥ 이격도", t:"이격도 — 주가와 이평선의 거리",
-       body:`<div class="lead">이격도 = (주가 ÷ 이평선) × 100. 얼마나 멀리 떨어져 있는가.</div>
-       <ul><li>이격도가 <b>과도하게 벌어지면</b> 이평선 쪽으로 되돌림 압력 발생(평균 회귀)</li>
-       <li>급등 후 이격도 과열 구간은 추격매수보다 <b>눌림 대기</b>가 정석</li></ul>`},
-      {c:"gold", chip:"⑦⑧ 원문", t:"추세와 패턴 — 차트 마스터 1주차", wide:true,
-       embedSrc:"pages/chartmaster-w1.html"},
-      {c:"gold", chip:"핵심 논지 · 나의 방식", t:"힘의 원리 — 기준봉이 추세의 생사를 정한다",
-       body:`<div class="lead">모든 캔들이 같은 무게를 갖지 않는다. <b>연속 상승 구간에서 가장 강하게(거래량 동반) 뻗은 캔들</b> — 이것이 '기준봉'이다.</div>
-       <ul><li>기준봉은 그 상승의 <b>기준점이자 힘의 증거</b> — 이후 모든 눌림(되돌림)은 이 기준봉을 잣대로 판정한다</li>
-       <li>기준봉이 없으면 그 상승은 아직 '진짜 힘'이 확인되지 않은 상승이다</li></ul>
-       <div class="box-dark">질문을 바꿔라: "지금 눌리고 있나?"가 아니라 <b>"기준봉의 어느 지점까지 눌렸나?"</b>가 진짜 질문이다.</div>`},
-      {c:"coral", chip:"핵심 논지 · 판정 3단계", t:"기준봉 눌림목 — 살아있음 / 횡보 / 하락전환", wide:true,
-       body:`<div class="pz-wrap">
-       <div class="pz-bar"><div class="pz-zone z1">①</div><div class="pz-zone z2">②</div><div class="pz-zone z3">③</div></div>
-       <div class="pz-legend">
-         <div class="pz-row"><span class="pz-t">① 기준봉 1/2선 위 — 추세 살아있음</span>
-           <span class="pz-d">기준봉 몸통(시가~종가)의 50% 되돌림 지점 위에서 눌리는 중 → 상승 추세 <b>유효</b>, 정상적인 숨고르기.</span></div>
-         <div class="pz-row"><span class="pz-t">② 1/2선 하회 — 눌림목 깨짐 → 횡보 전환</span>
-           <span class="pz-d">종가가 <b>기준봉 1/2선 아래로</b> 마감 → "살아있음"에서 격하. 상승도 하락도 아닌 <b>관망 구간</b>으로 전환.</span></div>
-         <div class="pz-row"><span class="pz-t">③ 기준봉 시가 하회 — 하락 추세 전환 확정</span>
-           <span class="pz-d">종가가 <b>기준봉의 시가</b>까지 깨고 내려오면, 그 상승을 만든 힘 자체가 훼손된 것 — <b>하락 추세 전환</b>으로 판정.</span></div>
-       </div></div>
-       <div class="box-red" style="margin-top:16px">되돌림은 항상 온다 — 중요한 건 "눌렸다"가 아니라 <b>"어디까지 눌렸는가"</b>다. 1/2선과 시가, 이 두 개의 선이 생사를 가른다.</div>`},
-      {c:"lav", chip:"실전 체크리스트", t:"기준봉 판정 — 매매 전 3초 점검",
-       body:`<ul><li><b>① 기준봉 찾기</b> — 최근 상승 구간에서 몸통·거래량이 가장 큰 캔들 특정</li>
-       <li><b>② 1/2선 긋기</b> — 기준봉 시가~종가(또는 저가~고가)의 중간값 계산</li>
-       <li><b>③ 현재가 위치 확인</b> — 1/2선 위(①)/아래(②)/시가 아래(③) 중 어디인지 매매 전 항상 점검</li></ul>
-       <div class="box-dark">①구간에서만 신규 진입 우선 검토, ②구간은 관망, ③구간은 <b>추세 훼손 인정하고 재평가</b>.</div>`},
-      {c:"sage", chip:"AI 실습", t:"기준봉·눌림목 판정을 AI에 시키기",
-       body:`<div class="ai"><b>[프롬프트]</b>
-       <span class="ln">차트 캡쳐를 첨부한다. 최근 상승 구간에서 몸통·거래량이 가장 큰 캔들(기준봉)을 특정해줘.</span>
-       <span class="ln">그 캔들의 시가·종가 기준 1/2 되돌림 가격대를 계산해줘.</span>
-       <span class="ln">현재 종가가 ①1/2선 위 ②1/2선~시가 사이 ③시가 아래 중 어디인지 판정해줘.</span>
-       <span class="ln">매매 판단·추천은 하지 말고, 위치 판정과 근거만 사실대로 제시해줘.</span></div>
-       <div class="box-red">AI는 캔들 좌표를 못 보고 이미지로 추정할 뿐이다 — 최종 확인은 항상 본인 눈으로.</div>`}
+      {c:"gold", chip:"제1원칙", t:"추세를 거스르지 마라",
+       body:`<div class="lead">상승·하락·횡보 — 큰 흐름을 거스르지 않는다.</div>
+       <ul><li>"떨어지는 칼날을 잡지 마라"</li><li>추세에 올라타는 게 가장 편한 매매</li></ul>`},
+      {c:"sky", chip:"기본", t:"캔들 읽기",
+       body:`<ul><li><b>양봉</b>(상승)/<b>음봉</b>(하락)</li><li>몸통=시가·종가, 꼬리=고가·저가</li>
+       <li>긴 꼬리 = 세력 간 힘겨루기 흔적</li></ul>`},
+      {c:"amber", chip:"핵심", t:"이동평균선",
+       body:`<ul><li>5·20·60·120일 평균</li><li><b>정배열</b>(단기>장기)=상승 / <b>역배열</b>=하락</li>
+       <li>이평선은 지지·저항 역할도</li></ul>`},
+      {c:"coral", chip:"핵심", t:"지지선 · 저항선",
+       body:`<ul><li><b>지지</b>: 사려고 모이는 가격대</li><li><b>저항</b>: 팔려고 모이는 가격대</li>
+       <li>거래량 동반 돌파 = 신뢰도↑</li></ul>`},
+      {c:"lav", chip:"보조", t:"보조지표는 양념일 뿐",
+       body:`<ul><li>RSI(과열/침체)·MACD(전환) 등</li><li>맹신 금지 — <b>가격·거래량이 본질</b></li></ul>`},
+      {c:"sage", chip:"실습", t:"차트 캡쳐 → AI 분석",
+       body:`<div class="ai">차트를 캡쳐해 "추세·지지저항·이평선 배열을 분석, 단 매매 판단은 빼고 사실만" 요청</div>`}
     ]
   },
   {
@@ -1001,7 +1120,6 @@ const COURSE = [
   },
 ];
 
-function b64ToUtf8(b64){const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new TextDecoder("utf-8").decode(bytes);}
 const ACCENT=["#D4A853","#E8943A","#9B8EC4","#5B9BD5","#7BA68C","#5B9BD5","#E87461","#E8943A","#7BA68C","#D4A853"];
 
 /* ===================== 포스 그래프 데이터 (확장) ===================== */
@@ -1113,12 +1231,6 @@ function cardHTML(c){
       <div class="graphwrap"><div class="graphbox" data-graph="${c.graph.kind}"></div>
       <div class="legend">${(c.graph.legend||[]).map(l=>`<span><i style="background:${legColor(l[0])}"></i>${l[1]}</span>`).join('')}</div>
       <div class="body" style="margin-top:10px">${c.graph.caption||''}</div></div></div>`;
-  }
-  if(c.embedSrc){
-    return `<div class="pcard fullembed" data-c="${c.c}">
-      <div class="fe-label"><span class="fe-chip">${c.chip}</span>${main}</div>
-      <a class="fe-open" href="${c.embedSrc}" target="_blank" rel="noopener">새 탭에서 원본 열기 ↗</a>
-      <iframe src="${c.embedSrc}" loading="lazy" title="${main}"></iframe></div>`;
   }
   return `<div class="pcard" data-c="${c.c}"><span class="chip">${c.chip}</span><h3>${main}</h3>${subHTML}
     <div class="body">${c.body||''}</div></div>`;
@@ -1374,7 +1486,6 @@ function renderBoardList(){
 }
 
 async function boardFetch(){
-  if(boardEditingId) return; // 수정 중엔 자동 새로고침이 입력값을 덮어쓰지 않도록 건너뜀
   try{
     const res=await fetch(BOARD_API+'?clientId='+encodeURIComponent(boardClientId),{cache:'no-store'});
     if(!res.ok) throw new Error('bad status');
@@ -1407,24 +1518,23 @@ async function boardSubmit(){
   }
   btn.disabled=false;
 }
-function boardStartEdit(id){ boardEditingId=id; if(boardTimer){clearInterval(boardTimer);boardTimer=null;} renderBoardList();
+function boardStartEdit(id){ boardEditingId=id; renderBoardList();
   setTimeout(()=>{const ta=document.getElementById('editArea_'+id); if(ta){ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length);}},0);
 }
-function boardResumePolling(){ if(!boardTimer){ boardTimer=setInterval(boardFetch, BOARD_POLL_MS); } }
-function boardCancelEdit(){ boardEditingId=null; boardResumePolling(); renderBoardList(); }
+function boardCancelEdit(){ boardEditingId=null; renderBoardList(); }
 async function boardSaveEdit(id){
   const ta=document.getElementById('editArea_'+id); if(!ta) return;
   const text=ta.value.trim().slice(0,300); if(!text) return;
   if(boardOffline){
     const list=boardLoadLocal(); const idx=list.findIndex(p=>p.id===id);
     if(idx>-1){ list[idx].text=text; list[idx].edited=true; boardSaveLocal(list); }
-    boardEditingId=null; boardResumePolling(); boardPosts=list.map(p=>Object.assign({mine:true},p)); renderBoardList(); return;
+    boardEditingId=null; boardPosts=list.map(p=>Object.assign({mine:true},p)); renderBoardList(); return;
   }
   try{
     const res=await fetch(BOARD_API,{method:'PUT',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({id, clientId:boardClientId, text})});
     if(!res.ok){ const e=await res.json().catch(()=>({})); alert('수정 실패: '+(e.error||res.status)); return; }
-    boardEditingId=null; boardResumePolling(); await boardFetch();
+    boardEditingId=null; await boardFetch();
   }catch(e){ alert('수정 중 오류가 발생했습니다'); }
 }
 async function boardDelete(id){
