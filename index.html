@@ -202,7 +202,11 @@
   .pcard.fullembed{padding:0;overflow:hidden;position:relative;border-width:1px;}
   .pcard.fullembed::before{display:none;}
   .pcard.fullembed iframe{width:100%;height:100%;border:none;display:block;background:#fff;}
-  .fe-label{position:absolute;top:16px;left:16px;z-index:5;display:flex;align-items:center;gap:8px;
+  .fe-home{position:absolute;top:16px;left:16px;z-index:6;background:var(--grad-gold);color:#fff;
+    border:none;font-family:inherit;font-weight:800;font-size:.88rem;padding:9px 17px;border-radius:999px;
+    cursor:pointer;box-shadow:0 8px 24px rgba(212,168,83,.4);transition:.15s;}
+  .fe-home:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(212,168,83,.5);}
+  .fe-label{position:absolute;top:16px;left:118px;z-index:5;display:flex;align-items:center;gap:8px;
     background:rgba(26,22,18,.82);color:#fff;font-weight:800;font-size:.85rem;padding:8px 16px;
     border-radius:999px;backdrop-filter:blur(6px);box-shadow:0 8px 22px rgba(26,22,18,.28);pointer-events:none;}
   .fe-label .fe-chip{background:var(--gold);color:#1A1612;font-size:.72rem;font-weight:900;
@@ -211,6 +215,11 @@
     font-weight:800;font-size:.85rem;padding:8px 16px;border-radius:999px;text-decoration:none;
     box-shadow:0 8px 22px rgba(26,22,18,.2);transition:.15s;}
   .fe-open:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,22,18,.26);}
+  @media (max-width:640px){
+    .fe-home{padding:8px 12px;font-size:.8rem;}
+    .fe-label{left:90px;font-size:.75rem;padding:7px 12px;}
+    .fe-open{font-size:.75rem;padding:7px 12px;}
+  }
   .pcard.fullembed iframe{flex:1;}
 
   /* 기준봉 눌림목 3단계 다이어그램 */
@@ -1116,6 +1125,7 @@ function cardHTML(c){
   }
   if(c.embedSrc){
     return `<div class="pcard fullembed" data-c="${c.c}">
+      <button class="fe-home" onclick="goHome()" title="목차로 돌아가기">🏠 홈</button>
       <div class="fe-label"><span class="fe-chip">${c.chip}</span>${main}</div>
       <a class="fe-open" href="${c.embedSrc}" target="_blank" rel="noopener">새 탭에서 원본 열기 ↗</a>
       <iframe src="${c.embedSrc}" loading="lazy" title="${main}"></iframe></div>`;
