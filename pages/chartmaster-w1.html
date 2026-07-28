@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<!-- saved from url=(0152)https://chart-master4.pages.dev/%EC%B0%A8%ED%8A%B8%EB%A7%88%EC%8A%A4%ED%84%B0_1%EC%A3%BC%EC%B0%A8_%ED%94%84%EB%A0%88%EC%A0%A0%ED%85%8C%EC%9D%B4%EC%85%98 -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>차트 마스터 4주 완성 · 1주차 — 추세와 패턴</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./차트 마스터 4주 완성 · 1주차 — 추세와 패턴_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./차트 마스터 4주 완성 · 1주차 — 추세와 패턴_files/pretendard.min.css">
+<style>
+:root{
+  --bg-primary:#FEFCF8; --bg-warm:#FFF9F0; --bg-card:#FFFFFF; --bg-accent:#FFF5E8;
+  --gold:#D4A853; --gold-deep:#C8922F; --amber:#E8943A; --coral:#E87461; --coral-deep:#D85A46;
+  --sage:#7BA68C; --sage-deep:#5E9A77; --sky:#5B9BD5; --sky-deep:#4F8FCB; --lavender:#9B8EC4;
+  --text-primary:#1A1612; --text-secondary:#6B5E52; --text-muted:#9E8E7E;
+  --line:rgba(26,22,18,0.08);
+  --gradient-gold:linear-gradient(135deg,#D4A853,#E8943A);
+  --gradient-hero:linear-gradient(160deg,#FFF6EA,#FFE2C9,#FFF9F1);
+  --shadow-card:0 6px 30px rgba(26,22,18,0.07);
+  --shadow-soft:0 18px 60px rgba(26,22,18,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Pretendard','Plus Jakarta Sans','Noto Sans KR',sans-serif;
+  color:var(--text-primary); background:var(--bg-primary);
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+/* atmosphere */
+body::before,body::after{content:"";position:fixed;border-radius:50%;filter:blur(80px);z-index:0;pointer-events:none}
+body::before{width:46vw;height:46vw;top:-14vw;right:-10vw;background:radial-gradient(circle,rgba(212,168,83,0.16),transparent 70%)}
+body::after{width:42vw;height:42vw;bottom:-16vw;left:-12vw;background:radial-gradient(circle,rgba(232,116,97,0.12),transparent 70%)}
+
+.serif{font-family:'Playfair Display','Noto Serif KR',Georgia,serif}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* progress + chrome */
+.progress{position:fixed;top:0;left:0;height:5px;width:0;background:var(--gradient-gold);z-index:50;transition:width .45s cubic-bezier(.4,0,.2,1);box-shadow:0 0 14px rgba(212,168,83,.5)}
+.sect-label{position:fixed;top:22px;left:32px;z-index:40;font-size:clamp(.62rem,.9vw,.8rem);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--text-muted)}
+.brand-mark{position:fixed;top:20px;right:32px;z-index:40;font-size:clamp(.62rem,.9vw,.78rem);font-weight:700;letter-spacing:.14em;color:var(--gold-deep);font-family:'Playfair Display',serif}
+.counter{position:fixed;bottom:22px;right:30px;z-index:40;font-family:'JetBrains Mono',monospace;font-size:clamp(.72rem,1vw,.92rem);color:var(--text-secondary);letter-spacing:.06em}
+.counter b{color:var(--gold-deep);font-weight:700}
+.nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:40;display:flex;gap:12px}
+.nav button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--bg-card);color:var(--text-secondary);cursor:pointer;font-size:18px;display:grid;place-items:center;box-shadow:var(--shadow-card);transition:all .25s ease}
+.nav button:hover{transform:translateY(-2px);color:var(--gold-deep);box-shadow:var(--shadow-soft)}
+.nav button:active{transform:translateY(0)}
+
+/* deck */
+.deck{position:relative;height:100vh;width:100vw;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(40px,5.2vw,86px) clamp(36px,6vw,110px) 78px;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease}
+.slide.active{opacity:1;visibility:visible;pointer-events:auto}
+.inner{width:100%;max-width:1240px}
+
+/* entrance anim — replays on each activation */
+.slide .anim{opacity:0}
+.slide.active .anim{animation:rise .62s cubic-bezier(.2,.7,.2,1) forwards}
+.slide.active .anim:nth-child(1){animation-delay:.05s}
+.slide.active .anim:nth-child(2){animation-delay:.13s}
+.slide.active .anim:nth-child(3){animation-delay:.21s}
+.slide.active .anim:nth-child(4){animation-delay:.29s}
+.slide.active .anim:nth-child(5){animation-delay:.37s}
+.slide.active .anim:nth-child(6){animation-delay:.45s}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.slide .anim{opacity:1}.slide.active .anim{animation:none}}
+
+/* typography pieces */
+.kicker{display:inline-flex;align-items:center;gap:9px;font-size:clamp(.72rem,1vw,.92rem);font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.kicker::before{content:"";width:26px;height:2px;background:currentColor;display:inline-block}
+.k-gold{color:var(--gold-deep)} .k-coral{color:var(--coral-deep)} .k-sage{color:var(--sage-deep)} .k-sky{color:var(--sky-deep)}
+.title{font-family:'Playfair Display','Noto Serif KR',serif;font-weight:900;line-height:1.08;letter-spacing:-.01em;font-size:clamp(2.1rem,4.6vw,3.9rem);margin:.34em 0 .42em}
+.lead{font-size:clamp(1.04rem,1.75vw,1.62rem);line-height:1.6;color:var(--text-secondary);font-weight:400;}
+.lead b{color:var(--text-primary);font-weight:700}
+.points{list-style:none;margin:1.1em 0 0;display:flex;flex-direction:column;gap:.62em}
+.points li{position:relative;padding-left:1.5em;font-size:clamp(1rem,1.62vw,1.46rem);line-height:1.5;color:var(--text-primary)}
+.points li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+.points li b{font-weight:700}
+.hl{background:linear-gradient(transparent 58%,rgba(212,168,83,.32) 0);padding:0 .05em}
+.hl-c{background:linear-gradient(transparent 58%,rgba(232,116,97,.28) 0)}
+
+.callout{margin-top:1.3em;background:var(--bg-card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:16px;padding:clamp(15px,1.7vw,22px) clamp(18px,2vw,26px);box-shadow:var(--shadow-card)}
+.callout .tag{display:inline-block;font-size:clamp(.66rem,.9vw,.8rem);font-weight:800;letter-spacing:.12em;color:var(--gold-deep);text-transform:uppercase;margin-bottom:.45em}
+.callout p{font-size:clamp(.98rem,1.55vw,1.4rem);line-height:1.5;color:var(--text-primary)}
+.callout.coral{border-left-color:var(--coral)} .callout.coral .tag{color:var(--coral-deep)}
+
+/* layouts */
+.two-col{display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(28px,4vw,64px);align-items:center}
+.chartbox{width:100%;background:linear-gradient(180deg,#FFFFFF,#FFFDF8);border:1px solid var(--line);border-radius:22px;padding:14px 16px;box-shadow:var(--shadow-soft)}
+.chartbox .cap{font-size:clamp(.74rem,1.05vw,.95rem);font-weight:600;color:var(--text-muted);text-align:center;margin-top:4px;letter-spacing:.02em}
+.chart-svg{width:100%;height:auto;display:block}
+.chart-svg text.pen{font-family:'Nanum Pen Script',cursive;font-weight:400}
+
+.minis{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,26px);margin-top:1.1em}
+.minis.two{grid-template-columns:repeat(2,1fr)}
+.mini{background:linear-gradient(180deg,#FFFFFF,#FFFDF8);border:1px solid var(--line);border-radius:18px;padding:10px 12px 6px;box-shadow:var(--shadow-card)}
+.mini h4{font-family:'Noto Serif KR',serif;font-weight:700;font-size:clamp(.96rem,1.45vw,1.35rem);text-align:center;margin-bottom:2px}
+.mini p{text-align:center;font-size:clamp(.78rem,1.05vw,1rem);color:var(--text-secondary);line-height:1.35;min-height:2.4em;margin-top:3px}
+.minis .chart-svg{max-height:min(34vh,300px);width:100%;display:block;margin:0 auto}
+.chartbox.mini2{padding:8px 12px}
+.chartbox.mini2 .chart-svg{max-height:25vh}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px);margin-top:1.4em}
+.cards.four{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--bg-card);border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:18px;padding:clamp(18px,2vw,28px);box-shadow:var(--shadow-card)}
+.card .num{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(1.6rem,3vw,2.6rem);color:var(--gold-deep);line-height:1}
+.card h3{font-family:'Noto Serif KR',serif;font-weight:700;font-size:clamp(1.05rem,1.6vw,1.5rem);margin:.45em 0 .35em}
+.card p{font-size:clamp(.92rem,1.32vw,1.2rem);line-height:1.5;color:var(--text-secondary)}
+.card.c2{border-top-color:var(--coral)} .card.c2 .num{color:var(--coral-deep)}
+.card.c3{border-top-color:var(--sage)} .card.c3 .num{color:var(--sage-deep)}
+.card.c4{border-top-color:var(--sky)} .card.c4 .num{color:var(--sky-deep)}
+
+/* cover */
+.cover{text-align:center}
+.cover .eyebrow{font-size:clamp(.78rem,1.1vw,1rem);font-weight:700;letter-spacing:.4em;text-transform:uppercase;color:var(--gold-deep)}
+.cover h1{font-family:'Playfair Display','Noto Serif KR',serif;font-weight:900;font-size:clamp(3rem,8.4vw,7rem);line-height:.98;letter-spacing:-.02em;margin:.18em 0 .1em}
+.cover .rule{width:84px;height:3px;background:var(--gradient-gold);margin:1.1rem auto 1.3rem;border-radius:3px}
+.cover h2{font-family:'Noto Serif KR',serif;font-weight:600;font-size:clamp(1.2rem,2.4vw,2rem);color:var(--text-primary)}
+.cover .beat{margin-top:1.6rem;display:inline-flex;align-items:center;gap:clamp(8px,1.4vw,18px);flex-wrap:wrap;justify-content:center}
+.cover .beat span{background:var(--bg-card);border:1px solid var(--line);border-radius:30px;padding:9px 20px;font-size:clamp(.85rem,1.3vw,1.15rem);font-weight:600;box-shadow:var(--shadow-card)}
+.cover .beat i{color:var(--gold-deep);font-style:normal}
+.cover .hint{margin-top:2.2rem;font-size:clamp(.74rem,1vw,.9rem);color:var(--text-muted)}
+.cover .hint kbd{font-family:'JetBrains Mono',monospace;background:var(--bg-accent);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:.85em;color:var(--text-secondary)}
+
+/* divider */
+.divider{text-align:left}
+.divider .dnum{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(4.6rem,15vw,12rem);line-height:.86;background:var(--gradient-gold);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.divider .dname{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(2.4rem,6vw,4.6rem);margin-top:.05em;letter-spacing:-.01em}
+.divider .dsub{font-size:clamp(1.05rem,1.9vw,1.7rem);color:var(--text-secondary);margin-top:.8rem;line-height:1.5}
+.divider .deyebrow{font-size:clamp(.8rem,1.1vw,1rem);letter-spacing:.34em;text-transform:uppercase;color:var(--coral-deep);font-weight:700}
+
+/* statement slide */
+.statement{text-align:center;max-width:980px;margin:0 auto}
+.statement .stop{font-size:clamp(2.4rem,5vw,3.6rem)}
+.statement h2{font-family:'Playfair Display','Noto Serif KR',serif;font-weight:900;font-size:clamp(2.4rem,6.2vw,5rem);line-height:1.08;margin:.18em 0 .5em;letter-spacing:-.01em}
+.statement h2 em{font-style:normal;color:var(--coral-deep)}
+.statement p{font-size:clamp(1.05rem,1.9vw,1.6rem);line-height:1.6;color:var(--text-secondary);margin:0 auto .7em}
+.statement p b{color:var(--text-primary)}
+
+/* disclaimer */
+.disc{margin-top:1.4em;font-size:clamp(.78rem,1.1vw,.98rem);color:var(--text-muted);line-height:1.55;border-top:1px solid var(--line);padding-top:1em;}
+
+.diff{display:inline-flex;align-items:center;gap:12px;background:rgba(123,166,140,.12);border:1px solid rgba(123,166,140,.3);color:var(--sage-deep);border-radius:30px;padding:10px 22px;font-weight:700;font-size:clamp(.92rem,1.4vw,1.25rem);margin-top:.4em}
+
+@media (max-width:900px){
+  .two-col{grid-template-columns:1fr;gap:22px}
+  .col-chart{order:2}
+  .cards,.cards.four{grid-template-columns:1fr 1fr}
+  .minis{grid-template-columns:1fr}
+  .slide{padding:64px 26px 84px}
+}
+
+/* 한글 줄바꿈: 단어 단위 유지 */
+.lead,.points li,.callout p,.card h3,.card p,.mini h4,.mini p,.cover h1,.cover h2,.title,.dsub,.dlead,h1,h2,h3,h4,li,p{word-break:keep-all;overflow-wrap:break-word}
+/* 섹션 디바이더 서브문구: 폭 확대(문장 단위로 깔끔히 줄바꿈) */
+.divider .dsub{}
+/* 캔버스 펜 */
+.nav{z-index:60}
+#pen-layer{position:fixed;inset:0;z-index:45;pointer-events:none;touch-action:none}
+#pen-layer.on{pointer-events:auto;cursor:crosshair}
+#pen.active{color:var(--gold-deep);border-color:var(--gold);box-shadow:var(--shadow-soft)}
+.pen-tools{position:fixed;bottom:80px;right:20px;z-index:70;display:none;align-items:center;gap:11px;background:rgba(255,253,248,.97);border:1px solid var(--line);border-radius:40px;padding:8px 15px;box-shadow:var(--shadow-soft);font-family:'Pretendard','Plus Jakarta Sans',sans-serif}.pen-tools.left{right:auto;left:20px}.pen-tools .pmove{font-size:.95rem;line-height:1}
+body.pen-active .pen-tools{display:flex}
+.pen-tools .swatch{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0;transition:transform .15s ease}
+.pen-tools .swatch:hover{transform:scale(1.08)}
+.pen-tools .swatch.active{box-shadow:0 0 0 2px var(--gold-deep);transform:scale(1.14)}
+.sw-black{background:#1A1612}.sw-red{background:#E0301E}.sw-blue{background:#2E6FD6}
+.sw-hl{background:linear-gradient(135deg,#FFE100,#FFD000)}
+.pen-tools .sep{width:1px;height:22px;background:var(--line)}
+.pen-tools .ptool{border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 13px;font-size:.82rem;font-weight:600;color:var(--text-secondary);cursor:pointer;font-family:inherit}
+.pen-tools .ptool:hover{color:var(--text-primary)}
+.pen-tools .ptool.active{background:var(--coral);color:#fff;border-color:var(--coral)}
+.pen-tools .hintk{font-size:.72rem;color:var(--text-muted);letter-spacing:.02em}
+</style>
+</head>
+<body>
+<div class="progress" id="bar" style="width: 100%;"></div>
+<div class="sect-label" id="sect">THANK YOU</div>
+<div class="brand-mark">차트 마스터</div>
+<div class="counter"><b id="cur">28</b> / <span id="tot">28</span></div>
+<div class="nav"><button id="prev" aria-label="이전">‹</button><button id="full" aria-label="전체화면">⤢</button><button id="pen" aria-label="펜 (P)">✎</button><button id="next" aria-label="다음">›</button></div>
+<canvas id="pen-layer" width="1884" height="883" style="width: 1884px; height: 883px;"></canvas>
+<div class="pen-tools" id="penTools"><button class="swatch sw-black active" data-color="#1A1612" data-mode="pen" aria-label="검정 (1)" title="검정 (1)"></button><button class="swatch sw-red" data-color="#E0301E" data-mode="pen" aria-label="빨강 (2)" title="빨강 (2)"></button><button class="swatch sw-blue" data-color="#2E6FD6" data-mode="pen" aria-label="파랑 (3)" title="파랑 (3)"></button><button class="swatch sw-hl" data-color="#FFE100" data-mode="hl" aria-label="형광 (4)" title="형광 (4)"></button><span class="sep"></span><button class="ptool" id="penErase" aria-label="지우개 (E)" title="지우개 (E)">지우개</button><button class="ptool" id="penClear" aria-label="전체 지우기 (C)" title="전체 지우기 (C)">지우기</button><span class="sep"></span><span class="hintk">P 끌기</span><span class="sep"></span><button class="ptool pmove" id="penMove" title="좌/우 하단 이동" aria-label="좌우 이동" onclick="document.getElementById(&#39;penTools&#39;).classList.toggle(&#39;left&#39;)">⇄</button></div>
+
+<div class="deck" id="deck">
+
+<!-- 1 COVER -->
+<section class="slide" data-sect="PREMIUM CHART COURSE">
+  <div class="inner cover">
+    <div class="eyebrow anim">PREMIUM CHART COURSE · 4-WEEK MASTERY</div>
+    <h1 class="anim">차트 마스터</h1>
+    <div class="rule anim"></div>
+    <h2 class="anim">1주차 — 추세와 패턴, <i style="color:var(--gold-deep);font-style:normal">차트를 읽는 눈</i></h2>
+    <div class="beat anim">
+      <span><i>①</i> 개념</span>
+      <span style="color:var(--text-muted)">→</span>
+      <span><i>②</i> 차트 증거</span>
+      <span style="color:var(--text-muted)">→</span>
+      <span><i>③</i> 실전 활용</span>
+    </div>
+    <p class="hint anim"><kbd>←</kbd> <kbd>→</kbd> 또는 화면 버튼으로 이동 · <kbd>Space</kbd> 다음 · <kbd>F</kbd> 전체화면</p>
+  </div>
+</section>
+
+<!-- 2 AGENDA -->
+<section class="slide" data-sect="ORIENTATION">
+  <div class="inner">
+    <span class="kicker k-gold anim">오늘의 흐름</span>
+    <h2 class="title anim">오늘, 이렇게 갑니다</h2>
+    <p class="lead anim">모든 개념은 똑같은 <b>3비트 리듬</b>으로 전달됩니다.<br>이론만 주고 끝내지 않습니다 — 매번 <b>"그래서 매매에 이렇게 쓴다"</b>로 닫습니다.</p>
+    <div class="cards anim">
+      <div class="card"><div class="num">①</div><h3>개념</h3><p>왜 이게 중요한가.<br>시장의 본질을 한 줄로.</p></div>
+      <div class="card c2"><div class="num">②</div><h3>차트 증거</h3><p>실제 차트 어디서 확인하나.<br>눈으로 본다.</p></div>
+      <div class="card c3"><div class="num">③</div><h3>실전 활용</h3><p>살 자리·팔 자리·나갈 자리로 연결.</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">Roadmap</span><p><b>Part 0</b> 기초 살짝 &nbsp;→&nbsp; <b>Part 1</b> 추세 &nbsp;→&nbsp; <b>Part 2</b> 패턴.<br>&nbsp;“추세를 모르면 패턴은 외우기, 추세를 알면 패턴은 이해.”</p></div>
+  </div>
+</section>
+
+<!-- 3 DIVIDER 0 -->
+<section class="slide" data-sect="PART 0 · 기초">
+  <div class="inner divider">
+    <div class="deyebrow anim">FOUNDATION</div>
+    <div class="dnum anim">00</div>
+    <div class="dname anim">기초 다지기</div>
+    <p class="dsub anim">캔들 하나, 거래량 하나로 <b style="color:var(--text-primary)">"지금 누가 이기고 있나"</b>를 읽는다.<br>여기는 가볍게, 빠르게.</p>
+  </div>
+</section>
+
+<!-- 4 차트란 -->
+<section class="slide" data-sect="PART 0 · 기초">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">개념 · 01</span>
+      <h2 class="title anim">차트란 무엇인가</h2>
+      <p class="lead anim">차트는 <b>가격의 역사 + 시장 심리의 기록</b>.<br>한마디로 <span class="hl">사려는 힘과 팔려는 힘이 부딪힌 결과물</span>입니다.</p>
+      <ul class="points anim">
+        <li>오른다 = 그 순간 <b>사려는 힘</b>이 더 셌다</li>
+        <li>내린다 = 그 순간 <b>팔려는 힘</b>이 더 셌다</li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>차트 읽기는 <b>'예언'이 아니라 '힘의 균형 읽기'</b>.<br>이 관점 하나로 시작합니다.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="basicCandles"><svg viewBox="0 0 600 392" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen1" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="1" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG1" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC1" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS1" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="496" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="117" x2="496" y2="117" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="196" x2="496" y2="196" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="275" x2="496" y2="275" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="354" x2="496" y2="354" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="96.33" y1="227.6" x2="96.33" y2="311.87" stroke="#E87461" stroke-width="2.2"></line><rect x="83.33" y="238.13" width="26" height="52.67" rx="2" fill="#E87461"></rect><line x1="169" y1="206.53" x2="169" y2="269.73" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="156" y="238.13" width="26" height="21.07" rx="2" fill="#5B9BD5"></rect><line x1="241.67" y1="153.87" x2="241.67" y2="269.73" stroke="#E87461" stroke-width="2.2"></line><rect x="228.67" y="164.4" width="26" height="94.80" rx="2" fill="#E87461"></rect><line x1="314.33" y1="132.8" x2="314.33" y2="217.07" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="301.33" y="164.4" width="26" height="42.13" rx="2" fill="#5B9BD5"></rect><line x1="387" y1="101.2" x2="387" y2="217.07" stroke="#E87461" stroke-width="2.2"></line><rect x="374" y="111.73" width="26" height="94.80" rx="2" fill="#E87461"></rect><line x1="459.67" y1="69.6" x2="459.67" y2="185.47" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="446.67" y="111.73" width="26" height="52.67" rx="2" fill="#5B9BD5"></rect><text x="235.67" y="139.87" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-6 235.67 139.87)">매수 승</text><text x="467.67" y="59.6" class="pen" fill="#4F8FCB" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-4 467.67 59.6)">매도 승</text></svg></div><div class="cap">빨강은 매수세 승리, 파랑은 매도세 승리</div></div></div>
+  </div>
+</section>
+
+<!-- 5 왜 통하나 -->
+<section class="slide" data-sect="PART 0 · 기초">
+  <div class="inner">
+    <span class="kicker k-gold anim">개념 · 02</span>
+    <h2 class="title anim">왜 차트가 ‘통하나’ — 3가지 전제</h2>
+    <p class="lead anim" style="">이 3개 위에서만 기술적 분석이 작동합니다.<br>(다우 이론의 출발점)</p>
+    <div class="cards anim">
+      <div class="card"><div class="num">1</div><h3>가격에 다 녹아 있다</h3><p>재료·심리·수급이 이미 가격에 반영된다.</p></div>
+      <div class="card c2"><div class="num">2</div><h3>가격은 추세를 만든다</h3><p>한 번 방향을 잡으면 관성으로 이어진다.</p></div>
+      <div class="card c3"><div class="num">3</div><h3>역사는 반복된다</h3><p>사람 심리는 안 변한다 → 같은 패턴 재현.</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">한 줄 정리</span><p>“차트가 점쟁이냐?” 아니요.<br><b>이 3가지 전제가 성립하기에</b> 통하는 것입니다.</p></div>
+  </div>
+</section>
+
+<!-- 6 캔들 읽기 -->
+<section class="slide" data-sect="PART 0 · 기초">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">개념 · 03 · 핵심</span>
+      <h2 class="title anim">캔들 한 개 읽기</h2>
+      <p class="lead anim">캔들 1개 = <b>네 개의 가격(OHLC)</b>.<br>그중 <span class="hl">종가가 그 싸움의 ‘결론’</span>입니다.</p>
+      <ul class="points anim">
+        <li><b>몸통</b> = 시가~종가 = 그 기간의 결론</li>
+        <li><b>꼬리</b> = 시도했지만 되돌려진 가격(실패)</li>
+        <li>★ 한국식: <b style="color:var(--coral-deep)">빨강=상승(양봉)</b> / <b style="color:var(--sky-deep)">파랑=하락(음봉)</b></li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>긴 빨강 몸통=매수 압도 · 위꼬리 김=위에 매도벽 · 아래꼬리 김=아래 매수세.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="anatomy"><svg viewBox="0 0 660 460" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="candle anatomy"><line x1="210" y1="60" x2="210" y2="360" stroke="#E87461" stroke-width="3"></line><rect x="181" y="120" width="58" height="180" rx="4" fill="#E87461"></rect><line x1="560" y1="80" x2="560" y2="350" stroke="#5B9BD5" stroke-width="3"></line><rect x="531" y="130" width="58" height="160" rx="4" fill="#5B9BD5"></rect><line x1="210" y1="60" x2="348" y2="72" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="356" y="80" class="pen" fill="#6B5E52" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">고가 (H)</text><line x1="239" y1="120" x2="348" y2="130" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="356" y="138" class="pen" fill="#D85A46" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">종가 (C)</text><line x1="239" y1="300" x2="348" y2="300" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="356" y="308" class="pen" fill="#D85A46" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">시가 (O)</text><line x1="210" y1="360" x2="348" y2="352" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="356" y="360" class="pen" fill="#6B5E52" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">저가 (L)</text><text x="150" y="215" class="pen" fill="#1A1612" font-size="30" text-anchor="end" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">몸통</text><text x="150" y="245" class="pen" fill="#9E8E7E" font-size="24" text-anchor="end" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">= 결론</text><text x="150" y="92" class="pen" fill="#9E8E7E" font-size="24" text-anchor="end" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">위꼬리</text><text x="150" y="338" class="pen" fill="#9E8E7E" font-size="24" text-anchor="end" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">아래꼬리</text><line x1="155" y1="210" x2="181" y2="210" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="210" y="408" class="pen" fill="#D85A46" font-size="32" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">양봉 (빨강)</text><text x="210" y="436" class="pen" fill="#6B5E52" font-size="23" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">종가 &gt; 시가 · 상승</text><text x="560" y="408" class="pen" fill="#4F8FCB" font-size="32" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">음봉 (파랑)</text><text x="560" y="436" class="pen" fill="#6B5E52" font-size="23" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">종가 &lt; 시가 · 하락</text></svg></div><div class="cap">양봉(빨강)과 음봉(파랑)의 구조</div></div></div>
+  </div>
+</section>
+
+<!-- 7 거래량 -->
+<section class="slide" data-sect="PART 0 · 기초">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">개념 · 04</span>
+      <h2 class="title anim">거래량 = 신뢰도 도장</h2>
+      <p class="lead anim">가격이 <b>‘무엇’</b>이라면, 거래량은 <span class="hl">‘그게 진짜냐’</span>를 말해줍니다.</p>
+      <ul class="points anim">
+        <li>상승 <b>+ 거래량 폭증</b> = 신뢰도 높은 상승</li>
+        <li>상승 <b>+ 거래량 빈약</b> = 의심 (언제든 꺾임)</li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>이제부터 원칙: <b>가격은 항상 거래량과 함께 본다.</b></p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="volCandles"><svg viewBox="0 0 600 392" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen3" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="3" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG3" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC3" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS3" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="496" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="96.23" x2="496" y2="96.23" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="154.46" x2="496" y2="154.46" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="212.69" x2="496" y2="212.69" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="270.92" x2="496" y2="270.92" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><rect x="83.33" y="329.47" width="26" height="22.53" rx="2" fill="rgba(232,116,97,.34)"></rect><rect x="156" y="310.70" width="26" height="41.30" rx="2" fill="rgba(232,116,97,.34)"></rect><rect x="228.67" y="282.92" width="26" height="69.08" rx="2" fill="rgba(232,116,97,.34)"></rect><rect x="301.33" y="291.93" width="26" height="60.07" rx="2" fill="rgba(232,116,97,.34)"></rect><rect x="374" y="332.48" width="26" height="19.52" rx="2" fill="rgba(91,155,213,.34)"></rect><rect x="446.67" y="336.98" width="26" height="15.02" rx="2" fill="rgba(91,155,213,.34)"></rect><line x1="96.33" y1="212.69" x2="96.33" y2="251.51" stroke="#E87461" stroke-width="2.2"></line><rect x="83.33" y="217.54" width="26" height="24.27" rx="2" fill="#E87461"></rect><line x1="169" y1="183.58" x2="169" y2="222.4" stroke="#E87461" stroke-width="2.2"></line><rect x="156" y="188.43" width="26" height="29.11" rx="2" fill="#E87461"></rect><line x1="241.67" y1="139.9" x2="241.67" y2="193.28" stroke="#E87461" stroke-width="2.2"></line><rect x="228.67" y="149.61" width="26" height="38.82" rx="2" fill="#E87461"></rect><line x1="314.33" y1="110.79" x2="314.33" y2="159.31" stroke="#E87461" stroke-width="2.2"></line><rect x="301.33" y="125.34" width="26" height="24.27" rx="2" fill="#E87461"></rect><line x1="387" y1="105.94" x2="387" y2="139.9" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="374" y="125.34" width="26" height="9.71" rx="2" fill="#5B9BD5"></rect><line x1="459.67" y1="120.49" x2="459.67" y2="154.46" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="446.67" y="135.05" width="26" height="14.56" rx="2" fill="#5B9BD5"></rect><ellipse cx="241.67" cy="169.02" rx="30" ry="42" fill="none" stroke="#5E9A77" stroke-width="3.2" filter="url(#pen3)"></ellipse><text x="239.67" y="74.82" class="pen" fill="#5E9A77" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-4 239.67 74.82)">거래량 폭증</text><text x="239.67" y="81.41" class="pen" fill="#5E9A77" font-size="28" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">= 신뢰 ↑</text><text x="465.67" y="114.49" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-4 465.67 114.49)">거래량 빈약</text><text x="465.67" y="138.49" class="pen" fill="#E87461" font-size="28" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">= 의심</text></svg></div><div class="cap">같은 상승이라도 거래량이 신뢰도를 가른다</div></div></div>
+  </div>
+</section>
+
+<!-- 8 DIVIDER 1 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner divider">
+    <div class="deyebrow anim">THE TREND IS YOUR FRIEND</div>
+    <div class="dnum anim">01</div>
+    <div class="dname anim">추세</div>
+    <p class="dsub anim">차트 매매의 <b style="color:var(--text-primary)">9할</b>은 ‘지금 추세가 무엇인가’ 판단에서 갈린다.<br>흐름을 거스르지 않는다.</p>
+  </div>
+</section>
+
+<!-- 9 추세 3종 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner">
+    <span class="kicker k-gold anim">개념 · 핵심</span>
+    <h2 class="title anim">추세란? 딱 3종류</h2>
+    <p class="lead anim" style="">가장 실전적인 정의 — <b>고점과 저점이 ‘같이’ 높아지면 상승, 같이 낮아지면 하락.</b><br>지표 없이 이것만으로 판단됩니다.</p>
+    <div class="minis anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="trendUp"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen4" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="4" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG4" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC4" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS4" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="60.67,230 60.67,210.14 110,150.55 159.33,177.03 208.67,104.21 258,137.31 307.33,57.86 307.33,230" fill="url(#area4)"></polygon><polyline points="60.67,210.14 110,150.55 159.33,177.03 208.67,104.21 258,137.31 307.33,57.86" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><circle cx="110" cy="150.55" r="5.5" fill="#E87461"></circle><circle cx="208.67" cy="104.21" r="5.5" fill="#E87461"></circle><circle cx="307.33" cy="57.86" r="5.5" fill="#E87461"></circle><circle cx="159.33" cy="177.03" r="5.5" fill="#5E9A77"></circle><circle cx="258" cy="137.31" r="5.5" fill="#5E9A77"></circle><text x="208.67" y="200.41" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">고점·저점 ↑</text></svg></div><h4 style="color:var(--coral-deep)">상승추세 ↗</h4><p>고점 ↑ + 저점 ↑<br>(Higher High / Higher Low)</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="trendDown"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen5" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="5" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG5" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC5" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS5" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="60.67,230 60.67,57.86 110,124.07 159.33,97.59 208.67,170.41 258,137.31 307.33,210.14 307.33,230" fill="url(#area5)"></polygon><polyline points="60.67,57.86 110,124.07 159.33,97.59 208.67,170.41 258,137.31 307.33,210.14" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><circle cx="110" cy="124.07" r="5.5" fill="#E87461"></circle><circle cx="208.67" cy="170.41" r="5.5" fill="#E87461"></circle><circle cx="159.33" cy="97.59" r="5.5" fill="#4F8FCB"></circle><circle cx="258" cy="137.31" r="5.5" fill="#4F8FCB"></circle><text x="208.67" y="84.97" class="pen" fill="#4F8FCB" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">고점·저점 ↓</text></svg></div><h4 style="color:var(--sky-deep)">하락추세 ↘</h4><p>고점 ↓ + 저점 ↓<br>(Lower High / Lower Low)</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="trendSide"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen6" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="6" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG6" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC6" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS6" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="57.14,230 57.14,184.29 99.43,83.71 141.71,175.14 184,92.86 226.29,175.14 268.57,83.71 310.86,175.14 310.86,230" fill="url(#area6)"></polygon><polyline points="57.14,184.29 99.43,83.71 141.71,175.14 184,92.86 226.29,175.14 268.57,83.71 310.86,175.14" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="36" y1="83.71" x2="332" y2="83.71" stroke="#E87461" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen6)"></line><line x1="36" y1="184.29" x2="332" y2="184.29" stroke="#5E9A77" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen6)"></line><text x="184" y="124.86" class="pen" fill="#1A1612" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">박스권</text></svg></div><h4 style="color:var(--text-secondary)">횡보 ↔</h4><p>일정 범위 안 박스권<br>(방향 없음)</p></div>
+    </div>
+    <div class="callout coral anim"><span class="tag">실전 활용</span><p><b>추세를 거슬러 베팅하지 않는다.</b><br>하락추세에서 “싸 보여서” 사는 ‘떨어지는 칼날 잡기’가 초보 계좌를 녹이는 1순위.</p></div>
+  </div>
+</section>
+
+<!-- 10 추세선 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">개념 · 차트 증거</span>
+      <h2 class="title anim">추세선 긋기</h2>
+      <p class="lead anim">상승추세 = <b>저점들을 이은 선</b>(지지 역할).<br>하락추세 = 고점들을 이은 선(저항 역할).</p>
+      <ul class="points anim">
+        <li>점 <b>2개</b>로 긋는다</li>
+        <li><b>3번째 터치에서 반등</b>하면 = 진짜 추세선</li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>추세선 <b>터치 = 매수 후보</b>, 추세선 <b>이탈 = 관망·청산</b>.<br>손절은 선 살짝 아래.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="trendline"><svg viewBox="0 0 600 372" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen7" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="7" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG7" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC7" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS7" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="496" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="112" x2="496" y2="112" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="186" x2="496" y2="186" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="260" x2="496" y2="260" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="334" x2="496" y2="334" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="91.14" y1="262.96" x2="91.14" y2="310.32" stroke="#E87461" stroke-width="2.2"></line><rect x="78.14" y="274.8" width="26" height="29.60" rx="2" fill="#E87461"></rect><line x1="153.43" y1="215.6" x2="153.43" y2="280.72" stroke="#E87461" stroke-width="2.2"></line><rect x="140.43" y="227.44" width="26" height="47.36" rx="2" fill="#E87461"></rect><line x1="215.71" y1="203.76" x2="215.71" y2="262.96" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="202.71" y="227.44" width="26" height="23.68" rx="2" fill="#5B9BD5"></rect><line x1="278" y1="168.24" x2="278" y2="257.04" stroke="#E87461" stroke-width="2.2"></line><rect x="265" y="180.08" width="26" height="71.04" rx="2" fill="#E87461"></rect><line x1="340.29" y1="144.56" x2="340.29" y2="215.6" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="327.29" y="180.08" width="26" height="23.68" rx="2" fill="#5B9BD5"></rect><line x1="402.57" y1="109.04" x2="402.57" y2="209.68" stroke="#E87461" stroke-width="2.2"></line><rect x="389.57" y="120.88" width="26" height="82.88" rx="2" fill="#E87461"></rect><line x1="464.86" y1="79.44" x2="464.86" y2="168.24" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="451.86" y="120.88" width="26" height="35.52" rx="2" fill="#5B9BD5"></rect><path d="M 215.71 262.96 L 464.86 165.28" stroke="#C8922F" stroke-width="3.6" fill="none" stroke-linecap="round" filter="url(#pen7)"></path><ellipse cx="464.86" cy="165.28" rx="24" ry="20" fill="none" stroke="#C8922F" stroke-width="3.2" filter="url(#pen7)"></ellipse><text x="470.86" y="199.28" class="pen" fill="#C8922F" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">3번째 터치</text><text x="470.86" y="223.28" class="pen" fill="#C8922F" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">= 진짜 추세선</text><text x="145.43" y="227.28" class="pen" fill="#C8922F" font-size="28" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-12 145.43 227.28)">저점을 잇는다</text></svg></div><div class="cap">상승추세선: 저점을 잇고, 3번째 터치에서 확인</div></div></div>
+  </div>
+</section>
+
+<!-- 11 지지 저항 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">개념 · 차트 증거</span>
+      <h2 class="title anim">지지 · 저항 + 역할 전환</h2>
+      <p class="lead anim"><b style="color:var(--sage-deep)">지지</b>=매수세가 받치는 바닥.<br><b style="color:var(--coral-deep)">저항</b>=매도세가 누르는 천장.</p>
+      <ul class="points anim">
+        <li>강한 자리: 전 고점/저점 · 거래 폭증 가격대 · 라운드 넘버</li>
+        <li>★ <b>역할 전환</b>: 저항을 강하게 뚫으면 → 그 가격이 <b>지지</b>가 된다</li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>매수는 <b>지지 근처</b>, 손절은 <b>라인 아래</b>.<br>저항 직전 신규 매수는 자제.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="suppres"><svg viewBox="0 0 600 372" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen8" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="8" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area8" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG8" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC8" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS8" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="496" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="112" x2="496" y2="112" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="186" x2="496" y2="186" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="260" x2="496" y2="260" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="334" x2="496" y2="334" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="87.25" y1="221.24" x2="87.25" y2="291.71" stroke="#E87461" stroke-width="2.2"></line><rect x="74.25" y="235.33" width="26" height="42.29" rx="2" fill="#E87461"></rect><line x1="141.75" y1="157.81" x2="141.75" y2="256.48" stroke="#E87461" stroke-width="2.2"></line><rect x="128.75" y="221.24" width="26" height="14.09" rx="2" fill="#E87461"></rect><line x1="196.25" y1="193.05" x2="196.25" y2="284.67" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="183.25" y="221.24" width="26" height="49.33" rx="2" fill="#5B9BD5"></rect><line x1="250.75" y1="164.86" x2="250.75" y2="277.62" stroke="#E87461" stroke-width="2.2"></line><rect x="237.75" y="178.95" width="26" height="91.62" rx="2" fill="#E87461"></rect><line x1="305.25" y1="143.71" x2="305.25" y2="235.33" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="292.25" y="178.95" width="26" height="42.29" rx="2" fill="#5B9BD5"></rect><line x1="359.75" y1="129.62" x2="359.75" y2="228.29" stroke="#E87461" stroke-width="2.2"></line><rect x="346.75" y="143.71" width="26" height="77.53" rx="2" fill="#E87461"></rect><line x1="414.25" y1="80.29" x2="414.25" y2="157.81" stroke="#E87461" stroke-width="2.2"></line><rect x="401.25" y="94.38" width="26" height="49.33" rx="2" fill="#E87461"></rect><line x1="468.75" y1="66.19" x2="468.75" y2="129.62" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="455.75" y="94.38" width="26" height="21.14" rx="2" fill="#5B9BD5"></rect><rect x="60" y="277.62" width="436" height="28.19" rx="3" fill="rgba(123,166,140,.18)"></rect><rect x="60" y="136.67" width="436" height="28.19" rx="3" fill="rgba(232,116,97,.16)"></rect><text x="83.25" y="325.71" class="pen" fill="#5E9A77" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">지지</text><text x="83.25" y="142.76" class="pen" fill="#E87461" font-size="30" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">저항</text><path d="M 359.75 193.05 L 436.05 136.67" stroke="#C8922F" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#pen8)" marker-end="url(#arG8)"></path><text x="450.95" y="148.76" class="pen" fill="#C8922F" font-size="28" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">저항 → 지지</text><text x="450.95" y="172.76" class="pen" fill="#C8922F" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">역할 전환</text></svg></div><div class="cap">저항 돌파 후, 그 자리가 지지로 바뀐다</div></div></div>
+  </div>
+</section>
+
+<!-- 12 전환 신호 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-coral anim">개념 · 차트 증거</span>
+      <h2 class="title anim">추세의 전환 신호</h2>
+      <p class="lead anim">추세는 <b>확실한 전환 신호 전까지</b> 지속됩니다.<br>상승→하락 전환의 3대 균열:</p>
+      <ul class="points anim">
+        <li><b>① 추세선 이탈</b></li>
+        <li><b>② 저점 붕괴</b> (HL 무너짐 → LL 시작)</li>
+        <li><b>③ 고점 실패</b> (직전 고점 못 넘김)</li>
+      </ul>
+      <div class="callout coral anim"><span class="tag">실전 활용</span><p>보유 중이면 <b>익절·손절 점검 타이밍</b>.<br>전환은 ‘사건’이 아니라 ‘과정’ — 한 캔들로 단정 금지.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="reversal"><svg viewBox="0 0 600 408" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen9" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="9" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG9" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC9" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS9" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="496" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="121" x2="496" y2="121" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="204" x2="496" y2="204" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="287" x2="496" y2="287" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="370" x2="496" y2="370" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="87.25" y1="250.48" x2="87.25" y2="316.88" stroke="#E87461" stroke-width="2.2"></line><rect x="74.25" y="263.76" width="26" height="39.84" rx="2" fill="#E87461"></rect><line x1="141.75" y1="197.36" x2="141.75" y2="270.4" stroke="#E87461" stroke-width="2.2"></line><rect x="128.75" y="210.64" width="26" height="53.12" rx="2" fill="#E87461"></rect><line x1="196.25" y1="144.24" x2="196.25" y2="223.92" stroke="#E87461" stroke-width="2.2"></line><rect x="183.25" y="157.52" width="26" height="53.12" rx="2" fill="#E87461"></rect><line x1="250.75" y1="84.48" x2="250.75" y2="170.8" stroke="#E87461" stroke-width="2.2"></line><rect x="237.75" y="104.4" width="26" height="53.12" rx="2" fill="#E87461"></rect><line x1="305.25" y1="77.84" x2="305.25" y2="137.6" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="292.25" y="104.4" width="26" height="13.28" rx="2" fill="#5B9BD5"></rect><line x1="359.75" y1="91.12" x2="359.75" y2="150.88" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="346.75" y="117.68" width="26" height="19.92" rx="2" fill="#5B9BD5"></rect><line x1="414.25" y1="124.32" x2="414.25" y2="204" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="401.25" y="144.24" width="26" height="46.48" rx="2" fill="#5B9BD5"></rect><line x1="468.75" y1="170.8" x2="468.75" y2="243.84" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="455.75" y="190.72" width="26" height="39.84" rx="2" fill="#5B9BD5"></rect><path d="M 87.25 316.88 L 250.75 170.8" stroke="#C8922F" stroke-width="3.2" fill="none" stroke-linecap="round" filter="url(#pen9)"></path><path d="M 250.75 170.8 L 468.75 64.56" stroke="#C8922F" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="2 7" filter="url(#pen9)"></path><text x="367.75" y="95.04" class="pen" fill="#E87461" font-size="26" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">② 고점 실패</text><ellipse cx="414.25" cy="190.72" rx="22" ry="26" fill="none" stroke="#E87461" stroke-width="3.2" filter="url(#pen9)"></ellipse><line x1="278" y1="235.00" x2="343.4" y2="190.72" stroke="rgba(26,22,18,0.28)" stroke-width="1.3" stroke-dasharray="2 4"></line><text x="278" y="243.84" class="pen" fill="#E87461" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">① 추세선 이탈</text><text x="463.3" y="313.68" class="pen" fill="#E87461" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">③ 저점 붕괴</text></svg></div><div class="cap">2개 이상 + 거래량 동반이면 전환 신뢰도 ↑</div></div></div>
+  </div>
+</section>
+
+<!-- 13 추세 정리 -->
+<section class="slide" data-sect="PART 1 · 추세">
+  <div class="inner">
+    <span class="kicker k-gold anim">요약</span>
+    <h2 class="title anim">추세 — 한 장 정리</h2>
+    <div class="cards four anim">
+      <div class="card"><div class="num">판별</div><h3>추세 3종</h3><p>HH/HL · LH/LL · 박스</p></div>
+      <div class="card c3"><div class="num">매수</div><h3>살 자리</h3><p>지지·추세선 근처 (눌림목)</p></div>
+      <div class="card c2"><div class="num">손절</div><h3>나갈 자리</h3><p>라인 살짝 아래</p></div>
+      <div class="card c4"><div class="num">청산</div><h3>접을 때</h3><p>전환 신호 식별</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">코스 연결</span><p>‘상승추세 + 눌림목’은 <b>셋업 1번(눌림목 지지 반등)</b>의 뿌리.<br>이 토대 위에 다음 시간 지표를 얹습니다.</p></div>
+  </div>
+</section>
+
+<!-- 14 DIVIDER 2 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner divider">
+    <div class="deyebrow anim">PATTERNS</div>
+    <div class="dnum anim">02</div>
+    <div class="dname anim">패턴</div>
+    <p class="dsub anim">캔들 <b style="color:var(--text-primary)">1~2개</b>의 즉각 신호부터, 캔들 <b style="color:var(--text-primary)">수십 개</b>가 만드는 큰 형태까지.<br>작은 신호에서 큰 그림으로.</p>
+  </div>
+</section>
+
+<!-- +CANDLE A 패턴 두 크기 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-gold anim">패턴 · 두 가지 크기</span>
+    <h2 class="title anim">패턴엔 두 ‘크기’가 있다</h2>
+    <p class="lead anim" style="">같은 ‘패턴’이라도 스케일이 다릅니다.<br><b>작은 신호부터 보고, 큰 형태로 줌아웃</b>합니다.</p>
+    <div class="cards anim" style="grid-template-columns:1fr 1fr">
+      <div class="card"><div class="num">①</div><h3>캔들 패턴</h3><p>캔들 <b>1~2개</b> · 매수·매도 심리의 <b>즉각적 신호</b> (망치·도지·장악·별) — 지금부터.</p></div>
+      <div class="card c4"><div class="num">②</div><h3>차트 패턴</h3><p>캔들 <b>수십 개</b>가 만드는 <b>큰 형태</b> (삼각·헤드앤숄더) — 다음 블록.</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">공통 원칙</span><p>둘 다 <b>‘위치’가 전부</b> — 추세 끝·지지/저항에서 나와야 의미가 있고, <b>거래량·다음 캔들</b>로 확인합니다.</p></div>
+  </div>
+</section>
+
+<!-- +CANDLE B 망치 유성 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-coral anim">캔들 패턴 ① · 꼬리가 말한다</span>
+    <h2 class="title anim">망치형 · 유성형</h2>
+    <p class="lead anim" style=""><b>긴 꼬리</b>는 ‘되돌림’의 흔적 — 한쪽으로 밀렸다가 반대 힘에 되밀린 자국입니다.</p>
+    <div class="minis two anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="hammer"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen10" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="10" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area10" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG10" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC10" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS10" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="56" x2="71.5" y2="92" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="58.5" y="68" width="26" height="18.00" rx="2" fill="#5B9BD5"></rect><line x1="146.5" y1="80" x2="146.5" y2="116" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="133.5" y="92" width="26" height="18.00" rx="2" fill="#5B9BD5"></rect><line x1="221.5" y1="104" x2="221.5" y2="140" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="208.5" y="116" width="26" height="18.00" rx="2" fill="#5B9BD5"></rect><line x1="296.5" y1="128" x2="296.5" y2="200" stroke="#E87461" stroke-width="2.2"></line><rect x="283.5" y="134" width="26" height="6.00" rx="2" fill="#E87461"></rect><ellipse cx="296.5" cy="161" rx="22" ry="31" fill="none" stroke="#5E9A77" stroke-width="3.2" filter="url(#pen10)"></ellipse><text x="296.5" y="218" class="pen" fill="#5E9A77" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">하단 반전 ↑</text></svg></div><h4 style="color:var(--sage-deep)">망치형 (Hammer)</h4><p>하락 끝, 긴 <b>아래</b>꼬리<br>→ 매수세 되돌림 = 하단 반전</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="star"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen11" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="11" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area11" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG11" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC11" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS11" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="179.18" x2="71.5" y2="213.06" stroke="#E87461" stroke-width="2.2"></line><rect x="58.5" y="184.82" width="26" height="22.59" rx="2" fill="#E87461"></rect><line x1="146.5" y1="156.59" x2="146.5" y2="190.47" stroke="#E87461" stroke-width="2.2"></line><rect x="133.5" y="162.24" width="26" height="22.58" rx="2" fill="#E87461"></rect><line x1="221.5" y1="134" x2="221.5" y2="167.88" stroke="#E87461" stroke-width="2.2"></line><rect x="208.5" y="139.65" width="26" height="22.59" rx="2" fill="#E87461"></rect><line x1="296.5" y1="77.53" x2="296.5" y2="145.29" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="283.5" y="134" width="26" height="5.65" rx="2" fill="#5B9BD5"></rect><ellipse cx="296.5" cy="111.41" rx="22" ry="33" fill="none" stroke="#E87461" stroke-width="3.2" filter="url(#pen11)"></ellipse><text x="296.5" y="184.82" class="pen" fill="#E87461" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">상단 반전 ↓</text></svg></div><h4 style="color:var(--coral-deep)">유성형 (Shooting Star)</h4><p>상승 끝, 긴 <b>위</b>꼬리<br>→ 매도세 눌림 = 상단 반전</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p>반드시 <b>추세 끝 + 지지/저항</b>에서 나와야 의미.<br><b>다음 캔들</b>이 방향을 확인해주면 신뢰 ↑.</p></div>
+  </div>
+</section>
+
+<!-- +CANDLE C 도지 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">캔들 패턴 ② · 균형</span>
+      <h2 class="title anim">도지 (Doji)</h2>
+      <p class="lead anim">시가 ≈ 종가 → 몸통이 거의 없는 <b>십자</b>.<br>매수·매도가 <span class="hl">팽팽한 균형 = “결정 못 함”</span>.</p>
+      <ul class="points anim">
+        <li>강한 추세 <b>끝</b>에 나오면 = 추세 힘 빠짐 경고</li>
+        <li>모양별: <b>십자 · 잠자리 · 비석</b></li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p>도지는 ‘경고등’일 뿐.<br><b>다음 캔들이 방향을 확정</b>합니다 — 도지 하나로 베팅 금지.</p></div>
+    </div>
+    <div class="col-chart anim">
+      <div class="chartbox mini2" style="margin-bottom:12px"><div class="chartbox-svg" data-chart="dojiContext"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen12" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="12" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG12" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC12" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS12" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="176" x2="71.5" y2="212" stroke="#E87461" stroke-width="2.2"></line><rect x="58.5" y="182" width="26" height="24.00" rx="2" fill="#E87461"></rect><line x1="146.5" y1="152" x2="146.5" y2="188" stroke="#E87461" stroke-width="2.2"></line><rect x="133.5" y="158" width="26" height="24.00" rx="2" fill="#E87461"></rect><line x1="221.5" y1="128" x2="221.5" y2="164" stroke="#E87461" stroke-width="2.2"></line><rect x="208.5" y="134" width="26" height="24.00" rx="2" fill="#E87461"></rect><line x1="296.5" y1="80" x2="296.5" y2="164" stroke="#E87461" stroke-width="2.2"></line><rect x="283.5" y="134" width="26" height="2.40" rx="2" fill="#E87461"></rect><ellipse cx="296.5" cy="122" rx="19" ry="30" fill="none" stroke="#C8922F" stroke-width="3.2" filter="url(#pen12)"></ellipse><text x="296.5" y="200" class="pen" fill="#C8922F" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">추세 끝 도지</text></svg></div><div class="cap">상승 끝의 도지 = 힘이 빠지는 신호</div></div>
+      <div class="chartbox mini2"><div class="chartbox-svg" data-chart="dojiTypes"><svg viewBox="0 0 372 236" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen13" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="13" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG13" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC13" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS13" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="82" y1="50" x2="82" y2="170" stroke="#E87461" stroke-width="2.2"></line><rect x="69" y="110" width="26" height="2.40" rx="2" fill="#E87461"></rect><line x1="186" y1="105" x2="186" y2="170" stroke="#E87461" stroke-width="2.2"></line><rect x="173" y="110" width="26" height="2.40" rx="2" fill="#E87461"></rect><line x1="290" y1="50" x2="290" y2="115" stroke="#E87461" stroke-width="2.2"></line><rect x="277" y="110" width="26" height="2.40" rx="2" fill="#E87461"></rect><text x="82" y="205" class="pen" fill="#9E8E7E" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">십자</text><text x="186" y="205" class="pen" fill="#9E8E7E" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">잠자리</text><text x="290" y="205" class="pen" fill="#9E8E7E" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">비석</text></svg></div><div class="cap">십자 · 잠자리 · 비석</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- +CANDLE D 장악형 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-coral anim">캔들 패턴 ③ · 힘의 역전</span>
+    <h2 class="title anim">장악형 (Engulfing)</h2>
+    <p class="lead anim" style=""><b>큰 몸통</b>이 직전 캔들의 몸통을 <b>통째로 덮으면</b> = 세력이 교체됐다는 강한 증거.</p>
+    <div class="minis two anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="bullEngulf"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen14" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="14" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area14" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG14" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC14" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS14" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="76.4" x2="71.5" y2="124.4" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="58.5" y="86" width="26" height="28.80" rx="2" fill="#5B9BD5"></rect><line x1="146.5" y1="105.2" x2="146.5" y2="153.2" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="133.5" y="114.8" width="26" height="28.80" rx="2" fill="#5B9BD5"></rect><line x1="221.5" y1="134" x2="221.5" y2="172.4" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="208.5" y="143.6" width="26" height="19.20" rx="2" fill="#5B9BD5"></rect><line x1="296.5" y1="86" x2="296.5" y2="182" stroke="#E87461" stroke-width="2.2"></line><rect x="283.5" y="95.6" width="26" height="76.80" rx="2" fill="#E87461"></rect><ellipse cx="262.75" cy="134" rx="50" ry="44" fill="none" stroke="#5E9A77" stroke-width="3.2" filter="url(#pen14)"></ellipse><text x="259" y="201.2" class="pen" fill="#5E9A77" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">하단 반전 ↑</text></svg></div><h4 style="color:var(--sage-deep)">상승장악형 ↑</h4><p>작은 음봉 → <b>큰 양봉</b>이 삼킴<br>하락 끝에서 = 하단 반전</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="bearEngulf"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen15" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="15" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area15" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG15" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC15" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS15" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="155.33" x2="71.5" y2="208.67" stroke="#E87461" stroke-width="2.2"></line><rect x="58.5" y="166" width="26" height="32.00" rx="2" fill="#E87461"></rect><line x1="146.5" y1="123.33" x2="146.5" y2="176.67" stroke="#E87461" stroke-width="2.2"></line><rect x="133.5" y="134" width="26" height="32.00" rx="2" fill="#E87461"></rect><line x1="221.5" y1="112.67" x2="221.5" y2="144.67" stroke="#E87461" stroke-width="2.2"></line><rect x="208.5" y="123.33" width="26" height="10.67" rx="2" fill="#E87461"></rect><line x1="296.5" y1="102" x2="296.5" y2="208.67" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="283.5" y="112.67" width="26" height="85.33" rx="2" fill="#5B9BD5"></rect><ellipse cx="262.75" cy="155.33" rx="50" ry="44" fill="none" stroke="#E87461" stroke-width="3.2" filter="url(#pen15)"></ellipse><text x="259" y="224.67" class="pen" fill="#E87461" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">상단 반전 ↓</text></svg></div><h4 style="color:var(--coral-deep)">하락장악형 ↓</h4><p>작은 양봉 → <b>큰 음봉</b>이 삼킴<br>상승 끝에서 = 상단 반전</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p>큰 몸통 = 교체의 증거.<br><b>거래량 동반 + 추세 끝</b>이면 신뢰 ↑.<br>추세 한복판이면 의미 약함.</p></div>
+  </div>
+</section>
+
+<!-- +CANDLE D2 샛별 저녁별 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-coral anim">캔들 패턴 ④ · 세 캔들의 합의</span>
+    <h2 class="title anim">샛별 · 저녁별 (Star)</h2>
+    <p class="lead anim" style="">캔들 <b>3개</b>가 만드는 반전.<br>가운데 ‘별’은 망설임, <b>3번째 캔들이 방향을 확정</b> — 그래서 단일 캔들보다 신뢰가 높습니다.</p>
+    <div class="minis two anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="morningStar"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen16" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="16" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area16" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG16" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC16" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS16" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="64.18" x2="71.5" y2="107.82" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="58.5" y="72.91" width="26" height="26.18" rx="2" fill="#5B9BD5"></rect><line x1="146.5" y1="99.09" x2="146.5" y2="177.64" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="133.5" y="107.82" width="26" height="61.09" rx="2" fill="#5B9BD5"></rect><line x1="221.5" y1="168.91" x2="221.5" y2="203.82" stroke="#E87461" stroke-width="2.2"></line><rect x="208.5" y="186.36" width="26" height="2.40" rx="2" fill="#E87461"></rect><line x1="296.5" y1="107.82" x2="296.5" y2="186.36" stroke="#E87461" stroke-width="2.2"></line><rect x="283.5" y="116.55" width="26" height="61.09" rx="2" fill="#E87461"></rect><ellipse cx="221.5" cy="151.45" rx="78" ry="33" fill="none" stroke="#5E9A77" stroke-width="3.2" filter="url(#pen16)"></ellipse><text x="221.5" y="51.09" class="pen" fill="#5E9A77" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">하단 반전 ↑</text></svg></div><h4 style="color:var(--sage-deep)">샛별형 (Morning Star)</h4><p>하락 끝: 큰 음봉 → 별 → <b>큰 양봉</b><br>= 하단 반전 ↑</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="eveningStar"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen17" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="17" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area17" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG17" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC17" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS17" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="71.5" y1="168.91" x2="71.5" y2="221.27" stroke="#E87461" stroke-width="2.2"></line><rect x="58.5" y="177.64" width="26" height="34.91" rx="2" fill="#E87461"></rect><line x1="146.5" y1="99.09" x2="146.5" y2="186.36" stroke="#E87461" stroke-width="2.2"></line><rect x="133.5" y="107.82" width="26" height="69.82" rx="2" fill="#E87461"></rect><line x1="221.5" y1="72.91" x2="221.5" y2="107.82" stroke="#E87461" stroke-width="2.2"></line><rect x="208.5" y="90.36" width="26" height="2.40" rx="2" fill="#E87461"></rect><line x1="296.5" y1="90.36" x2="296.5" y2="177.64" stroke="#5B9BD5" stroke-width="2.2"></line><rect x="283.5" y="99.09" width="26" height="69.82" rx="2" fill="#5B9BD5"></rect><ellipse cx="221.5" cy="134" rx="78" ry="33" fill="none" stroke="#E87461" stroke-width="3.2" filter="url(#pen17)"></ellipse><text x="221.5" y="208.18" class="pen" fill="#E87461" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">상단 반전 ↓</text></svg></div><h4 style="color:var(--coral-deep)">저녁별형 (Evening Star)</h4><p>상승 끝: 큰 양봉 → 별 → <b>큰 음봉</b><br>= 상단 반전 ↓</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p>3번째 캔들이 1번째 몸통을 <b>깊이 파고들수록</b> 강함.<br>거래량 동반 + 추세 끝이면 신뢰 ↑ — 단, 여전히 <b>‘위치’가 우선</b>.</p></div>
+  </div>
+</section>
+
+<!-- +CANDLE E 캔들 패턴 직언 + 전환 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-coral anim">캔들 패턴 · 이것만은</span>
+    <h2 class="title anim">캔들 패턴, ‘위치’가 전부다</h2>
+    <div class="cards anim">
+      <div class="card c2"><div class="num">📍</div><h3>위치</h3><p>추세 끝·지지/저항에서만 의미.<br>한복판의 망치·도지는 무시.</p></div>
+      <div class="card c3"><div class="num">✓</div><h3>확인</h3><p>다음 캔들 + 거래량이 방향을 확정.<br>단독 베팅 금지.</p></div>
+      <div class="card c4"><div class="num">→</div><h3>다음</h3><p>‘즉각 신호’를 봤으니, 이제 ‘형태’를 보는 <b>차트 패턴</b>으로.</p></div>
+    </div>
+    <div class="callout coral anim"><span class="tag">직언</span><p>캔들 패턴은 <b>적중기가 아니라 ‘힌트’</b>입니다.<br>위치·확인 없이 캔들 하나에 베팅하는 순간, 그건 매매가 아니라 도박입니다.</p></div>
+  </div>
+</section>
+
+<!-- 15 패턴 3대 규칙 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-gold anim">차트 패턴 · 핵심 토대</span>
+      <h2 class="title anim">차트 패턴의 3대 규칙</h2>
+      <ul class="points anim">
+        <li><b>① 거래량</b> — 형성 중엔 줄고, 돌파 순간 터진다</li>
+        <li><b>② 돌파</b> — 특정 선을 깨야 ‘완성’.<br>그 전엔 보류</li>
+        <li><b>③ 목표가</b> — 보통 패턴 높이만큼 이동</li>
+      </ul>
+      <div class="callout anim"><span class="tag">실전 활용</span><p><b>미완성 진입 금지</b> · 손절은 <b>경계선 반대편</b> · 목표는 <b>패턴 높이</b>만큼.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="rules"><svg viewBox="0 0 600 372" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen18" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="18" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area18" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG18" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC18" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS18" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="482" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="112" x2="482" y2="112" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="186" x2="482" y2="186" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="260" x2="482" y2="260" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="334" x2="482" y2="334" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><polygon points="86.38,334 86.38,297 139.13,124.33 191.88,235.33 244.63,118.17 297.38,186 350.13,112 402.88,155.17 455.63,50.33 455.63,334" fill="url(#area18)"></polygon><polyline points="86.38,297 139.13,124.33 191.88,235.33 244.63,118.17 297.38,186 350.13,112 402.88,155.17 455.63,50.33" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="60" y1="112" x2="482" y2="112" stroke="#E87461" stroke-width="2.6" stroke-dasharray="1 9" stroke-linecap="round" filter="url(#pen18)"></line><text x="105.47" y="104" class="pen" fill="#E87461" font-size="27" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">수평 저항</text><path d="M 191.88 235.33 L 402.88 155.17" stroke="#5E9A77" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#pen18)"></path><text x="293.38" y="222.17" class="pen" fill="#5E9A77" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(14 293.38 222.17)">저점 ↑</text><path d="M 423.98 105.83 L 455.63 56.5" stroke="#5E9A77" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#pen18)" marker-end="url(#arS18)"></path><text x="461.63" y="46.33" class="pen" fill="#5E9A77" font-size="28" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">② 돌파</text><path d="M 476.73 50.33 L 476.73 110.77" stroke="#C8922F" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen18)" marker-end="url(#arG18)"></path><path d="M 476.73 112 L 476.73 50.33" stroke="#C8922F" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen18)" marker-end="url(#arG18)"></path><text x="486.73" y="83.17" class="pen" fill="#C8922F" font-size="26" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">③ 목표</text><text x="223.53" y="118.33" class="pen" fill="#4F8FCB" font-size="25" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">① 거래량↓ → 돌파시↑</text></svg></div><div class="cap">거래량 ↓ → 돌파 시 폭증, 목표는 패턴 높이만큼</div></div></div>
+  </div>
+</section>
+
+<!-- 16 지속형 삼각 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-sage anim">지속형 ① · 추세 재출발</span>
+    <h2 class="title anim">삼각수렴 (Triangle)</h2>
+    <div class="minis anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="triAsc"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen19" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="19" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area19" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG19" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC19" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS19" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="55.43,230 55.43,209.79 98.29,78.42 141.14,169.37 184,73.37 226.86,134 269.71,68.32 312.57,98.63 312.57,230" fill="url(#area19)"></polygon><polyline points="55.43,209.79 98.29,78.42 141.14,169.37 184,73.37 226.86,134 269.71,68.32 312.57,98.63" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="34" y1="70.84" x2="334" y2="70.84" stroke="#E87461" stroke-width="2.2" stroke-dasharray="1 9" stroke-linecap="round" filter="url(#pen19)"></line><path d="M 141.14 169.37 L 312.57 98.63" stroke="#5E9A77" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen19)"></path><path d="M 312.57 73.37 L 329.71 48.11" stroke="#5E9A77" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen19)" marker-end="url(#arS19)"></path></svg></div><h4 style="color:var(--sage-deep)">상승삼각형 ▲</h4><p>수평 저항 + 높아지는 저점<br>→ 위로 돌파 경향</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="triDesc"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen20" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="20" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area20" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG20" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC20" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS20" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="55.43,230 55.43,58.21 98.29,189.58 141.14,98.63 184,194.63 226.86,139.05 269.71,199.68 312.57,169.37 312.57,230" fill="url(#area20)"></polygon><polyline points="55.43,58.21 98.29,189.58 141.14,98.63 184,194.63 226.86,139.05 269.71,199.68 312.57,169.37" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="34" y1="197.16" x2="334" y2="197.16" stroke="#5E9A77" stroke-width="2.2" stroke-dasharray="1 9" stroke-linecap="round" filter="url(#pen20)"></line><path d="M 55.43 58.21 L 226.86 139.05" stroke="#E87461" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen20)"></path><path d="M 312.57 189.58 L 329.71 214.84" stroke="#E87461" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen20)" marker-end="url(#arC20)"></path></svg></div><h4 style="color:var(--coral-deep)">하락삼각형 ▽</h4><p>수평 지지 + 낮아지는 고점<br>→ 아래로 이탈 경향</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="triSym"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen21" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="21" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area21" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG21" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC21" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS21" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="55.43,230 55.43,209.79 98.29,58.21 141.14,169.37 184,88.53 226.86,139.05 269.71,108.74 312.57,123.89 312.57,230" fill="url(#area21)"></polygon><polyline points="55.43,209.79 98.29,58.21 141.14,169.37 184,88.53 226.86,139.05 269.71,108.74 312.57,123.89" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><path d="M 98.29 58.21 L 312.57 108.74" stroke="#E87461" stroke-width="2.4" fill="none" stroke-linecap="round" filter="url(#pen21)"></path><path d="M 141.14 169.37 L 312.57 123.89" stroke="#5E9A77" stroke-width="2.4" fill="none" stroke-linecap="round" filter="url(#pen21)"></path></svg></div><h4 style="color:var(--text-secondary)">대칭삼각형 ◆</h4><p>위아래 수렴<br>→ 돌파 방향 추종(중립)</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p><b>상승추세 + 상승삼각형 = 추세 추종 매수의 정석</b> — 코스 <b>셋업 2번(거래량 동반 돌파)</b>의 전형.</p></div>
+  </div>
+</section>
+
+<!-- 17 지속형 깃발/박스/컵 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-sage anim">지속형 ②</span>
+    <h2 class="title anim">깃발 · 박스 · 컵앤핸들</h2>
+    <div class="minis anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="flag"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen22" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="22" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area22" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG22" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC22" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS22" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="52.75,230 52.75,206 90.25,182 127.75,146 165.25,122 202.75,140 240.25,152 277.75,164 315.25,74 315.25,230" fill="url(#area22)"></polygon><polyline points="52.75,206 90.25,182 127.75,146 165.25,122 202.75,140 240.25,152 277.75,164 315.25,74" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><path d="M 52.75 206 L 165.25 122" stroke="#C8922F" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen22)"></path><text x="84.25" y="158" class="pen" fill="#C8922F" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round" transform="rotate(-30 84.25 158)">깃대</text><path d="M 277.75 146 L 315.25 74" stroke="#5E9A77" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen22)" marker-end="url(#arS22)"></path></svg></div><h4>깃발 / 페넌트</h4><p>급등(깃대) 후 짧은 눌림<br>→ 추세 재개 (단기)</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="boxp"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen23" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="23" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area23" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG23" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC23" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS23" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="55.43,230 55.43,190.47 98.29,134 141.14,190.47 184,134 226.86,184.82 269.71,139.65 312.57,60.59 312.57,230" fill="url(#area23)"></polygon><polyline points="55.43,190.47 98.29,134 141.14,190.47 184,134 226.86,184.82 269.71,139.65 312.57,60.59" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="34" y1="134" x2="334" y2="134" stroke="#E87461" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen23)"></line><line x1="34" y1="190.47" x2="334" y2="190.47" stroke="#5E9A77" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen23)"></line><path d="M 286.86 128.35 L 312.57 66.24" stroke="#5E9A77" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen23)" marker-end="url(#arS23)"></path></svg></div><h4>직사각형 / 박스</h4><p>수평 지지·저항 횡보<br>→ 돌파 방향 추종</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="cup"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen24" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="24" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area24" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG24" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC24" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS24" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="50.67,230 50.67,78.42 84,139.05 117.33,179.47 150.67,199.68 184,189.58 217.33,139.05 250.67,88.53 284,113.79 317.33,53.16 317.33,230" fill="url(#area24)"></polygon><polyline points="50.67,78.42 84,139.05 117.33,179.47 150.67,199.68 184,189.58 217.33,139.05 250.67,88.53 284,113.79 317.33,53.16" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><text x="150.67" y="181.58" class="pen" fill="#C8922F" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">컵</text><text x="284" y="137.79" class="pen" fill="#C8922F" font-size="24" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">핸들</text></svg></div><h4>컵앤핸들</h4><p>둥근 바닥 + 짧은 핸들<br>→ 상방 돌파 (중장기)</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p>목표가 = <b>깃대 길이</b> 또는 <b>박스 높이</b>만큼.<br>돌파 + 거래량 확인 후 진입.</p></div>
+  </div>
+</section>
+
+<!-- 18 반전형 H&S -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner two-col">
+    <div class="col-text">
+      <span class="kicker k-coral anim">반전형 ① · 핵심</span>
+      <h2 class="title anim">헤드앤숄더</h2>
+      <p class="lead anim">좌어깨 – <b>머리(최고점)</b> – 우어깨 + <b>목선(neckline)</b>.<br><span class="hl-c">목선 이탈 = 상승 종료 → 하락 전환.</span></p>
+      <ul class="points anim">
+        <li>우어깨에서 <b>거래량 감소</b>가 흔함(매수세 약화)</li>
+        <li>뒤집으면 <b>역헤드앤숄더 = 바닥 반전</b></li>
+      </ul>
+      <div class="callout coral anim"><span class="tag">실전 활용</span><p>확인 = <b>목선 이탈 + 거래량</b>.<br>목표 = <b>머리~목선 높이</b>만큼.</p></div>
+    </div>
+    <div class="col-chart anim"><div class="chartbox"><div class="chartbox-svg" data-chart="hns"><svg viewBox="0 0 600 400" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen25" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="25" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area25" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG25" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC25" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS25" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><line x1="60" y1="38" x2="482" y2="38" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="119" x2="482" y2="119" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="200" x2="482" y2="200" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="281" x2="482" y2="281" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><line x1="60" y1="362" x2="482" y2="362" stroke="rgba(26,22,18,0.05)" stroke-width="1"></line><polygon points="90.14,362 90.14,323.43 150.43,192.29 210.71,254 271,84.29 331.29,238.57 391.57,176.86 451.86,284.86 451.86,362" fill="url(#area25)"></polygon><polyline points="90.14,323.43 150.43,192.29 210.71,254 271,84.29 331.29,238.57 391.57,176.86 451.86,284.86" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="60" y1="246.29" x2="482" y2="246.29" stroke="#C8922F" stroke-width="2.6" stroke-dasharray="1 9" stroke-linecap="round" filter="url(#pen25)"></line><text x="100.2" y="238.29" class="pen" fill="#C8922F" font-size="26" text-anchor="start" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">목선</text><text x="150.43" y="180.29" class="pen" fill="#1A1612" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">좌어깨</text><text x="271" y="72.29" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">머리</text><text x="391.57" y="164.86" class="pen" fill="#1A1612" font-size="27" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">우어깨</text><text x="391.57" y="194.86" class="pen" fill="#9E8E7E" font-size="21" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">(거래량↓)</text><path d="M 433.77 254 L 451.86 300.29" stroke="#E87461" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#pen25)" marker-end="url(#arC25)"></path><text x="457.86" y="286.86" class="pen" fill="#E87461" font-size="26" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">목선 이탈</text><text x="457.86" y="308.86" class="pen" fill="#E87461" font-size="23" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">= 전환</text></svg></div><div class="cap">목선을 깨는 순간이 패턴의 ‘완성’</div></div></div>
+  </div>
+</section>
+
+<!-- 19 반전형 쌍봉/쌍바닥 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner">
+    <span class="kicker k-coral anim">반전형 ②</span>
+    <h2 class="title anim">쌍봉(M) · 쌍바닥(W)</h2>
+    <p class="lead anim" style="">같은 가격을 <b>두 번 못 넘기면</b> 천장 반전, <b>두 번 안 깨지면</b> 바닥 반전.</p>
+    <div class="minis two anim">
+      <div class="mini"><div class="chartbox-svg" data-chart="dblTop"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen26" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="26" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area26" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG26" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC26" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS26" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="64,230 64,208.67 124,70 184,144.67 244,75.33 304,198 304,230" fill="url(#area26)"></polygon><polyline points="64,208.67 124,70 184,144.67 244,75.33 304,198" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="34" y1="144.67" x2="334" y2="144.67" stroke="#C8922F" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen26)"></line><text x="124" y="62" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">①</text><text x="244" y="67.33" class="pen" fill="#E87461" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">②</text><path d="M 280 150 L 304 192.67" stroke="#E87461" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen26)" marker-end="url(#arC26)"></path></svg></div><h4 style="color:var(--coral-deep)">쌍봉 (이중천장) M</h4><p>두 고점 후 목선 이탈 → 하락 전환</p></div>
+      <div class="mini"><div class="chartbox-svg" data-chart="dblBot"><svg viewBox="0 0 372 268" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart"><defs><filter id="pen27" x="-6%" y="-6%" width="112%" height="112%"><feturbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="27" result="t"></feturbulence><fedisplacementmap in="SourceGraphic" in2="t" scale="2.4"></fedisplacementmap></filter><lineargradient id="area27" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"></stop><stop offset="1" stop-color="#E8943A" stop-opacity="0"></stop></lineargradient><marker id="arG27" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"></path></marker><marker id="arC27" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"></path></marker><marker id="arS27" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"></path></marker></defs><polygon points="64,230 64,68.32 124,199.68 184,128.95 244,194.63 304,78.42 304,230" fill="url(#area27)"></polygon><polyline points="64,68.32 124,199.68 184,128.95 244,194.63 304,78.42" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></polyline><line x1="34" y1="128.95" x2="334" y2="128.95" stroke="#C8922F" stroke-width="2.6" stroke-dasharray="2 7" stroke-linecap="round" filter="url(#pen27)"></line><text x="124" y="223.68" class="pen" fill="#5E9A77" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">①</text><text x="244" y="218.63" class="pen" fill="#5E9A77" font-size="30" text-anchor="middle" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">②</text><path d="M 280 123.89 L 304 83.47" stroke="#5E9A77" stroke-width="2.6" fill="none" stroke-linecap="round" filter="url(#pen27)" marker-end="url(#arS27)"></path></svg></div><h4 style="color:var(--sage-deep)">쌍바닥 (이중바닥) W</h4><p>두 저점 후 돌파 → 상승 전환</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">실전 활용</span><p>바닥 반전(쌍바닥·역H&amp;S)은 <b>‘확인 후’ 진입</b>.<br>목표 = 천장~바닥 높이만큼.</p></div>
+  </div>
+</section>
+
+<!-- 20 직언 -->
+<section class="slide" data-sect="PART 2 · 패턴">
+  <div class="inner statement">
+    <div class="stop anim">🛑</div>
+    <h2 class="anim">“완성 전엔, <em>베팅하지 않는다.</em>”</h2>
+    <p class="anim">초보가 가장 많이 잃는 한 가지 — <b>추세 중간을 천장이라 착각</b>해 멀쩡한 상승주를 팔아버립니다.</p>
+    <p class="anim">패턴은 적중 ‘보장’이 아니라 <b>확률을 약간 기울이고 리스크를 정해주는 도구</b>.<br>그래서 우리는 외우지 않고 <b>바리플레이로 직접 검증</b>합니다.</p>
+  </div>
+</section>
+
+<!-- 21 핵심 정리 -->
+<section class="slide" data-sect="WRAP-UP">
+  <div class="inner">
+    <span class="kicker k-gold anim">핵심 정리</span>
+    <h2 class="title anim">1주차에서 손에 쥐는 것</h2>
+    <div class="cards four anim">
+      <div class="card"><div class="num">01</div><h3>읽기</h3><p>캔들·거래량으로 ‘누가 이기나’</p></div>
+      <div class="card c2"><div class="num">02</div><h3>판별</h3><p>추세 3종 (HH/HL·LH/LL)</p></div>
+      <div class="card c3"><div class="num">03</div><h3>자리</h3><p>살 자리·팔 자리·나갈 자리</p></div>
+      <div class="card c4"><div class="num">04</div><h3>전환</h3><p>버틸 때 vs 접을 때 구분</p></div>
+    </div>
+    <div class="callout anim"><span class="tag">다음 주 예고</span><p>2주차엔 여기에 <b>이동평균·RSI·MACD·볼린저밴드</b>를 얹습니다.<br>단, <b>지표는 주연이 아니라 조연</b> — 추세·패턴 판단의 신뢰도를 높이는 보조입니다.</p></div>
+  </div>
+</section>
+
+<!-- 22 CLOSING -->
+<section class="slide active" data-sect="THANK YOU">
+  <div class="inner cover">
+    <div class="eyebrow anim">YOUR EDGE</div>
+    <h1 class="anim serif" style="font-size:clamp(2.4rem,6.4vw,5.4rem)">외우지 말고,<br>차트에서 직접 찾으세요</h1>
+    <div class="rule anim"></div>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ============ CHART ENGINE (SVG string builder) ============ */
+var CHART_UID=0;
+var COL={G:'#C8922F',C:'#E87461',S:'#5E9A77',K:'#1A1612',M:'#9E8E7E',sky:'#4F8FCB',gold:'#C8922F'};
+function col(c){return COL[c]||c||COL.G;}
+
+function buildChart(spec){
+  var uid=++CHART_UID;
+  var W=spec.vb[0],H=spec.vb[1];
+  var L=spec.padL!=null?spec.padL:60, R=spec.padR!=null?spec.padR:104, T=spec.padT!=null?spec.padT:38, B=spec.padB!=null?spec.padB:38;
+  var mn=spec.range[0],mx=spec.range[1];
+  var n=spec.candles?spec.candles.length:(spec.line?spec.line.length:(spec.n||1));
+  var plotW=W-L-R, plotFull=H-T-B;
+  var volH=spec.volume?plotFull*0.22:0, volGap=spec.volume?12:0;
+  var plotH=plotFull-volH-volGap;
+  var step=plotW/n;
+  var cw=Math.min(step*0.5,26);
+  function X(i){return +(L+(i+0.5)*step).toFixed(2);}
+  function Y(p){return +(T+(mx-p)/(mx-mn)*plotH).toFixed(2);}
+  var s='';
+  s+='<defs>'
+    +'<filter id="pen'+uid+'" x="-6%" y="-6%" width="112%" height="112%"><feTurbulence type="turbulence" baseFrequency="0.016" numOctaves="2" seed="'+uid+'" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.4"/></filter>'
+    +'<linearGradient id="area'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8943A" stop-opacity="0.24"/><stop offset="1" stop-color="#E8943A" stop-opacity="0"/></linearGradient>'
+    +'<marker id="arG'+uid+'" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#C8922F"/></marker>'
+    +'<marker id="arC'+uid+'" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#E87461"/></marker>'
+    +'<marker id="arS'+uid+'" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5E9A77"/></marker>'
+    +'</defs>';
+  if(spec.grid!==false){
+    for(var g=0;g<=4;g++){var gy=+(T+plotH*g/4).toFixed(2);s+='<line x1="'+L+'" y1="'+gy+'" x2="'+(W-R)+'" y2="'+gy+'" stroke="rgba(26,22,18,0.05)" stroke-width="1"/>';}
+  }
+  if(spec.volume){
+    var vmax=Math.max.apply(null,spec.volume),base=+(T+plotFull).toFixed(2);
+    for(var vi=0;vi<spec.volume.length;vi++){
+      var vh=(spec.volume[vi]/vmax)*volH, up=spec.candles?(spec.candles[vi][3]>=spec.candles[vi][0]):true;
+      s+='<rect x="'+(X(vi)-cw/2)+'" y="'+(base-vh).toFixed(2)+'" width="'+cw+'" height="'+vh.toFixed(2)+'" rx="2" fill="'+(up?'rgba(232,116,97,.34)':'rgba(91,155,213,.34)')+'"/>';
+    }
+  }
+  if(spec.line){
+    var pts='';for(var li=0;li<spec.line.length;li++){pts+=X(li)+','+Y(spec.line[li])+' ';}
+    var area=X(0)+','+Y(mn)+' '+pts+X(n-1)+','+Y(mn);
+    s+='<polygon points="'+area+'" fill="url(#area'+uid+')"/>';
+    s+='<polyline points="'+pts.trim()+'" fill="none" stroke="#B5852F" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>';
+  }
+  if(spec.candles){
+    for(var ci=0;ci<spec.candles.length;ci++){
+      var c=spec.candles[ci],o=c[0],h=c[1],lo=c[2],cl=c[3],up=cl>=o,cc=up?'#E87461':'#5B9BD5';
+      var yo=Y(o),yc=Y(cl),top=Math.min(yo,yc),bh=Math.max(Math.abs(yo-yc),2.4);
+      s+='<line x1="'+X(ci)+'" y1="'+Y(h)+'" x2="'+X(ci)+'" y2="'+Y(lo)+'" stroke="'+cc+'" stroke-width="2.2"/>';
+      s+='<rect x="'+(X(ci)-cw/2)+'" y="'+top+'" width="'+cw+'" height="'+bh.toFixed(2)+'" rx="2" fill="'+cc+'"/>';
+    }
+  }
+  if(spec.overlays){for(var oi=0;oi<spec.overlays.length;oi++){var ov=spec.overlays[oi];s+=poly(ov.data,col(ov.c),ov.w||2.6,ov.dash);}}
+  if(spec.hist){
+    var zeroY=Y(0);
+    for(var hi=0;hi<spec.hist.length;hi++){var hv=spec.hist[hi];if(hv==null)continue;var hy=Y(hv),hTop=Math.min(hy,zeroY),hH=Math.max(Math.abs(hy-zeroY),1);s+='<rect x="'+(X(hi)-cw/2)+'" y="'+hTop.toFixed(2)+'" width="'+cw+'" height="'+hH.toFixed(2)+'" rx="1.5" fill="'+(hv>=0?'rgba(94,154,119,.55)':'rgba(232,116,97,.55)')+'"/>';}
+  }
+  function poly(data,color,w,dash){var p='';for(var pi=0;pi<data.length;pi++){if(data[pi]==null)continue;p+=X(pi)+','+Y(data[pi])+' ';}return '<polyline points="'+p.trim()+'" fill="none" stroke="'+color+'" stroke-width="'+(w||2.6)+'" stroke-linejoin="round" stroke-linecap="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';}
+  function ann(a){
+    var C=col(a.c),o='';
+    if(a.t==='zone'){var yT=Y(a.p2);return '<rect x="'+L+'" y="'+yT+'" width="'+plotW+'" height="'+(Y(a.p1)-yT).toFixed(2)+'" rx="3" fill="'+(a.fill||'rgba(123,166,140,.16)')+'"/>';}
+    if(a.t==='hline'){return '<line x1="'+L+'" y1="'+Y(a.p)+'" x2="'+(W-R)+'" y2="'+Y(a.p)+'" stroke="'+C+'" stroke-width="'+(a.w||2.6)+'" stroke-dasharray="'+(a.dash||'1 9')+'" stroke-linecap="round" filter="url(#pen'+uid+')"/>';}
+    if(a.t==='tl'||a.t==='arrow'){
+      var mk=a.mk||(a.c==='C'?'C':a.c==='S'?'S':'G');
+      var m=a.t==='arrow'?(' marker-end="url(#ar'+mk+uid+')"'):'';
+      var dash=a.dash?(' stroke-dasharray="'+a.dash+'"'):'';
+      return '<path d="M '+X(a.from[0])+' '+Y(a.from[1])+' L '+X(a.to[0])+' '+Y(a.to[1])+'" stroke="'+C+'" stroke-width="'+(a.w||3.4)+'" fill="none" stroke-linecap="round"'+dash+' filter="url(#pen'+uid+')"'+m+'/>';
+    }
+    if(a.t==='ellipse'){return '<ellipse cx="'+X(a.at[0])+'" cy="'+Y(a.at[1])+'" rx="'+(a.rx||32)+'" ry="'+(a.ry||22)+'" fill="none" stroke="'+C+'" stroke-width="'+(a.w||3.2)+'" filter="url(#pen'+uid+')"/>';}
+    if(a.t==='dot'){return '<circle cx="'+X(a.at[0])+'" cy="'+Y(a.at[1])+'" r="'+(a.r||5.5)+'" fill="'+C+'"/>';}
+    if(a.t==='label'){
+      var lx=+(X(a.at[0])+(a.dx||0)).toFixed(2),ly=+(Y(a.at[1])+(a.dy||0)).toFixed(2),sz=a.s||32,anc=a.anc||'start';
+      if(a.lead){o+='<line x1="'+lx+'" y1="'+(ly-sz*0.34).toFixed(2)+'" x2="'+X(a.lead[0])+'" y2="'+Y(a.lead[1])+'" stroke="rgba(26,22,18,0.28)" stroke-width="1.3" stroke-dasharray="2 4"/>';}
+      var tr=a.rot?(' transform="rotate('+a.rot+' '+lx+' '+ly+')"'):'';
+      o+='<text x="'+lx+'" y="'+ly+'" class="pen" fill="'+C+'" font-size="'+sz+'" text-anchor="'+anc+'" stroke="#FFF9F0" stroke-width="'+(a.halo||5)+'" paint-order="stroke" stroke-linejoin="round"'+tr+'>'+a.text+'</text>';
+      if(a.text2){o+='<text x="'+lx+'" y="'+(ly+sz*0.92).toFixed(2)+'" class="pen" fill="'+C+'" font-size="'+sz+'" text-anchor="'+anc+'" stroke="#FFF9F0" stroke-width="'+(a.halo||5)+'" paint-order="stroke" stroke-linejoin="round"'+tr+'>'+a.text2+'</text>';}
+      return o;
+    }
+    return '';
+  }
+  if(spec.ann){for(var ai=0;ai<spec.ann.length;ai++){s+=ann(spec.ann[ai]);}}
+  return '<svg viewBox="0 0 '+W+' '+H+'" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="chart">'+s+'</svg>';
+}
+
+/* dedicated candle-anatomy diagram */
+function buildAnatomy(){
+  var uid=++CHART_UID;
+  function T(x,y,t,c,anc,sz){return '<text x="'+x+'" y="'+y+'" class="pen" fill="'+c+'" font-size="'+(sz||30)+'" text-anchor="'+(anc||'start')+'" stroke="#FFF9F0" stroke-width="5" paint-order="stroke" stroke-linejoin="round">'+t+'</text>';}
+  function L(x1,y1,x2,y2){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="rgba(26,22,18,0.30)" stroke-width="1.3" stroke-dasharray="2 4"/>';}
+  var s='';
+  var ux=210, dx=560, bw=58;
+  s+='<line x1="'+ux+'" y1="60" x2="'+ux+'" y2="360" stroke="#E87461" stroke-width="3"/>';
+  s+='<rect x="'+(ux-bw/2)+'" y="120" width="'+bw+'" height="180" rx="4" fill="#E87461"/>';
+  s+='<line x1="'+dx+'" y1="80" x2="'+dx+'" y2="350" stroke="#5B9BD5" stroke-width="3"/>';
+  s+='<rect x="'+(dx-bw/2)+'" y="130" width="'+bw+'" height="160" rx="4" fill="#5B9BD5"/>';
+  s+=L(ux,60,348,72)+T(356,80,'고가 (H)','#6B5E52');
+  s+=L(ux+bw/2,120,348,130)+T(356,138,'종가 (C)','#D85A46');
+  s+=L(ux+bw/2,300,348,300)+T(356,308,'시가 (O)','#D85A46');
+  s+=L(ux,360,348,352)+T(356,360,'저가 (L)','#6B5E52');
+  s+=T(150,215,'몸통','#1A1612','end',30)+T(150,245,'= 결론','#9E8E7E','end',24);
+  s+=T(150,92,'위꼬리','#9E8E7E','end',24);
+  s+=T(150,338,'아래꼬리','#9E8E7E','end',24);
+  s+=L(155,210,ux-bw/2,210);
+  s+=T(ux,408,'양봉 (빨강)','#D85A46','middle',32)+T(ux,436,'종가 > 시가 · 상승','#6B5E52','middle',23);
+  s+=T(dx,408,'음봉 (파랑)','#4F8FCB','middle',32)+T(dx,436,'종가 < 시가 · 하락','#6B5E52','middle',23);
+  return '<svg viewBox="0 0 660 460" class="chart-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="candle anatomy">'+s+'</svg>';
+}
+
+/* ============ CHART DATA ============ */
+var bigVB=[600,392], midVB=[600,372], miniVB=[372,268];
+var CHARTS={
+  hammer:{vb:miniVB,range:[34,66],grid:false,padL:34,padR:38,candles:[[61,63,57,58],[57,59,53,54],[53,55,49,50],[49,51,39,50]],ann:[
+    {t:'ellipse',at:[3,45.5],rx:22,ry:31,c:'S'},
+    {t:'label',at:[3,42],dy:36,text:'하단 반전 ↑',c:'S',s:27,anc:'middle'}
+  ]},
+  star:{vb:miniVB,range:[44,78],grid:false,padL:34,padR:38,candles:[[48,53,47,52],[52,57,51,56],[56,61,55,60],[61,71,59,60]],ann:[
+    {t:'ellipse',at:[3,65],rx:22,ry:33,c:'C'},
+    {t:'label',at:[3,52],dy:0,text:'상단 반전 ↓',c:'C',s:27,anc:'middle'}
+  ]},
+  dojiContext:{vb:miniVB,range:[44,76],grid:false,padL:34,padR:38,candles:[[48,53,47,52],[52,57,51,56],[56,61,55,60],[60,69,55,60]],ann:[
+    {t:'ellipse',at:[3,62],rx:19,ry:30,c:'G'},
+    {t:'label',at:[3,49],dy:0,text:'추세 끝 도지',c:'G',s:26,anc:'middle'}
+  ]},
+  dojiTypes:{vb:[372,236],range:[34,66],grid:false,padL:30,padR:30,padT:30,padB:46,candles:[[50,62,38,50],[50,51,38,50],[50,62,49,50]],ann:[
+    {t:'label',at:[0,35],dy:20,text:'십자',c:'M',s:25,anc:'middle'},
+    {t:'label',at:[1,35],dy:20,text:'잠자리',c:'M',s:25,anc:'middle'},
+    {t:'label',at:[2,35],dy:20,text:'비석',c:'M',s:25,anc:'middle'}
+  ]},
+  bullEngulf:{vb:miniVB,range:[46,66],grid:false,padL:34,padR:38,candles:[[61,62,57,58],[58,59,54,55],[55,56,52,53],[52,61,51,60]],ann:[
+    {t:'ellipse',at:[2.55,56],rx:50,ry:44,c:'S'},
+    {t:'label',at:[2.5,49],dy:0,text:'하단 반전 ↑',c:'S',s:26,anc:'middle'}
+  ]},
+  bearEngulf:{vb:miniVB,range:[46,64],grid:false,padL:34,padR:38,candles:[[49,53,48,52],[52,56,51,55],[55,57,54,56],[57,58,48,49]],ann:[
+    {t:'ellipse',at:[2.55,53],rx:50,ry:44,c:'C'},
+    {t:'label',at:[2.5,46.5],dy:0,text:'상단 반전 ↓',c:'C',s:26,anc:'middle'}
+  ]},
+  morningStar:{vb:miniVB,range:[48,70],grid:false,padL:34,padR:38,candles:[[66,67,62,63],[62,63,54,55],[53,55,51,53],[54,62,53,61]],ann:[
+    {t:'ellipse',at:[2,57],rx:78,ry:33,c:'S'},
+    {t:'label',at:[2,68.5],text:'하단 반전 ↑',c:'S',s:25,anc:'middle'}
+  ]},
+  eveningStar:{vb:miniVB,range:[48,70],grid:false,padL:34,padR:38,candles:[[50,55,49,54],[54,63,53,62],[64,66,62,64],[63,64,54,55]],ann:[
+    {t:'ellipse',at:[2,59],rx:78,ry:33,c:'C'},
+    {t:'label',at:[2,50.5],text:'상단 반전 ↓',c:'C',s:25,anc:'middle'}
+  ]},
+  basicCandles:{vb:bigVB,range:[44,74],candles:[[50,56,48,55],[55,58,52,53],[53,63,52,62],[62,65,57,58],[58,68,57,67],[67,71,60,62]],ann:[
+    {t:'label',at:[2,63],dx:-6,dy:-14,text:'매수 승',c:'C',s:30,anc:'middle',rot:-6},
+    {t:'label',at:[5,71],dx:8,dy:-10,text:'매도 승',c:'sky',s:30,anc:'start',rot:-4}
+  ]},
+  volCandles:{vb:bigVB,range:[42,90],padB:40,volume:[30,55,92,80,26,20],candles:[[48,54,46,53],[53,60,52,59],[59,69,58,67],[67,75,65,72],[72,76,69,70],[70,73,66,67]],ann:[
+    {t:'ellipse',at:[2,63],rx:30,ry:42,c:'S'},
+    {t:'label',at:[2,82],dx:-2,dy:-2,text:'거래량 폭증',c:'S',s:30,anc:'middle',rot:-4},
+    {t:'label',at:[2,86],dx:-2,dy:24,text:'= 신뢰 ↑',c:'S',s:28,anc:'middle'},
+    {t:'label',at:[5,73],dx:6,dy:-6,text:'거래량 빈약',c:'C',s:30,anc:'middle',rot:-4},
+    {t:'label',at:[5,73],dx:6,dy:18,text:'= 의심',c:'C',s:28,anc:'middle'}
+  ]},
+  trendUp:{vb:miniVB,range:[22,80],line:[28,46,38,60,50,74],grid:false,padR:40,padL:36,ann:[
+    {t:'dot',at:[1,46],c:'C'},{t:'dot',at:[3,60],c:'C'},{t:'dot',at:[5,74],c:'C'},
+    {t:'dot',at:[2,38],c:'S'},{t:'dot',at:[4,50],c:'S'},
+    {t:'label',at:[3,40],dy:30,text:'고점·저점 ↑',c:'C',s:30,anc:'middle'}
+  ]},
+  trendDown:{vb:miniVB,range:[22,80],line:[74,54,62,40,50,28],grid:false,padR:40,padL:36,ann:[
+    {t:'dot',at:[1,54],c:'C'},{t:'dot',at:[3,40],c:'C'},
+    {t:'dot',at:[2,62],c:'sky'},{t:'dot',at:[4,50],c:'sky'},
+    {t:'label',at:[3,64],dy:-6,text:'고점·저점 ↓',c:'sky',s:30,anc:'middle'}
+  ]},
+  trendSide:{vb:miniVB,range:[30,72],line:[40,62,42,60,42,62,42],grid:false,padR:40,padL:36,ann:[
+    {t:'hline',p:62,c:'C',dash:'2 7'},{t:'hline',p:40,c:'S',dash:'2 7'},
+    {t:'label',at:[3,53],text:'박스권',c:'K',s:30,anc:'middle'}
+  ]},
+  trendline:{vb:midVB,range:[30,80],candles:[[35,42,34,40],[40,50,39,48],[48,52,42,44],[44,58,43,56],[56,62,50,52],[52,68,51,66],[66,73,58,60]],ann:[
+    {t:'tl',from:[2,42],to:[6,58.5],c:'G',w:3.6},
+    {t:'ellipse',at:[6,58.5],rx:24,ry:20,c:'G'},
+    {t:'label',at:[6,58.5],dx:6,dy:34,text:'3번째 터치',c:'G',s:30,anc:'middle'},
+    {t:'label',at:[6,58.5],dx:6,dy:58,text:'= 진짜 추세선',c:'G',s:27,anc:'middle'},
+    {t:'label',at:[1,46],dx:-8,dy:-12,text:'저점을 잇는다',c:'G',s:28,anc:'middle',rot:-12}
+  ]},
+  suppres:{vb:midVB,range:[44,86],candles:[[52,60,50,58],[58,69,55,60],[60,64,51,53],[53,68,52,66],[66,71,58,60],[60,73,59,71],[71,80,69,78],[78,82,73,75]],ann:[
+    {t:'zone',p1:48,p2:52,fill:'rgba(123,166,140,.18)'},
+    {t:'zone',p1:68,p2:72,fill:'rgba(232,116,97,.16)'},
+    {t:'label',at:[0,50],dx:-4,dy:34,text:'지지',c:'S',s:30,anc:'start'},
+    {t:'label',at:[0,70],dx:-4,dy:-8,text:'저항',c:'C',s:30,anc:'start'},
+    {t:'arrow',from:[5,64],to:[6.4,72],c:'G',mk:'G',w:3},
+    {t:'label',at:[6.6,70],dx:4,dy:-2,text:'저항 → 지지',c:'G',s:28,anc:'middle'},
+    {t:'label',at:[6.6,70],dx:4,dy:22,text:'역할 전환',c:'G',s:25,anc:'middle'}
+  ]},
+  reversal:{vb:[600,408],range:[40,90],candles:[[50,58,48,56],[56,66,55,64],[64,74,62,72],[72,83,70,80],[80,84,75,78],[78,82,73,75],[74,77,65,67],[67,70,59,61]],ann:[
+    {t:'tl',from:[0,48],to:[3,70],c:'G',w:3.2},{t:'tl',from:[3,70],to:[7,86],c:'G',w:2,dash:'2 7'},
+    {t:'label',at:[5,79],dx:8,dy:-16,text:'② 고점 실패',c:'C',s:26,anc:'start'},
+    {t:'ellipse',at:[6,67],rx:22,ry:26,c:'C'},
+    {t:'label',at:[3.5,59],text:'① 추세선 이탈',c:'C',s:26,anc:'middle',lead:[4.7,67]},
+    {t:'label',at:[6.9,53],dy:30,text:'③ 저점 붕괴',c:'C',s:26,anc:'middle'}
+  ]},
+  rules:{vb:midVB,range:[34,82],line:[40,68,50,69,58,70,63,80],padR:118,ann:[
+    {t:'hline',p:70,c:'C',w:2.6},
+    {t:'label',at:[0.4,70],dx:-2,dy:-8,text:'수평 저항',c:'C',s:27,anc:'start'},
+    {t:'tl',from:[2,50],to:[6,63],c:'S',w:3},
+    {t:'label',at:[4,57],dx:-4,dy:30,text:'저점 ↑',c:'S',s:27,anc:'middle',rot:14},
+    {t:'arrow',from:[6.4,71],to:[7,79],c:'S',mk:'S',w:3},
+    {t:'label',at:[7,80],dx:6,dy:-4,text:'② 돌파',c:'S',s:28,anc:'middle'},
+    {t:'arrow',from:[7.4,80],to:[7.4,70.2],c:'G',mk:'G',w:2.6},
+    {t:'arrow',from:[7.4,70],to:[7.4,80],c:'G',mk:'G',w:2.6},
+    {t:'label',at:[7.4,75],dx:10,dy:2,text:'③ 목표',c:'G',s:26,anc:'start'},
+    {t:'label',at:[2.6,68],dx:0,dy:-6,text:'① 거래량↓ → 돌파시↑',c:'sky',s:25,anc:'middle'}
+  ]},
+  triAsc:{vb:miniVB,range:[36,74],line:[40,66,48,67,55,68,62],grid:false,padR:38,padL:34,ann:[
+    {t:'hline',p:67.5,c:'C',w:2.2},{t:'tl',from:[2,48],to:[6,62],c:'S',w:2.6},
+    {t:'arrow',from:[6,67],to:[6.4,72],c:'S',mk:'S',w:2.6}
+  ]},
+  triDesc:{vb:miniVB,range:[34,72],line:[68,42,60,41,52,40,46],grid:false,padR:38,padL:34,ann:[
+    {t:'hline',p:40.5,c:'S',w:2.2},{t:'tl',from:[0,68],to:[4,52],c:'C',w:2.6},
+    {t:'arrow',from:[6,42],to:[6.4,37],c:'C',mk:'C',w:2.6}
+  ]},
+  triSym:{vb:miniVB,range:[34,72],line:[38,68,46,62,52,58,55],grid:false,padR:38,padL:34,ann:[
+    {t:'tl',from:[1,68],to:[6,58],c:'C',w:2.4},{t:'tl',from:[2,46],to:[6,55],c:'S',w:2.4}
+  ]},
+  flag:{vb:miniVB,range:[26,58],line:[30,34,40,44,41,39,37,52],grid:false,padR:38,padL:34,ann:[
+    {t:'tl',from:[0,30],to:[3,44],c:'G',w:2.6},
+    {t:'label',at:[1,38],dx:-6,dy:0,text:'깃대',c:'G',s:26,anc:'middle',rot:-30},
+    {t:'arrow',from:[6,40],to:[7,52],c:'S',mk:'S',w:2.6}
+  ]},
+  boxp:{vb:miniVB,range:[38,72],line:[45,55,45,55,46,54,68],grid:false,padR:38,padL:34,ann:[
+    {t:'hline',p:55,c:'C',dash:'2 7'},{t:'hline',p:45,c:'S',dash:'2 7'},
+    {t:'arrow',from:[5.4,56],to:[6,67],c:'S',mk:'S',w:2.6}
+  ]},
+  cup:{vb:miniVB,range:[32,70],line:[62,50,42,38,40,50,60,55,67],grid:false,padR:38,padL:34,ann:[
+    {t:'label',at:[3,40],dy:-8,text:'컵',c:'G',s:26,anc:'middle'},
+    {t:'label',at:[7,55],dx:0,dy:24,text:'핸들',c:'G',s:24,anc:'middle'}
+  ]},
+  hns:{vb:[600,400],range:[30,72],line:[35,52,44,66,46,54,40],padR:118,ann:[
+    {t:'hline',p:45,c:'G',w:2.6},
+    {t:'label',at:[0.2,45],dx:-2,dy:-8,text:'목선',c:'G',s:26,anc:'start'},
+    {t:'label',at:[1,52],dy:-12,text:'좌어깨',c:'K',s:27,anc:'middle'},
+    {t:'label',at:[3,66],dy:-12,text:'머리',c:'C',s:30,anc:'middle'},
+    {t:'label',at:[5,54],dy:-12,text:'우어깨',c:'K',s:27,anc:'middle'},
+    {t:'label',at:[5,54],dy:18,text:'(거래량↓)',c:'M',s:21,anc:'middle'},
+    {t:'arrow',from:[5.7,44],to:[6,38],c:'C',mk:'C',w:3},
+    {t:'label',at:[6,40],dx:6,dy:2,text:'목선 이탈',c:'C',s:26,anc:'middle'},
+    {t:'label',at:[6,40],dx:6,dy:24,text:'= 전환',c:'C',s:23,anc:'middle'}
+  ]},
+  dblTop:{vb:miniVB,range:[36,72],line:[40,66,52,65,42],grid:false,padR:38,padL:34,ann:[
+    {t:'hline',p:52,c:'G',dash:'2 7'},
+    {t:'label',at:[1,66],dy:-8,text:'①',c:'C',s:30,anc:'middle'},
+    {t:'label',at:[3,65],dy:-8,text:'②',c:'C',s:30,anc:'middle'},
+    {t:'arrow',from:[3.6,51],to:[4,43],c:'C',mk:'C',w:2.6}
+  ]},
+  dblBot:{vb:miniVB,range:[28,66],line:[60,34,48,35,58],grid:false,padR:38,padL:34,ann:[
+    {t:'hline',p:48,c:'G',dash:'2 7'},
+    {t:'label',at:[1,34],dy:24,text:'①',c:'S',s:30,anc:'middle'},
+    {t:'label',at:[3,35],dy:24,text:'②',c:'S',s:30,anc:'middle'},
+    {t:'arrow',from:[3.6,49],to:[4,57],c:'S',mk:'S',w:2.6}
+  ]}
+};
+var SPECIAL={anatomy:buildAnatomy};
+
+function renderCharts(){
+  var boxes=document.querySelectorAll('.chartbox-svg');
+  boxes.forEach(function(box){
+    var name=box.getAttribute('data-chart');
+    try{
+      if(SPECIAL[name]){box.innerHTML=SPECIAL[name]();}
+      else if(CHARTS[name]){box.innerHTML=buildChart(CHARTS[name]);}
+    }catch(e){box.innerHTML='<div style="padding:20px;color:#9E8E7E;font-size:13px;text-align:center">[chart: '+name+']</div>';}
+  });
+}
+
+var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+var idx=0,n=slides.length;
+var bar=document.getElementById('bar'),cur=document.getElementById('cur'),tot=document.getElementById('tot'),sect=document.getElementById('sect');
+if(tot)tot.textContent=String(n).padStart(2,'0');
+function pad(x){return String(x).padStart(2,'0');}
+function show(i){
+  i=Math.max(0,Math.min(n-1,i));
+  if(i!==idx&&slides[idx])slides[idx].classList.remove('active');
+  idx=i;
+  if(slides[idx])slides[idx].classList.add('active');
+  if(bar)bar.style.width=((idx+1)/n*100)+'%';
+  if(cur)cur.textContent=pad(idx+1);
+  if(sect&&slides[idx])sect.textContent=slides[idx].getAttribute('data-sect')||'';
+  clearPen();
+}
+function next(){show(idx+1);}
+function prev(){show(idx-1);}
+/* ---- 전체화면: 메서드 호출(this 보존)+프리픽스+예외처리 ---- */
+function fsEl(){return document.fullscreenElement||document.webkitFullscreenElement||null;}
+function toggleFull(){
+  try{
+    if(!fsEl()){var el=document.documentElement,req=el.requestFullscreen||el.webkitRequestFullscreen;if(req)req.call(el);}
+    else{var ex=document.exitFullscreen||document.webkitExitFullscreen;if(ex)ex.call(document);}
+  }catch(e){}
+}
+/* ---- 캔버스 펜 ---- */
+var pen=document.getElementById('pen-layer');
+var pctx=pen?pen.getContext('2d'):null;
+var penOn=false,drawing=false,lastX=0,lastY=0;
+var penColor='#1A1612',isErase=false,isHL=false;
+var PEN_W=3.6,HL_W=22,ERASE_W=30;
+function resizePen(){
+  if(!pen||!pctx)return;
+  var dpr=window.devicePixelRatio||1,prev=null;
+  try{prev=document.createElement('canvas');prev.width=pen.width;prev.height=pen.height;prev.getContext('2d').drawImage(pen,0,0);}catch(e){prev=null;}
+  pen.width=Math.floor(window.innerWidth*dpr);pen.height=Math.floor(window.innerHeight*dpr);
+  pen.style.width=window.innerWidth+'px';pen.style.height=window.innerHeight+'px';
+  pctx.setTransform(dpr,0,0,dpr,0,0);pctx.lineCap='round';pctx.lineJoin='round';
+  if(prev){try{pctx.save();pctx.setTransform(1,0,0,1,0,0);pctx.drawImage(prev,0,0);pctx.restore();}catch(e){}}
+}
+function setPen(on){
+  penOn=on;
+  if(pen)pen.classList.toggle('on',on);
+  document.body.classList.toggle('pen-active',on);
+  var b=document.getElementById('pen');if(b)b.classList.toggle('active',on);
+}
+function clearPen(){if(pctx)pctx.clearRect(0,0,pen.width,pen.height);}
+function refreshTools(){
+  var sw=document.querySelectorAll('.pen-tools .swatch');
+  for(var i=0;i<sw.length;i++){
+    var on=!isErase && sw[i].getAttribute('data-color')===penColor;
+    sw[i].classList.toggle('active',on);
+  }
+  var eb=document.getElementById('penErase');if(eb)eb.classList.toggle('active',isErase);
+}
+function setColor(color,hl){isErase=false;isHL=!!hl;penColor=color;refreshTools();}
+function setErase(){isErase=true;refreshTools();}
+function pt(e){var t=(e.touches&&e.touches[0])?e.touches[0]:e;return{x:t.clientX,y:t.clientY};}
+function startDraw(e){if(!penOn)return;drawing=true;var p=pt(e);lastX=p.x;lastY=p.y;e.preventDefault();}
+function moveDraw(e){
+  if(!penOn||!drawing||!pctx)return;
+  var p=pt(e);
+  if(isErase){pctx.globalCompositeOperation='destination-out';pctx.globalAlpha=1;pctx.lineWidth=ERASE_W;}
+  else if(isHL){pctx.globalCompositeOperation='source-over';pctx.globalAlpha=0.4;pctx.strokeStyle=penColor;pctx.lineWidth=HL_W;}
+  else{pctx.globalCompositeOperation='source-over';pctx.globalAlpha=1;pctx.strokeStyle=penColor;pctx.lineWidth=PEN_W;}
+  pctx.beginPath();pctx.moveTo(lastX,lastY);pctx.lineTo(p.x,p.y);pctx.stroke();
+  lastX=p.x;lastY=p.y;e.preventDefault();
+}
+function endDraw(){drawing=false;}
+/* ---- UI 연결 ---- */
+var _n=document.getElementById('next');if(_n)_n.addEventListener('click',next);
+var _p=document.getElementById('prev');if(_p)_p.addEventListener('click',prev);
+var _f=document.getElementById('full');if(_f)_f.addEventListener('click',toggleFull);
+var _pen=document.getElementById('pen');if(_pen)_pen.addEventListener('click',function(){setPen(!penOn);});
+var _sw=document.querySelectorAll('.pen-tools .swatch');
+for(var _i=0;_i<_sw.length;_i++){(function(el){el.addEventListener('click',function(){setColor(el.getAttribute('data-color'),el.getAttribute('data-mode')==='hl');});})(_sw[_i]);}
+var _eb=document.getElementById('penErase');if(_eb)_eb.addEventListener('click',setErase);
+var _cb=document.getElementById('penClear');if(_cb)_cb.addEventListener('click',clearPen);
+if(pen){
+  pen.addEventListener('mousedown',startDraw);
+  window.addEventListener('mousemove',moveDraw);
+  window.addEventListener('mouseup',endDraw);
+  pen.addEventListener('touchstart',startDraw,{passive:false});
+  pen.addEventListener('touchmove',moveDraw,{passive:false});
+  pen.addEventListener('touchend',endDraw);
+}
+/* ---- 키보드 (e.code → 한/영 IME 무관) ---- */
+window.addEventListener('keydown',function(e){
+  var code=e.code,k=e.key;
+  if(code==='ArrowRight'||code==='PageDown'||code==='Space'){e.preventDefault();next();}
+  else if(code==='ArrowLeft'||code==='PageUp'){e.preventDefault();prev();}
+  else if(code==='Home'){e.preventDefault();show(0);}
+  else if(code==='End'){e.preventDefault();show(n-1);}
+  else if(code==='KeyF'){e.preventDefault();toggleFull();}
+  else if(code==='KeyP'){e.preventDefault();setPen(!penOn);}
+  else if(code==='KeyE'){if(penOn)setErase();}
+  else if(code==='KeyC'){if(penOn)clearPen();}
+  else if(code==='Digit1'){if(penOn)setColor('#1A1612',false);}
+  else if(code==='Digit2'){if(penOn)setColor('#E0301E',false);}
+  else if(code==='Digit3'){if(penOn)setColor('#2E6FD6',false);}
+  else if(code==='Digit4'){if(penOn)setColor('#FFE100',true);}
+  else if(code==='Escape'||k==='Escape'){if(penOn)setPen(false);}
+});
+/* ---- 스와이프(펜 OFF일 때만) ---- */
+var tx=0,ty=0;
+window.addEventListener('touchstart',function(e){if(penOn)return;tx=e.changedTouches[0].clientX;ty=e.changedTouches[0].clientY;},{passive:true});
+window.addEventListener('touchend',function(e){
+  if(penOn)return;
+  var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>56&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
+},{passive:true});
+window.addEventListener('resize',resizePen);
+resizePen();refreshTools();
+renderCharts();
+show(0);
+})();
+</script>
+
+
+</body></html>
