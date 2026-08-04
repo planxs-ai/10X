@@ -315,7 +315,7 @@
   .board-row input{flex:none;width:110px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
     font-family:inherit;font-weight:700;font-size:.92rem;}
   .board-row textarea{flex:1;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-family:inherit;
-    font-weight:600;font-size:.98rem;resize:none;height:38px;line-height:1.3;}
+    font-weight:600;font-size:.98rem;resize:vertical;min-height:38px;max-height:280px;line-height:1.45;}
   .board-row input:focus,.board-row textarea:focus{outline:2px solid var(--gold);outline-offset:1px;}
   .board-submit{width:100%;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:.98rem;
     background:var(--grad-gold);color:#fff;cursor:pointer;transition:.15s;}
@@ -330,7 +330,7 @@
   .bi-edited{color:var(--ink3);font-size:.72rem;font-weight:700;margin-left:6px;}
   .bi-edit-row{display:flex;gap:6px;margin-top:6px;}
   .bi-edit-row textarea{flex:1;border:1px solid var(--gold);border-radius:8px;padding:7px 10px;
-    font-family:inherit;font-size:.95rem;font-weight:600;resize:none;height:34px;}
+    font-family:inherit;font-size:.95rem;font-weight:600;resize:vertical;min-height:34px;max-height:280px;line-height:1.4;}
   .bi-edit-row button{border:none;border-radius:8px;padding:0 12px;font-weight:800;font-size:.85rem;cursor:pointer;}
   .bi-edit-row .save{background:var(--grad-gold);color:#fff;}
   .bi-edit-row .cancel{background:var(--bg3);color:var(--ink2);}
@@ -422,10 +422,10 @@
     <div class="board-form">
       <div class="board-row">
         <input id="boardName" maxlength="20" placeholder="이름(선택)" />
-        <textarea id="boardText" maxlength="300" placeholder="질문이나 의견을 입력하세요… (Enter로 등록, Shift+Enter 줄바꿈)"></textarea>
+        <textarea id="boardText" maxlength="5000" placeholder="질문이나 의견을 입력하세요… (Enter로 등록, Shift+Enter 줄바꿈)"></textarea>
       </div>
       <button class="board-submit" id="boardSubmit">등록</button>
-      <div class="board-hint" id="boardHint">최대 300자 · 등록하면 약 3초 내 모든 참여자 화면에 표시됩니다</div>
+      <div class="board-hint" id="boardHint">최대 5,000자 · 등록하면 약 3초 내 모든 참여자 화면에 표시됩니다</div>
     </div>
   </div>
 </div>
@@ -1367,7 +1367,7 @@ function renderBoardList(){
       return `<div class="board-item">
         <div class="bi-top"><span class="bi-name">${escHtml(p.name||'익명')}</span><span class="bi-time">${timeAgo(p.ts)}</span></div>
         <div class="bi-edit-row">
-          <textarea id="editArea_${p.id}" maxlength="300">${escHtml(p.text)}</textarea>
+          <textarea id="editArea_${p.id}" maxlength="5000">${escHtml(p.text)}</textarea>
           <button class="save" onclick="boardSaveEdit('${p.id}')">저장</button>
           <button class="cancel" onclick="boardCancelEdit()">취소</button>
         </div></div>`;
@@ -1398,7 +1398,7 @@ async function boardFetch(){
 }
 async function boardSubmit(){
   const nameEl=document.getElementById('boardName'), textEl=document.getElementById('boardText');
-  const name=nameEl.value.trim().slice(0,20), text=textEl.value.trim().slice(0,300);
+  const name=nameEl.value.trim().slice(0,20), text=textEl.value.trim().slice(0,5000);
   if(!text) return;
   if(Date.now()-boardLastSubmit<2500) return;
   boardLastSubmit=Date.now();
@@ -1424,7 +1424,7 @@ function boardResumePolling(){ if(!boardTimer){ boardTimer=setInterval(boardFetc
 function boardCancelEdit(){ boardEditingId=null; boardResumePolling(); renderBoardList(); }
 async function boardSaveEdit(id){
   const ta=document.getElementById('editArea_'+id); if(!ta) return;
-  const text=ta.value.trim().slice(0,300); if(!text) return;
+  const text=ta.value.trim().slice(0,5000); if(!text) return;
   if(boardOffline){
     const list=boardLoadLocal(); const idx=list.findIndex(p=>p.id===id);
     if(idx>-1){ list[idx].text=text; list[idx].edited=true; boardSaveLocal(list); }
