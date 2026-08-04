@@ -9,7 +9,7 @@
 // DELETE /api/posts                → 삭제 { id, clientId } (본인) 또는 { id, adminKey } (관리자, 전체 삭제 가능)
 
 const KV_KEY = "posts";
-const MAX_POSTS = 300;
+const MAX_POSTS = 5000;
 const MAX_NAME = 20;
 const MAX_TEXT = 300;
 
