@@ -310,6 +310,18 @@
   .board-item .bi-name{font-weight:800;color:var(--amber);font-size:.92rem;}
   .board-item .bi-time{color:var(--ink3);font-size:.78rem;font-weight:700;white-space:nowrap;}
   .board-item .bi-text{color:var(--ink);font-weight:600;line-height:1.5;word-break:break-word;white-space:pre-wrap;}
+  .board-item .bi-head{display:flex;align-items:baseline;gap:8px;cursor:pointer;user-select:none;}
+  .board-item.flat .bi-head{cursor:default;}
+  .board-item.flat .bi-head:hover .bi-title{color:var(--ink);}
+  .board-item .bi-head:hover .bi-title{color:var(--amber);}
+  .board-item .bi-caret{flex:none;color:var(--ink3);font-size:.78rem;transition:transform .18s;display:inline-block;}
+  .board-item.open .bi-caret{transform:rotate(90deg);}
+  .board-item .bi-head .bi-name{flex:none;}
+  .board-item .bi-title{flex:1;min-width:0;color:var(--ink);font-weight:700;line-height:1.45;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .board-item.open .bi-title{white-space:normal;overflow:visible;}
+  .board-item .bi-body{display:none;margin-top:8px;}
+  .board-item.open .bi-body{display:block;}
   .board-form{flex:none;padding:16px 20px;border-top:1px solid var(--line);background:var(--bg2);}
   .board-row{display:flex;gap:8px;margin-bottom:8px;}
   .board-row input{flex:none;width:110px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;
@@ -422,10 +434,10 @@
     <div class="board-form">
       <div class="board-row">
         <input id="boardName" maxlength="20" placeholder="이름(선택)" />
-        <textarea id="boardText" maxlength="5000" placeholder="질문이나 의견을 입력하세요… (Enter로 등록, Shift+Enter 줄바꿈)"></textarea>
+        <textarea id="boardText" maxlength="5000" placeholder="첫 줄은 제목이 됩니다… (Shift+Enter 줄바꿈, Enter로 등록)"></textarea>
       </div>
       <button class="board-submit" id="boardSubmit">등록</button>
-      <div class="board-hint" id="boardHint">최대 5,000자 · 등록하면 약 3초 내 모든 참여자 화면에 표시됩니다</div>
+      <div class="board-hint" id="boardHint">첫 줄 = 제목 · 제목을 클릭하면 전체 내용이 열립니다 · 최대 5,000자</div>
     </div>
   </div>
 </div>
@@ -1366,6 +1378,57 @@ function boardHasSelection(){
 }
 // 드래그가 끝나면 보류해둔 갱신을 반영
 document.addEventListener('selectionchange',()=>{ if(boardPendingRender && !boardHasSelection()) renderBoardList(); });
+const boardExpanded=new Set();   // 펼쳐진 글 id 보관 (재렌더돼도 유지)
+// 첫 줄 = 제목, 나머지 = 본문
+function boardSplitText(t){
+  const s=String(t||'');
+  const nl=s.indexOf('\n');
+  if(nl===-1) return {title:s.trim(), body:''};
+  return {title:s.slice(0,nl).trim(), body:s.slice(nl+1).replace(/^\n+/,'')};
+}
+function buildBoardHtml(){
+  const admin=isAdminMode();
+  return boardPosts.map(p=>{
+    const canEdit = p.mine && !boardOffline || (boardOffline);
+    const canDelete = p.mine || admin || boardOffline;
+    const editedTag = p.edited ? '<span class="bi-edited">(수정됨)</span>' : '';
+    if(boardEditingId===p.id){
+      return `<div class="board-item open" data-id="${p.id}">
+        <div class="bi-top"><span class="bi-name">${escHtml(p.name||'익명')}</span><span class="bi-time">${timeAgo(p.ts)}</span></div>
+        <div class="bi-edit-row">
+          <textarea id="editArea_${p.id}" maxlength="5000">${escHtml(p.text)}</textarea>
+          <button class="save" onclick="boardSaveEdit('${p.id}')">저장</button>
+          <button class="cancel" onclick="boardCancelEdit()">취소</button>
+        </div></div>`;
+    }
+    const sp=boardSplitText(p.text);
+    const open=boardExpanded.has(p.id);
+    const actions=[];
+    if(canEdit) actions.push(`<button class="bi-act" onclick="boardStartEdit('${p.id}')">✏️ 수정</button>`);
+    if(canDelete) actions.push(`<button class="bi-act del" onclick="boardDelete('${p.id}')">🗑 삭제</button>`);
+    // 펼칠 내용(본문 또는 버튼)이 없으면 클릭 대상으로 만들지 않는다 — 빈 클릭 방지
+    const hasMore = !!sp.body || actions.length>0;
+    return `<div class="board-item${open?' open':''}${hasMore?'':' flat'}" data-id="${p.id}">
+      <div class="bi-head"${hasMore?` onclick="boardToggle('${p.id}')"`:''}>
+        <span class="bi-caret">${hasMore?'▸':'·'}</span>
+        <span class="bi-name">${escHtml(p.name||'익명')}${editedTag}</span>
+        <span class="bi-title">${escHtml(sp.title||'(제목 없음)')}</span>
+        <span class="bi-time">${timeAgo(p.ts)}</span>
+      </div>
+      <div class="bi-body">
+        ${sp.body?`<div class="bi-text">${escHtml(sp.body)}</div>`:''}
+        ${actions.length?`<div class="bi-actions">${actions.join('')}</div>`:''}
+      </div></div>`;
+  }).join('');
+}
+// 제목 클릭 → 펼치기/접기. 전체를 다시 그리지 않고 클래스만 바꿔서 깜빡임·스크롤 튐이 없다
+function boardToggle(id){
+  if(boardExpanded.has(id)) boardExpanded.delete(id); else boardExpanded.add(id);
+  const el=document.querySelector('#boardList .board-item[data-id="'+id+'"]');
+  if(el) el.classList.toggle('open', boardExpanded.has(id));
+  boardLastHtml=buildBoardHtml();   // 캐시 동기화 (다음 폴링에서 불필요한 재렌더 방지)
+}
+window.boardToggle=boardToggle;
 function renderBoardList(){
   const listEl=document.getElementById('boardList');
   if(!listEl) return;
@@ -1374,28 +1437,7 @@ function renderBoardList(){
     if(emptyHtml!==boardLastHtml){ listEl.innerHTML=emptyHtml; boardLastHtml=emptyHtml; }
     return;
   }
-  const admin=isAdminMode();
-  const __html = boardPosts.map(p=>{
-    const canEdit = p.mine && !boardOffline || (boardOffline);
-    const canDelete = p.mine || admin || boardOffline;
-    const editedTag = p.edited ? '<span class="bi-edited">(수정됨)</span>' : '';
-    if(boardEditingId===p.id){
-      return `<div class="board-item">
-        <div class="bi-top"><span class="bi-name">${escHtml(p.name||'익명')}</span><span class="bi-time">${timeAgo(p.ts)}</span></div>
-        <div class="bi-edit-row">
-          <textarea id="editArea_${p.id}" maxlength="5000">${escHtml(p.text)}</textarea>
-          <button class="save" onclick="boardSaveEdit('${p.id}')">저장</button>
-          <button class="cancel" onclick="boardCancelEdit()">취소</button>
-        </div></div>`;
-    }
-    const actions=[];
-    if(canEdit) actions.push(`<button class="bi-act" onclick="boardStartEdit('${p.id}')">✏️ 수정</button>`);
-    if(canDelete) actions.push(`<button class="bi-act del" onclick="boardDelete('${p.id}')">🗑 삭제</button>`);
-    return `<div class="board-item">
-      <div class="bi-top"><span class="bi-name">${escHtml(p.name||'익명')}${editedTag}</span><span class="bi-time">${timeAgo(p.ts)}</span></div>
-      <div class="bi-text">${escHtml(p.text)}</div>
-      ${actions.length?`<div class="bi-actions">${actions.join('')}</div>`:''}</div>`;
-  }).join('');
+  const __html=buildBoardHtml();
   if(__html===boardLastHtml) return;                            // 내용이 그대로면 DOM을 건드리지 않음
   if(boardHasSelection()){ boardPendingRender=true; return; }   // 드래그 중이면 갱신 보류
   const atBottom = listEl.scrollHeight - listEl.scrollTop - listEl.clientHeight < 40;
